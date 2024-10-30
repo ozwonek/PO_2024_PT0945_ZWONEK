@@ -5,10 +5,10 @@ import agh.ics.oop.model.MoveDirection;
 import java.util.Arrays;
 
 public class OptionsParser {
-    public static MoveDirection[] parsing(String[] args) {
-         MoveDirection[] moveDirections = new MoveDirection[args.length];
+    public static MoveDirection[] parse(String[] moves) {
+         MoveDirection[] moveDirections = new MoveDirection[moves.length];
          int i = 0;
-         for (String arg : args) {
+         for (String arg : moves) {
 
              switch (arg) {
                  case "f":
