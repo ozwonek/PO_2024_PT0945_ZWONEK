@@ -1,13 +1,15 @@
 package agh.ics.oop;
 
 import agh.ics.oop.OptionsParser;
+import agh.ics.oop.model.MapDirection;
 import agh.ics.oop.model.MoveDirection;
+import agh.ics.oop.model.Vector2d;
 
 
 public class World {
 
-    public static void run(MoveDirection[] komendy) {
-        for(MoveDirection argument : komendy) {
+    private static void run(MoveDirection[] commands) {
+        for(MoveDirection argument : commands) {
             switch(argument){
                 case FORWARD:
                     System.out.println("Zwierzak idzie do przodu!");
@@ -26,10 +28,19 @@ public class World {
 
     }
     public static void main(String[] args) {
-        System.out.print("Start\n");
-        MoveDirection[] komendy =  OptionsParser.parsing(args);
-        run(komendy);
-        System.out.print("Stop");
+        Vector2d position1 = new Vector2d(1,2);
+        System.out.println(position1);
+        Vector2d position2 = new Vector2d(-2,1);
+        System.out.println(position2);
+        System.out.println(position1.add(position2));
+        MapDirection direction = MapDirection.EAST;
+        System.out.println(direction);
+        direction = direction.next();
+        System.out.println(direction);
+        direction = direction.previous();
+        System.out.println(direction);
+        Vector2d coordinate = direction.toUnitVector();
+        System.out.println(coordinate);
 
     }
 }
