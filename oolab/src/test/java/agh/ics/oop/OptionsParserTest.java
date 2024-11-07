@@ -3,62 +3,67 @@ package agh.ics.oop;
 import agh.ics.oop.model.MoveDirection;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class OptionsParserTest {
     @Test
     void oneWrongMove() {
         String[] moves = {"x"};
-        MoveDirection[] good = {};
+        List<MoveDirection> good = new ArrayList<>();
 
-        assertArrayEquals(good, OptionsParser.parse(moves));
+        assertEquals(good, OptionsParser.parse(moves));
     }
 
     @Test
     void emptyArrayMoves() {
         String[] moves = {};
-        MoveDirection[] good = {};
+        List<MoveDirection>  good = new ArrayList<>();
 
-        assertArrayEquals(good, OptionsParser.parse(moves));
+        assertEquals(good, OptionsParser.parse(moves));
     }
 
     @Test
     void wrongMoveInside() {
         String[] moves = {"f", "b", " x", "f"};
-        MoveDirection[] good = {MoveDirection.FORWARD, MoveDirection.BACKWARD, MoveDirection.FORWARD};
+        List<MoveDirection> good = List.of(MoveDirection.FORWARD, MoveDirection.BACKWARD, MoveDirection.FORWARD);
 
-        assertArrayEquals(good, OptionsParser.parse(moves));
+        assertEquals(good, OptionsParser.parse(moves));
     }
 
     @Test
     void moveLeft() {
         String[] moves = {"l"};
-        MoveDirection[] good = {MoveDirection.LEFT};
 
-        assertArrayEquals(good, OptionsParser.parse(moves));
+        List<MoveDirection> good = List.of(MoveDirection.LEFT);
+
+        assertEquals(good, OptionsParser.parse(moves));
+
     }
 
     @Test
     void moveRight() {
         String[] moves = {"r"};
-        MoveDirection[] good = {MoveDirection.RIGHT};
+        List<MoveDirection> good = List.of(MoveDirection.RIGHT);
 
-        assertArrayEquals(good, OptionsParser.parse(moves));
+        assertEquals(good, OptionsParser.parse(moves));
     }
 
     @Test
     void moveForward() {
         String[] moves = {"f"};
-        MoveDirection[] good = {MoveDirection.FORWARD};
+        List<MoveDirection> good = List.of(MoveDirection.FORWARD);
 
-        assertArrayEquals(good, OptionsParser.parse(moves));
+        assertEquals(good, OptionsParser.parse(moves));
     }
 
     @Test
     void moveBackward() {
         String[] moves = {"b"};
-        MoveDirection[] good = {MoveDirection.BACKWARD};
+        List<MoveDirection> good = List.of(MoveDirection.BACKWARD);
 
-        assertArrayEquals(good, OptionsParser.parse(moves));
+        assertEquals(good, OptionsParser.parse(moves));;
     }
 }
