@@ -24,14 +24,14 @@ class AnimalTest {
     void changeToString(){
         Animal animal = new Animal();
 
-        assertEquals("(2,2) Polnoc",animal.toString());
+        assertEquals("^",animal.toString());
     }
     @Test
     void samePosition(){
         Animal animal  = new Animal();
 
-        assertTrue(animal.getPosition().equals(new Vector2d(2,2)));
-        assertFalse(animal.getPosition().equals(new Vector2d(2,1)));
+        assertEquals(animal.getPosition(), new Vector2d(2, 2));
+        assertNotEquals(animal.getPosition(), new Vector2d(2, 1));
 
     }
 
