@@ -1,9 +1,6 @@
 package agh.ics.oop;
 
-import agh.ics.oop.model.Animal;
-import agh.ics.oop.model.MapDirection;
-import agh.ics.oop.model.MoveDirection;
-import agh.ics.oop.model.Vector2d;
+import agh.ics.oop.model.*;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -16,20 +13,20 @@ class SimulationTest {
     @Test
     void orientationAndPositionAfterLeft(){
         List<Vector2d> positions = List.of(new Vector2d(2,2));
-        List<MoveDirection> moves = new ArrayList<>();
-        moves.add(MoveDirection.LEFT);
-        Simulation s1 = new Simulation(positions,moves);
+        List<MoveDirection> moves = List.of(MoveDirection.LEFT);
+        WorldMap map = new RectangularMap(5,5);
+        Simulation s1 = new Simulation(positions,moves,map);
         s1.run();
-        Animal animal = s1.getAnimals().get(0);
+        Animal animal = s1.getAnimals().getFirst();
         assertEquals(MapDirection.WEST,animal.getOrientation());
         assertEquals(new Vector2d(2,2),animal.getPosition());
     }
     @Test
     void orientationAndPositionAfterRight(){
         List<Vector2d> positions = List.of(new Vector2d(2,2));
-        List<MoveDirection> moves = new ArrayList<>();
-        moves.add(MoveDirection.RIGHT);
-        Simulation s1 = new Simulation(positions,moves);
+        List<MoveDirection> moves = List.of(MoveDirection.RIGHT);
+        RectangularMap map = new RectangularMap(5,5);
+        Simulation s1 = new Simulation(positions,moves,map);
         s1.run();
         Animal animal = s1.getAnimals().get(0);
         assertEquals(MapDirection.EAST,animal.getOrientation());
@@ -38,9 +35,9 @@ class SimulationTest {
     @Test
     void orientationAndPositionAfterForward(){
         List<Vector2d> positions = List.of(new Vector2d(2,2));
-        List<MoveDirection> moves = new ArrayList<>();
-        moves.add(MoveDirection.FORWARD);
-        Simulation s1 = new Simulation(positions,moves);
+        List<MoveDirection> moves = List.of(MoveDirection.FORWARD);
+        RectangularMap map = new RectangularMap(5,5);
+        Simulation s1 = new Simulation(positions,moves,map);
         s1.run();
         Animal animal = s1.getAnimals().get(0);
         assertEquals(MapDirection.NORTH,animal.getOrientation());
@@ -49,9 +46,9 @@ class SimulationTest {
     @Test
     void orientationAndPositionAfterBackward(){
         List<Vector2d> positions = List.of(new Vector2d(2,2));
-        List<MoveDirection> moves = new ArrayList<>();
-        moves.add(MoveDirection.BACKWARD);
-        Simulation s1 = new Simulation(positions,moves);
+        List<MoveDirection> moves = List.of(MoveDirection.BACKWARD);
+        RectangularMap map = new RectangularMap(5,5);
+        Simulation s1 = new Simulation(positions,moves,map);
         s1.run();
         Animal animal = s1.getAnimals().get(0);
         assertEquals(MapDirection.NORTH,animal.getOrientation());
@@ -60,9 +57,9 @@ class SimulationTest {
     @Test
     void orientationAndPositionAfterMoveOutOfMapRightUpperCorner(){
         List<Vector2d> positions = List.of(new Vector2d(4,4));
-        List<MoveDirection> moves = new ArrayList<>();
-        moves.add(MoveDirection.FORWARD);
-        Simulation s1 = new Simulation(positions,moves);
+        List<MoveDirection> moves = List.of(MoveDirection.FORWARD);
+        RectangularMap map = new RectangularMap(5,5);
+        Simulation s1 = new Simulation(positions,moves,map);
         s1.run();
         Animal animal = s1.getAnimals().get(0);
         assertEquals(MapDirection.NORTH,animal.getOrientation());
@@ -72,9 +69,9 @@ class SimulationTest {
     @Test
     void orientationAndPositionAfterMoveOutOfMapRightDownCorner(){
         List<Vector2d> positions = List.of(new Vector2d(4,0));
-        List<MoveDirection> moves = new ArrayList<>();
-        moves.add(MoveDirection.BACKWARD);
-        Simulation s1 = new Simulation(positions,moves);
+        List<MoveDirection> moves = List.of(MoveDirection.BACKWARD);
+        RectangularMap map = new RectangularMap(5,5);
+        Simulation s1 = new Simulation(positions,moves,map);
         s1.run();
         Animal animal = s1.getAnimals().get(0);
         assertEquals(MapDirection.NORTH,animal.getOrientation());
@@ -83,9 +80,9 @@ class SimulationTest {
     @Test
     void orientationAndPositionAfterMoveOutOfMapLeftDownCorner(){
         List<Vector2d> positions = List.of(new Vector2d(0,0));
-        List<MoveDirection> moves = new ArrayList<>();
-        moves.add(MoveDirection.BACKWARD);
-        Simulation s1 = new Simulation(positions,moves);
+        List<MoveDirection> moves = List.of(MoveDirection.BACKWARD);
+        RectangularMap map = new RectangularMap(5,5);
+        Simulation s1 = new Simulation(positions,moves,map);
         s1.run();
         Animal animal = s1.getAnimals().get(0);
         assertEquals(MapDirection.NORTH,animal.getOrientation());
@@ -94,9 +91,9 @@ class SimulationTest {
     @Test
     void orientationAndPositionAfterMoveOutOfMapLeftUpperCorner(){
         List<Vector2d> positions = List.of(new Vector2d(0,4));
-        List<MoveDirection> moves = new ArrayList<>();
-        moves.add(MoveDirection.FORWARD);
-        Simulation s1 = new Simulation(positions,moves);
+        List<MoveDirection> moves = List.of(MoveDirection.FORWARD);
+        RectangularMap map = new RectangularMap(5,5);
+        Simulation s1 = new Simulation(positions,moves,map);
         s1.run();
         Animal animal = s1.getAnimals().get(0);
         assertEquals(MapDirection.NORTH,animal.getOrientation());
@@ -105,9 +102,9 @@ class SimulationTest {
     @Test
     void orientationAndPositionAfterMoveOutOfMapNotInCorner(){
         List<Vector2d> positions = List.of(new Vector2d(3,4));
-        List<MoveDirection> moves = new ArrayList<>();
-        moves.add(MoveDirection.FORWARD);
-        Simulation s1 = new Simulation(positions,moves);
+        List<MoveDirection> moves = List.of(MoveDirection.FORWARD);
+        RectangularMap map = new RectangularMap(5,5);
+        Simulation s1 = new Simulation(positions,moves,map);
         s1.run();
         Animal animal = s1.getAnimals().get(0);
         assertEquals(MapDirection.NORTH,animal.getOrientation());
@@ -116,12 +113,9 @@ class SimulationTest {
     @Test
     void orienationAndPositionAfterSequencesMovesForOneAnimal(){
         List<Vector2d> positions = List.of(new Vector2d(2,2));
-        List<MoveDirection> moves = new ArrayList<>();
-        moves.add(MoveDirection.BACKWARD);
-        moves.add(MoveDirection.FORWARD);
-        moves.add(MoveDirection.FORWARD);
-        moves.add(MoveDirection.LEFT);
-        Simulation s1 = new Simulation(positions,moves);
+        List<MoveDirection> moves = List.of(MoveDirection.BACKWARD,MoveDirection.FORWARD,MoveDirection.FORWARD,MoveDirection.LEFT);
+        RectangularMap map = new RectangularMap(5,5);
+        Simulation s1 = new Simulation(positions,moves,map);
         s1.run();
         Animal animal = s1.getAnimals().get(0);
         assertEquals(MapDirection.WEST,animal.getOrientation());
@@ -131,35 +125,49 @@ class SimulationTest {
     @Test
     void orienationAndPositionAfterSequencesMovesForMoreAnimals(){
         List<Vector2d> positions = List.of(new Vector2d(2,2),new Vector2d(0,0));
-        List<MoveDirection> moves = new ArrayList<>();
-        moves.add(MoveDirection.BACKWARD);
-        moves.add(MoveDirection.FORWARD);
-        moves.add(MoveDirection.FORWARD);
-        moves.add(MoveDirection.LEFT);
-        Simulation s1 = new Simulation(positions,moves);
+        List<MoveDirection> moves = List.of(MoveDirection.BACKWARD,MoveDirection.FORWARD,MoveDirection.FORWARD,MoveDirection.LEFT,MoveDirection.RIGHT);
+        RectangularMap map = new RectangularMap(5,5);
+        Simulation s1 = new Simulation(positions,moves,map);
         s1.run();
         Animal animal1 = s1.getAnimals().get(0);
         Animal animal2 = s1.getAnimals().get(1);
-        assertEquals(MapDirection.NORTH,animal1.getOrientation());
+        assertEquals(MapDirection.EAST,animal1.getOrientation());
         assertEquals(new Vector2d(2,2),animal1.getPosition());
         assertEquals(MapDirection.WEST,animal2.getOrientation());
         assertEquals(new Vector2d(0,1),animal2.getPosition());
     }
     @Test
-    void orienationAndPositionAfterSequencesMovesWithParsingMovesOfInput(){
-        List<Vector2d> positions = List.of(new Vector2d(2,2),new Vector2d(3,4));
-        List<MoveDirection> moves = new ArrayList<>();
-        String[] move = {"f", "b", "r","l","f", "f", "r","r" ,"f", "f" ,"f", "f" ,"f" ,"f" ,"f" ,"f"};
-        List<MoveDirection> movesOfAnimals = OptionsParser.parse(move);
-        Simulation s1 = new Simulation(positions,movesOfAnimals);
+    void twoAnimalsOnOnePlace(){
+        List<Vector2d> positions = List.of(new Vector2d(2,2),new Vector2d(2,4));
+        List<MoveDirection> moves = List.of(MoveDirection.FORWARD,MoveDirection.BACKWARD);
+        RectangularMap map = new RectangularMap(5,5);
+        Simulation s1 = new Simulation(positions,moves,map);
         s1.run();
         Animal animal1 = s1.getAnimals().get(0);
         Animal animal2 = s1.getAnimals().get(1);
-        assertEquals(MapDirection.SOUTH,animal1.getOrientation());
-        assertEquals(new Vector2d(3,0),animal1.getPosition());
+        assertEquals(MapDirection.NORTH,animal1.getOrientation());
+        assertEquals(new Vector2d(2,3),animal1.getPosition());
         assertEquals(MapDirection.NORTH,animal2.getOrientation());
         assertEquals(new Vector2d(2,4),animal2.getPosition());
     }
+    @Test
+    void orienationAndPositionAfterSequencesMovesWithParsingMovesOfInput(){
+        List<Vector2d> positions = List.of(new Vector2d(2,2),new Vector2d(3,4));
+        String[] move = {"f", "b", "r","l","f", "f", "r","r" ,"f", "f" ,"f", "f" ,"f" ,"f" ,"f" ,"f"};
+        List<MoveDirection> movesOfAnimals = OptionsParser.parse(move);
+        RectangularMap map = new RectangularMap(5,5);
+        Simulation s1 = new Simulation(positions,movesOfAnimals,map);
+        s1.run();
+        Animal animal1 = s1.getAnimals().get(0);
+        Animal animal2 = s1.getAnimals().get(1);
+
+        assertEquals(MapDirection.SOUTH,animal1.getOrientation());
+        assertEquals(new Vector2d(2,0),animal1.getPosition());
+        assertEquals(MapDirection.NORTH,animal2.getOrientation());
+        assertEquals(new Vector2d(3,4),animal2.getPosition());
+    }
+
+
 
 
 
