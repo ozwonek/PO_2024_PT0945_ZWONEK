@@ -13,8 +13,9 @@ class OptionsParserTest {
     void oneWrongMove() {
         String[] moves = {"x"};
         List<MoveDirection> good = new ArrayList<>();
-
-        assertEquals(good, OptionsParser.parse(moves));
+        assertThrows(IllegalArgumentException.class, () -> {
+            OptionsParser.parse(moves);
+        });
     }
 
     @Test
@@ -25,13 +26,6 @@ class OptionsParserTest {
         assertEquals(good, OptionsParser.parse(moves));
     }
 
-    @Test
-    void wrongMoveInside() {
-        String[] moves = {"f", "b", " x", "f"};
-        List<MoveDirection> good = List.of(MoveDirection.FORWARD, MoveDirection.BACKWARD, MoveDirection.FORWARD);
-
-        assertEquals(good, OptionsParser.parse(moves));
-    }
 
     @Test
     void moveLeft() {
