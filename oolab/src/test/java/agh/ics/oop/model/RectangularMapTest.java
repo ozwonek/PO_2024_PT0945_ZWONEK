@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class RectangularMapTest {
 
     @Test
-    void mapWorks() {
+    void mapWorks() throws IncorrectPositionException {
         WorldMap map = new RectangularMap(5, 5);
         Animal animal = new Animal();
         map.place(animal);
@@ -20,7 +20,7 @@ class RectangularMapTest {
         assertTrue(map.canMoveTo(new Vector2d(2,2)));
     }
     @Test
-    void canMoveToOccupied() {
+    void canMoveToOccupied() throws IncorrectPositionException{
         WorldMap map = new RectangularMap(5, 5);
         Animal animal1 = new Animal(new Vector2d(2,2));
         map.place(animal1);
@@ -33,19 +33,19 @@ class RectangularMapTest {
 
     }
     @Test
-    void place() {
+    void place() throws IncorrectPositionException {
         WorldMap map = new RectangularMap(5, 5);
         Animal animal1 = new Animal();
         Animal animal2 = new Animal();
         Animal animal3 = new Animal(new Vector2d(6,6));
         assertTrue(map.place(animal1));
-        assertFalse(map.place(animal2));
-        assertFalse(map.place(animal3));
+        assertThrows(IncorrectPositionException.class, ()->{map.place(animal2);});
+        assertThrows(IncorrectPositionException.class, ()->{map.place(animal3);});
 
     }
 
     @Test
-    void moveTo() {
+    void moveTo() throws IncorrectPositionException {
         WorldMap map = new RectangularMap(5, 5);
         Animal animal1 = new Animal(new Vector2d(1,1));
         Animal animal2 = new Animal(new Vector2d(1, 3));
@@ -60,7 +60,7 @@ class RectangularMapTest {
     }
 
     @Test
-    void isOccupied() {
+    void isOccupied() throws IncorrectPositionException{
         WorldMap map = new RectangularMap(5, 5);
         Animal animal1 = new Animal(new Vector2d(1,1));
         Animal animal2 = new Animal(new Vector2d(1, 1));
@@ -70,7 +70,7 @@ class RectangularMapTest {
     }
 
     @Test
-    void objectAt() {
+    void objectAt() throws IncorrectPositionException{
         WorldMap map = new RectangularMap(5, 5);
         Animal animal1 = new Animal();
         Animal animal2 = new Animal(new Vector2d(2, 3));
@@ -82,7 +82,7 @@ class RectangularMapTest {
     }
 
     @Test
-    void testToString() {
+    void testToString()throws IncorrectPositionException {
         WorldMap map = new RectangularMap(5, 5);
         Animal animal1 = new Animal();
         Animal animal2 = new Animal(new Vector2d(2, 4));

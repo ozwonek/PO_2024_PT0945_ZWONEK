@@ -1,11 +1,11 @@
 package agh.ics.oop.model;
 
-import agh.ics.oop.model.util.Limitations;
+import agh.ics.oop.model.util.Boundary;
 
 import java.util.*;
 
 public class GrassField extends AbstractWorldMap{
-    Random rand = new Random();
+    private Random rand = new Random();
     private final Map<Vector2d, Grass> grasses = new HashMap<>();
     public GrassField(int numberOfGrasses){
         int placedGrasses = 0;
@@ -33,7 +33,7 @@ public class GrassField extends AbstractWorldMap{
         return elements;
     }
     @Override
-    public Limitations calculateLimits() {
+    public Boundary getCurrentBounds() {
         List<WorldElement> elements = getElements();
         Vector2d lowerLeftCorner = new Vector2d(Integer.MAX_VALUE,Integer.MAX_VALUE);
         Vector2d  upperRightCorner=new Vector2d(Integer.MIN_VALUE,Integer.MIN_VALUE);
@@ -41,6 +41,6 @@ public class GrassField extends AbstractWorldMap{
             lowerLeftCorner = lowerLeftCorner.lowerLeft(element.getPosition());
             upperRightCorner = upperRightCorner.upperRight(element.getPosition());
         }
-        return new Limitations(lowerLeftCorner,upperRightCorner);
+        return new Boundary(lowerLeftCorner,upperRightCorner);
     }
 }
