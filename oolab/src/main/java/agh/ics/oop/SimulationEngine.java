@@ -1,6 +1,4 @@
-package agh.ics.oop.model;
-
-import agh.ics.oop.Simulation;
+package agh.ics.oop;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +26,7 @@ public class SimulationEngine {
             Thread thread = new Thread(simulation);
             threads.add(thread);
             thread.start();
+
         }
 
     }
