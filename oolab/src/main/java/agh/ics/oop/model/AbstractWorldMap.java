@@ -3,10 +3,7 @@ package agh.ics.oop.model;
 import agh.ics.oop.model.util.MapVisualizer;
 import agh.ics.oop.model.util.Boundary;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public abstract class AbstractWorldMap implements WorldMap {
     protected Vector2d lowerLeft = new Vector2d(Integer.MIN_VALUE,Integer.MIN_VALUE);
@@ -14,6 +11,7 @@ public abstract class AbstractWorldMap implements WorldMap {
     protected final Map<Vector2d, Animal> animals = new HashMap<>();
     protected final MapVisualizer visualizer = new MapVisualizer(this);
     protected final List<MapChangeListener> observers = new ArrayList<>();
+    protected final UUID id = UUID.randomUUID();
     @Override
     public boolean canMoveTo(Vector2d position){
         return position.follows(lowerLeft) && position.proceeds(upperRight) && !(objectAt(position) instanceof Animal) ;
@@ -21,7 +19,7 @@ public abstract class AbstractWorldMap implements WorldMap {
     public void addObserver(MapChangeListener listener){
         observers.add(listener);
     }
-    public void abstractObserver(MapChangeListener listener){
+    public void removeObserver(MapChangeListener listener){
         observers.remove(listener);
     }
     protected void mapChange(String message){
@@ -74,7 +72,11 @@ public abstract class AbstractWorldMap implements WorldMap {
     @Override
     public String toString(){
         Boundary boundary = getCurrentBounds();
-        return visualizer.draw(boundary.getBottomLeftCorner(),boundary.getTopRightCorner());
+        return visualizer.draw(boundary.bottomLeftCorner(),boundary.topRightCorner());
+    }
+    @Override
+    public UUID getID(){
+        return id;
     }
 
 }

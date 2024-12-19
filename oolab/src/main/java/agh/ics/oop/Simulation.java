@@ -5,11 +5,10 @@ import agh.ics.oop.model.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Simulation {
+public class Simulation implements Runnable{
     private final List<Animal> animals;
     private final List<MoveDirection> moves;
     private final WorldMap map;
-
     public Simulation(List<Vector2d> animalOnPosition, List<MoveDirection> moves, WorldMap map) {
         this.moves = moves;
         this.animals = new ArrayList<>();
@@ -31,7 +30,7 @@ public class Simulation {
     public List<Animal> getAnimals() {
         return new ArrayList<>(this.animals);
     }
-
+    @Override
     public void run() {
 
         int numberOfAnimal = 0;
@@ -39,7 +38,6 @@ public class Simulation {
             int sizeOfAnimals = animals.size();
             map.move(animals.get(numberOfAnimal), move);
             numberOfAnimal = (numberOfAnimal + 1) % sizeOfAnimals;
-//            System.out.println(map.toString());
         }
 
     }
