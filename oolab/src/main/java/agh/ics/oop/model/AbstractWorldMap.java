@@ -35,7 +35,6 @@ public abstract class AbstractWorldMap implements WorldMap {
         return position.correctHeight(lowerLeft,upperRight);
     }
 
-
     @Override
     public boolean canMoveRightOrLeft(Vector2d position){
       return position.correctWidth(lowerLeft,upperRight);
@@ -61,6 +60,7 @@ public abstract class AbstractWorldMap implements WorldMap {
         }
         throw new IncorrectPositionException(animal.getPosition());
     }
+
     @Override
     public void move(Animal animal, MoveDirection direction,GrassField map){
         if(animal.equals(animals.get(animal.getPosition()))) {
@@ -69,15 +69,20 @@ public abstract class AbstractWorldMap implements WorldMap {
             animal.move(direction,this,map);
             animals.put(animal.getPosition(),animal);
             int grassEnergy = eatingGrass(animal.getPosition());
+            animal.setAge(animal.getAge()+1);
             if (grassEnergy > 0) {
                 animal.setEnergy(animal.getEnergy() + grassEnergy);
             }
             if(animal.getEnergy()==0){
                 animals.remove(animal.getPosition());
+                mapChange("zwierzak zmarł");
             }
             animal.setEnergy(animal.getEnergy() - 1);
-            mapChange("zwierze zmienilo pozycje z: " + oldPosition + " na: " + animal.getPosition() + "a jego energia wynosi: "+ animal.getEnergy());
-
+//            if (isOccupied(animal.getPosition())) {
+//                animals.put(animal.getPosition(), new Animal(animal.getPosition(),3));
+//            }
+            mapChange("zwierze zmienilo pozycje z: " + oldPosition + " na: " + animal.getPosition() + "a jego energia wynosi: "+ animal.getEnergy()+" zwierzak ma: "+ animal.getAge()+"lat");
+//            mapChange("width: "+ width +" upper right: "+ upperRight + "lower left: " + lowerLeft);
         }
     }
     @Override

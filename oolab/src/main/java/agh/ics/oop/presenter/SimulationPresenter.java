@@ -90,8 +90,8 @@ public class SimulationPresenter implements MapChangeListener {
         String moveList = movesTextField.getText();
         try {
             List<MoveDirection> directions = parse(moveList.split(" "));
-            List<Vector2d> positions = List.of(new Vector2d(2,2), new Vector2d(3,4));
-            int energy = 3;
+            List<Vector2d> positions = List.of(new Vector2d(2,2), new Vector2d(3,2));
+            int energy = 5;
             AbstractWorldMap map = new GrassField(10, 3,6,6);
             map.addObserver(this);
             Simulation simulation = new Simulation(positions,directions,map,energy);

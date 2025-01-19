@@ -41,7 +41,7 @@ public class Simulation implements Runnable {
                 map.move(animals.get(numberOfAnimal), move, (GrassField) map);
                 numberOfAnimal = (numberOfAnimal + 1) % sizeOfAnimals;
                 try{
-                    Thread.sleep(5000);
+                    Thread.sleep(2000);
                 }
                 catch (InterruptedException e) {
                     System.out.println("Wątek został przerwany: " + e.getMessage());

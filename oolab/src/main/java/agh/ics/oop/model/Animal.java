@@ -1,7 +1,7 @@
 package agh.ics.oop.model;
 
 import agh.ics.oop.World;
-
+import java.util.UUID;
 import java.util.Map;
 
 public class Animal implements WorldElement {
@@ -9,6 +9,8 @@ public class Animal implements WorldElement {
     private Vector2d position;
     private int energy;
     private WorldMap map;
+    private int age;
+    private UUID id = UUID.randomUUID();
 
     public Animal(){
         this.orientation = MapDirection.NORTH;
@@ -17,19 +19,30 @@ public class Animal implements WorldElement {
 
     public Animal(Vector2d position, int energy) {
         this.position = position;
+//        this.orientation = MapDirection.getRandomDirection();
         this.orientation = MapDirection.NORTH;
         this.energy = energy;
     }
+
     @Override
     public String toString(){
         return  orientation.toString();
     }
 
+    public UUID getId(){
+        return this.id;
+    }
     public int getEnergy(){
         return this.energy;
     }
     public void setEnergy(int newEnergy){
         this.energy = newEnergy;
+    }
+    public int getAge(){
+        return this.age;
+    }
+    public void setAge(int newAge){
+        this.age = newAge;
     }
 
     public MapDirection getOrientation(){
@@ -51,17 +64,14 @@ public class Animal implements WorldElement {
             case FORWARD -> currentPosition= orientation.toUnitVector().add(position);
             case BACKWARD -> currentPosition = position.substract(orientation.toUnitVector());
         }
-        if (validator.canMoveUpOrDown(currentPosition)){
-            this.position = currentPosition;
-        }
-        else {
+        if (!validator.canMoveUpOrDown(currentPosition)){
             this.orientation= this.orientation.opposite();
         }
-        if(validator.canMoveRightOrLeft(currentPosition)){
-            this.position = currentPosition;
+        else if(!validator.canMoveRightOrLeft(currentPosition)){
+            this.position = this.position.switchWidth(map.width-1);
         }
         else {
-            this.position = this.position.switchWidth(map.width);
+            this.position=currentPosition;
         }
     }
 }

@@ -3,12 +3,16 @@ package agh.ics.oop.model;
 import agh.ics.oop.World;
 import agh.ics.oop.model.Vector2d;
 
+import java.util.Random;
+
 
 public enum MapDirection {
     NORTH,
     SOUTH,
     WEST,
     EAST;
+
+    private static final Random random = new Random();
 
     @Override
     public String toString() {
@@ -54,5 +58,11 @@ public enum MapDirection {
             case WEST -> Vector2d.LEFT;
             case EAST -> Vector2d.RIGHT;
         };
+    }
+
+    public static MapDirection getRandomDirection() {
+        MapDirection[] directions = values();
+        int index = random.nextInt(directions.length);
+        return directions[index];
     }
 }
