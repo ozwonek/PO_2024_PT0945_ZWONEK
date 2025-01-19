@@ -14,6 +14,7 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.stage.Stage;
+import agh.ics.oop.model.AbstractWorldMap;
 
 import java.io.IOException;
 import java.util.List;
@@ -90,13 +91,14 @@ public class SimulationPresenter implements MapChangeListener {
         try {
             List<MoveDirection> directions = parse(moveList.split(" "));
             List<Vector2d> positions = List.of(new Vector2d(2,2), new Vector2d(3,4));
-            AbstractWorldMap map = new GrassField(10);
+            int energy = 3;
+            AbstractWorldMap map = new GrassField(10, 3,6,6);
             map.addObserver(this);
-            Simulation simulation = new Simulation(positions,directions,map);
+            Simulation simulation = new Simulation(positions,directions,map,energy);
             SimulationEngine engine = new SimulationEngine(List.of(simulation));
             movesDescriptionLabel.setText("simulation started with:" + moveList);
             new Thread(engine :: runAsync).start();
-            System.out.println("System zakonczył dzialanie");
+//            System.out.println("System zakonczył dzialanie");
         }
         catch(IllegalArgumentException e){
             System.out.println(e.getMessage());

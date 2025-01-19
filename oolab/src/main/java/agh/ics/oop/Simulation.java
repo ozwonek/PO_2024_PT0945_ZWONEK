@@ -10,11 +10,11 @@ public class Simulation implements Runnable {
     private final List<MoveDirection> moves;
     private final WorldMap map;
 
-    public Simulation(List<Vector2d> animalOnPosition, List<MoveDirection> moves, WorldMap map) {
+    public Simulation(List<Vector2d> animalOnPosition, List<MoveDirection> moves, WorldMap map,int energy) {
         this.moves = moves;
         this.animals = new ArrayList<>();
         for (Vector2d position : animalOnPosition) {
-            Animal animal = new Animal(position);
+            Animal animal = new Animal(position,energy);
             try {
                 if (map.place(animal)) {
                     animals.add(animal);
@@ -38,10 +38,10 @@ public class Simulation implements Runnable {
 
         for (MoveDirection move : moves) {
                 int sizeOfAnimals = animals.size();
-                map.move(animals.get(numberOfAnimal), move);
+                map.move(animals.get(numberOfAnimal), move, (GrassField) map);
                 numberOfAnimal = (numberOfAnimal + 1) % sizeOfAnimals;
                 try{
-                    Thread.sleep(500);
+                    Thread.sleep(5000);
                 }
                 catch (InterruptedException e) {
                     System.out.println("Wątek został przerwany: " + e.getMessage());

@@ -26,7 +26,6 @@ public class SimulationEngine {
             Thread thread = new Thread(simulation);
             threads.add(thread);
             thread.start();
-
         }
 
     }

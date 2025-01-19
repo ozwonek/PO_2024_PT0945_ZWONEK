@@ -1,5 +1,6 @@
 package agh.ics.oop.model;
 
+import agh.ics.oop.World;
 import agh.ics.oop.model.Vector2d;
 
 
@@ -25,6 +26,15 @@ public enum MapDirection {
             case SOUTH -> WEST;
             case WEST -> NORTH;
             case EAST -> SOUTH;
+        };
+    }
+
+    public MapDirection opposite(){
+        return switch (this) {
+            case NORTH -> SOUTH;
+            case SOUTH -> NORTH;
+            case WEST -> EAST;
+            case EAST -> WEST;
         };
     }
 
