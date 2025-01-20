@@ -1,20 +1,18 @@
 package agh.ics.oop;
 
 import agh.ics.oop.model.*;
-
+import static agh.ics.oop.OptionsParser.parse;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Simulation implements Runnable {
     private final List<Animal> animals;
-    private final List<MoveDirection> moves;
     private final WorldMap map;
 
-    public Simulation(List<Vector2d> animalOnPosition, List<MoveDirection> moves, WorldMap map,int energy) {
-        this.moves = moves;
+    public Simulation(List<Vector2d> animalOnPosition, WorldMap map,int energy, int genesLength) {
         this.animals = new ArrayList<>();
         for (Vector2d position : animalOnPosition) {
-            Animal animal = new Animal(position,energy);
+            Animal animal = new Animal(position,energy,genesLength);
             try {
                 if (map.place(animal)) {
                     animals.add(animal);
@@ -33,13 +31,17 @@ public class Simulation implements Runnable {
 
     @Override
     public void run() {
-
+        int sizeOfAnimals = animals.size();
+        int sizeOfGenes = animals.getFirst().getGenomes().getGenesLength();
         int numberOfAnimal = 0;
-
-        for (MoveDirection move : moves) {
-                int sizeOfAnimals = animals.size();
-                map.move(animals.get(numberOfAnimal), move, (GrassField) map);
+        int numberOfGen = 0;
+        for (int i = 0; i<1000; i++) {
+                Animal animal = animals.get(numberOfAnimal);
+                int gen = animal.getGenomes().get(numberOfGen);
+                MapDirection direction = parse(animal.getOrientation(),gen);
+                map.move(animals.get(numberOfAnimal), direction,(GrassField) map);
                 numberOfAnimal = (numberOfAnimal + 1) % sizeOfAnimals;
+                numberOfGen = (numberOfGen + 1 - numberOfAnimal) % sizeOfGenes;
                 try{
                     Thread.sleep(2000);
                 }

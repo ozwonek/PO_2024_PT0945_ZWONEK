@@ -1,6 +1,8 @@
 package agh.ics.oop.model;
 
 import agh.ics.oop.World;
+
+import java.util.List;
 import java.util.UUID;
 import java.util.Map;
 
@@ -10,19 +12,20 @@ public class Animal implements WorldElement {
     private int energy;
     private WorldMap map;
     private int age;
+    private final Genomes genomes;
     private UUID id = UUID.randomUUID();
 
-    public Animal(){
-        this.orientation = MapDirection.NORTH;
-        this.position = new Vector2d(2,2);
-    }
 
-    public Animal(Vector2d position, int energy) {
+    public Animal(Vector2d position, int energy,int genesLength) {
         this.position = position;
-//        this.orientation = MapDirection.getRandomDirection();
-        this.orientation = MapDirection.NORTH;
+        this.orientation = MapDirection.getRandomDirection();
+        this.genomes = new Genomes(genesLength);
         this.energy = energy;
     }
+    public Genomes getGenomes(){
+        return this.genomes;
+    }
+
 
     @Override
     public String toString(){
@@ -56,14 +59,16 @@ public class Animal implements WorldElement {
         return this.position.equals(position);
     }
 
-    public void move(MoveDirection direction, MoveValidator validator,GrassField map){
-        Vector2d currentPosition = this.position;
-        switch(direction){
-            case RIGHT -> this.orientation = orientation.next();
-            case LEFT -> this.orientation = orientation.previous();
-            case FORWARD -> currentPosition= orientation.toUnitVector().add(position);
-            case BACKWARD -> currentPosition = position.substract(orientation.toUnitVector());
-        }
+    public void move( MoveValidator validator,MapDirection direction,GrassField map){
+//        Vector2d currentPosition = this.position;
+//        switch(direction){
+//            case RIGHT -> this.orientation = orientation.next();
+//            case LEFT -> this.orientation = orientation.previous();
+//            case FORWARD -> currentPosition= orientation.toUnitVector().add(position);
+//            case BACKWARD -> currentPosition = position.substract(orientation.toUnitVector());
+//        }
+        this.orientation=direction;
+        Vector2d currentPosition= orientation.toUnitVector().add(position);
         if (!validator.canMoveUpOrDown(currentPosition)){
             this.orientation= this.orientation.opposite();
         }

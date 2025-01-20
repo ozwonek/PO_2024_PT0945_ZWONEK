@@ -19,7 +19,7 @@ import agh.ics.oop.model.AbstractWorldMap;
 import java.io.IOException;
 import java.util.List;
 
-import static agh.ics.oop.OptionsParser.parse;
+//import static agh.ics.oop.OptionsParser.parse;
 
 public class SimulationPresenter implements MapChangeListener {
     private WorldMap map;
@@ -89,12 +89,13 @@ public class SimulationPresenter implements MapChangeListener {
     public void onSimulationStartClicked(){
         String moveList = movesTextField.getText();
         try {
-            List<MoveDirection> directions = parse(moveList.split(" "));
+//            List<MoveDirection> directions = parse(moveList.split(" "));
             List<Vector2d> positions = List.of(new Vector2d(2,2), new Vector2d(3,2));
             int energy = 5;
+            int genesLength = 6;
             AbstractWorldMap map = new GrassField(10, 3,6,6);
             map.addObserver(this);
-            Simulation simulation = new Simulation(positions,directions,map,energy);
+            Simulation simulation = new Simulation(positions,map,energy,genesLength);
             SimulationEngine engine = new SimulationEngine(List.of(simulation));
             movesDescriptionLabel.setText("simulation started with:" + moveList);
             new Thread(engine :: runAsync).start();

@@ -50,6 +50,7 @@ public class GrassField extends AbstractWorldMap{
         elements.addAll(grasses.values());
         return elements;
     }
+
     @Override
     public Boundary getCurrentBounds() {
         List<WorldElement> elements = getElements();

@@ -10,7 +10,11 @@ public enum MapDirection {
     NORTH,
     SOUTH,
     WEST,
-    EAST;
+    EAST,
+    NORTHWEST,
+    SOUTHWEST,
+    SOUTHEAST,
+    NORTHEAST;
 
     private static final Random random = new Random();
 
@@ -21,17 +25,39 @@ public enum MapDirection {
             case SOUTH -> "v";
             case WEST -> "<";
             case EAST -> ">";
+            case NORTHEAST -> "NE";
+            case SOUTHEAST -> "SE";
+            case NORTHWEST -> "NW";
+            case SOUTHWEST -> "SW";
         };
     }
 
     public MapDirection next() {
         return switch (this) {
-            case NORTH -> EAST;
-            case SOUTH -> WEST;
-            case WEST -> NORTH;
-            case EAST -> SOUTH;
+            case NORTH -> NORTHEAST;
+            case NORTHEAST -> EAST;
+            case EAST -> SOUTHEAST;
+            case SOUTHEAST -> SOUTH;
+            case SOUTH -> SOUTHWEST;
+            case SOUTHWEST -> WEST;
+            case WEST -> NORTHWEST;
+            case NORTHWEST -> NORTH;
         };
     }
+
+//    public MapDirection nextNext(){
+//        return switch (this) {
+//            case NORTH -> EAST;
+//            case NORTHEAST -> SOUTHEAST;
+//            case EAST -> SOUTH;
+//            case SOUTHEAST -> SOUTHWEST;
+//            case SOUTH -> WEST;
+//            case SOUTHWEST -> NORTHWEST;
+//            case WEST -> NORTHWEST;
+//            case NORTHWEST -> NORTH;
+//        };
+//    }
+//    }
 
     public MapDirection opposite(){
         return switch (this) {
@@ -39,15 +65,23 @@ public enum MapDirection {
             case SOUTH -> NORTH;
             case WEST -> EAST;
             case EAST -> WEST;
+            case NORTHWEST -> SOUTHEAST;
+            case SOUTHEAST -> NORTHWEST;
+            case NORTHEAST -> SOUTHWEST;
+            case SOUTHWEST -> NORTHEAST;
         };
     }
 
     public MapDirection previous() {
         return switch (this) {
-            case NORTH -> WEST;
-            case SOUTH -> EAST;
-            case WEST -> SOUTH;
-            case EAST -> NORTH;
+            case NORTH -> NORTHWEST;
+            case SOUTH -> SOUTHEAST;
+            case WEST -> SOUTHWEST;
+            case EAST -> NORTHEAST;
+            case SOUTHWEST ->SOUTH;
+            case NORTHEAST -> NORTH;
+            case SOUTHEAST -> EAST;
+            case NORTHWEST -> WEST;
         };
     }
 
@@ -57,6 +91,10 @@ public enum MapDirection {
             case SOUTH -> Vector2d.DOWN;
             case WEST -> Vector2d.LEFT;
             case EAST -> Vector2d.RIGHT;
+            case NORTHWEST -> Vector2d.UP.add(Vector2d.LEFT);
+            case SOUTHEAST -> Vector2d.DOWN.add(Vector2d.RIGHT);
+            case NORTHEAST -> Vector2d.UP.add(Vector2d.RIGHT);
+            case SOUTHWEST -> Vector2d.DOWN.add(Vector2d.LEFT);
         };
     }
 
@@ -66,3 +104,11 @@ public enum MapDirection {
         return directions[index];
     }
 }
+//0 -> nie zmienia się
+//1 -> next
+//2 -> next.next
+//3 oposite.previous
+//4 oposite
+//5oposite.next
+//6previous.previous
+//7previous

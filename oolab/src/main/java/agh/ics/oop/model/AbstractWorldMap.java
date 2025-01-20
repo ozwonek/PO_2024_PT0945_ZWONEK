@@ -22,9 +22,6 @@ public abstract class AbstractWorldMap implements WorldMap {
         this.upperRight = new Vector2d(width-1, height-1);
     }
 
-    public int getWidth(){
-        return this.width;
-    }
     @Override
     public boolean canMoveTo(Vector2d position){
         return position.follows(lowerLeft) && position.proceeds(upperRight) && !(objectAt(position) instanceof Animal) ;
@@ -62,14 +59,14 @@ public abstract class AbstractWorldMap implements WorldMap {
     }
 
     @Override
-    public void move(Animal animal, MoveDirection direction,GrassField map){
+    public void move(Animal animal,MapDirection direction,GrassField map){
         if(animal.equals(animals.get(animal.getPosition()))) {
             Vector2d oldPosition = animal.getPosition();
             animals.remove(animal.getPosition());
-            animal.move(direction,this,map);
+            animal.move(this,direction,map);
             animals.put(animal.getPosition(),animal);
-            int grassEnergy = eatingGrass(animal.getPosition());
             animal.setAge(animal.getAge()+1);
+            int grassEnergy = eatingGrass(animal.getPosition());
             if (grassEnergy > 0) {
                 animal.setEnergy(animal.getEnergy() + grassEnergy);
             }
@@ -81,8 +78,8 @@ public abstract class AbstractWorldMap implements WorldMap {
 //            if (isOccupied(animal.getPosition())) {
 //                animals.put(animal.getPosition(), new Animal(animal.getPosition(),3));
 //            }
-            mapChange("zwierze zmienilo pozycje z: " + oldPosition + " na: " + animal.getPosition() + "a jego energia wynosi: "+ animal.getEnergy()+" zwierzak ma: "+ animal.getAge()+"lat");
-//            mapChange("width: "+ width +" upper right: "+ upperRight + "lower left: " + lowerLeft);
+//            mapChange("zwierze zmienilo pozycje z: " + oldPosition + " na: " + animal.getPosition() + "a jego energia wynosi: "+ animal.getEnergy()+" zwierzak ma: "+ animal.getAge()+"lat");
+            mapChange("geny zwierzaka to: " + animal.getGenomes().toString());
         }
     }
     @Override
@@ -93,7 +90,9 @@ public abstract class AbstractWorldMap implements WorldMap {
     @Override
     public WorldElement objectAt(Vector2d position){
         return animals.get(position);
+
     }
+
 
     public abstract int eatingGrass(Vector2d position);
 
