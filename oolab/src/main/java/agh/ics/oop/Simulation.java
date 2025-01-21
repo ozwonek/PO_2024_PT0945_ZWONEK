@@ -6,13 +6,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Simulation implements Runnable {
-    private final List<Animal> animals;
+    private List<Animal> animals;
     private final WorldMap map;
 
-    public Simulation(List<Vector2d> animalOnPosition, WorldMap map,int energy, int genesLength) {
+    public Simulation(List<Vector2d> animalOnPosition, WorldMap map,int energy, int genesLength,int minimumToBefull,int giveToChild) {
         this.animals = new ArrayList<>();
         for (Vector2d position : animalOnPosition) {
-            Animal animal = new Animal(position,energy,genesLength);
+            List<Animal> children = new ArrayList<>();
+            Animal animal = new Animal(position,energy,genesLength,minimumToBefull,giveToChild,children,new Genomes(genesLength));
             try {
                 if (map.place(animal)) {
                     animals.add(animal);
@@ -36,6 +37,7 @@ public class Simulation implements Runnable {
         int numberOfAnimal = 0;
         int numberOfGen = 0;
         for (int i = 0; i<1000; i++) {
+
                 Animal animal = animals.get(numberOfAnimal);
                 int gen = animal.getGenomes().get(numberOfGen);
                 MapDirection direction = parse(animal.getOrientation(),gen);

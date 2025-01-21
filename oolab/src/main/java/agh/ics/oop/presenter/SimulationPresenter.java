@@ -93,9 +93,11 @@ public class SimulationPresenter implements MapChangeListener {
             List<Vector2d> positions = List.of(new Vector2d(2,2), new Vector2d(3,2));
             int energy = 5;
             int genesLength = 6;
+            int minimumToBeFull = 8;
+            int giveToChild = 2;
             AbstractWorldMap map = new GrassField(10, 3,6,6);
             map.addObserver(this);
-            Simulation simulation = new Simulation(positions,map,energy,genesLength);
+            Simulation simulation = new Simulation(positions,map,energy,genesLength,minimumToBeFull,giveToChild);
             SimulationEngine engine = new SimulationEngine(List.of(simulation));
             movesDescriptionLabel.setText("simulation started with:" + moveList);
             new Thread(engine :: runAsync).start();
