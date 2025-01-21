@@ -7,21 +7,14 @@ import java.util.List;
 
 public class Simulation implements Runnable {
     private List<Animal> animals;
-    private final WorldMap map;
+    private final AbstractWorldMap map;
 
-    public Simulation(List<Vector2d> animalOnPosition, WorldMap map,int energy, int genesLength,int minimumToBefull,int giveToChild) {
+    public Simulation(List<Vector2d> animalOnPosition, AbstractWorldMap map,int energy, int genesLength,int minimumToBefull,int giveToChild) {
         this.animals = new ArrayList<>();
         for (Vector2d position : animalOnPosition) {
-            List<Animal> children = new ArrayList<>();
-            Animal animal = new Animal(position,energy,genesLength,minimumToBefull,giveToChild,children,new Genomes(genesLength));
-            try {
-                if (map.place(animal)) {
-                    animals.add(animal);
-                }
-            } catch (IncorrectPositionException e) {
-                System.out.println("Warning" + e.getMessage());
-            }
-
+            Animal animal = new Animal(position,energy,genesLength,minimumToBefull,giveToChild,new Genomes(genesLength));
+            map.place(animal);
+            animals.add(animal);
         }
         this.map = map;
     }
@@ -32,18 +25,17 @@ public class Simulation implements Runnable {
 
     @Override
     public void run() {
-        int sizeOfAnimals = animals.size();
-        int sizeOfGenes = animals.getFirst().getGenomes().getGenesLength();
-        int numberOfAnimal = 0;
-        int numberOfGen = 0;
         for (int i = 0; i<1000; i++) {
+                map.clean();
 
-                Animal animal = animals.get(numberOfAnimal);
-                int gen = animal.getGenomes().get(numberOfGen);
-                MapDirection direction = parse(animal.getOrientation(),gen);
-                map.move(animals.get(numberOfAnimal), direction,(GrassField) map);
-                numberOfAnimal = (numberOfAnimal + 1) % sizeOfAnimals;
-                numberOfGen = (numberOfGen + 1 - numberOfAnimal) % sizeOfGenes;
+                for(Animal animal : animals){
+                    int gen = animal.getGenomes().get(animal.getActive());
+                    System.out.println(gen);
+                    MapDirection direction = parse(animal.getOrientation(),gen);
+                    map.move(animal,direction,(GrassField) map);
+                    animal.nextGene();
+                }
+                map.allReproduce();
                 try{
                     Thread.sleep(2000);
                 }

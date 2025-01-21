@@ -2,10 +2,7 @@ package agh.ics.oop.model;
 
 import agh.ics.oop.World;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-import java.util.Map;
+import java.util.*;
 
 public class Animal implements WorldElement {
     private MapDirection orientation;
@@ -14,21 +11,23 @@ public class Animal implements WorldElement {
     private WorldMap map;
     private int age;
     private final Genomes genomes;
+    private int active;
     private UUID id = UUID.randomUUID();
-    private int minimumToBefull;
-    private int giveToChild;
+    private final int minimumToBeFull;
+    private final int giveToChild;
     private List<Animal> childrens = new ArrayList<>();
-    private int minimumMutation;
-    private int maximumMutation;
-    private int genesLength;
-    public Animal(Vector2d position, int energy,int genesLength,int minimumToBefull,int giveToChild,List<Animal> children,Genomes genomes) {
+    private final int genesLength;
+    private static final Random random = new Random();
+    public Animal(Vector2d position, int energy,int genesLength,int minimumToBeFull,int giveToChild,Genomes genomes) {
         this.position = position;
         this.orientation = MapDirection.getRandomDirection();
         this.genomes = genomes;
         this.energy = energy;
-        this.minimumToBefull = minimumToBefull;
+        this.genesLength = genesLength;
+        this.minimumToBeFull = minimumToBeFull;
         this.giveToChild = giveToChild;
-        this.childrens = children;
+        this.childrens = new ArrayList<>();
+        this.active = random.nextInt(genesLength);
     }
 
     public Genomes getGenomes(){
@@ -38,7 +37,7 @@ public class Animal implements WorldElement {
     public Animal reproduce(Animal secondParent){
         energy = energy - giveToChild;
         secondParent.setEnergy(secondParent.getEnergy() - giveToChild);
-        Animal child =  new Animal(this.position,this.giveToChild * 2, genesLength,minimumToBefull,giveToChild,new ArrayList<>(),new Genomes(this,secondParent));
+        Animal child =  new Animal(this.position,this.giveToChild * 2, genesLength,minimumToBeFull,giveToChild,new Genomes(this,secondParent));
         childrens.add(child);
         secondParent.getChildrens().add(child);
         return child;
@@ -63,6 +62,10 @@ public class Animal implements WorldElement {
     }
     public void setAge(int newAge){
         this.age = newAge;
+    }
+    public int getActive(){return this.active;}
+    public void nextGene(){
+        this.active = (active+1)%genesLength;
     }
     public List<Animal> getChildrens(){return this.childrens;}
 

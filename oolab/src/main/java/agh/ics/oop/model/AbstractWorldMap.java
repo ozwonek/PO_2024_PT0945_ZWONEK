@@ -5,6 +5,7 @@ import agh.ics.oop.model.util.MapVisualizer;
 import agh.ics.oop.model.util.Boundary;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public abstract class AbstractWorldMap implements WorldMap {
     protected final Map<Vector2d, List<Animal>> animals = new HashMap<>();
@@ -16,20 +17,12 @@ public abstract class AbstractWorldMap implements WorldMap {
     protected Vector2d lowerLeft = new Vector2d(0,0);
     protected Vector2d upperRight;
     protected int deadAnimalCount = 0;
-    public AbstractWorldMap(int width, int height) {
+    public AbstractWorldMap(int width, int height)
+    {
         this.width = width;
         this.height = height;
         this.upperRight = new Vector2d(width-1, height-1);
     }
-
-//    @Override
-//    public boolean canMoveTo(Vector2d position){
-//        return position.follows(lowerLeft) && position.proceeds(upperRight) && !(objectAt(position) instanceof Animal) ;
-//    }
-    @Override
-        public boolean canMoveTo(Vector2d position){
-           return position.follows(lowerLeft) && position.proceeds(upperRight);
-      }
 
     @Override
     public boolean canMoveUpOrDown(Vector2d position) {
@@ -39,13 +32,16 @@ public abstract class AbstractWorldMap implements WorldMap {
     @Override
     public boolean canMoveRightOrLeft(Vector2d position){
       return position.correctWidth(lowerLeft,upperRight);
-    };
+    }
+
     public void addObserver(MapChangeListener listener){
         observers.add(listener);
     }
+
     public void removeObserver(MapChangeListener listener){
         observers.remove(listener);
     }
+
     protected void mapChange(String message){
         for(MapChangeListener observer: observers){
             observer.mapChanged(this,message);
@@ -53,53 +49,73 @@ public abstract class AbstractWorldMap implements WorldMap {
     }
 
     @Override
-    public boolean place(Animal animal) throws IncorrectPositionException {
-        if(canMoveTo(animal.getPosition())){
-            animals.put(animal.getPosition(),animal);
-            mapChange("dodano zwierze na pozycji: " + animal.getPosition());
-            return true;
+    public void place(Animal animal){
+        if(animals.get(animal.getPosition()) == null){
+            List<Animal> onThisSpot = new ArrayList<>();
+            onThisSpot.add(animal);
+            animals.put(animal.getPosition(),onThisSpot);
         }
-        throw new IncorrectPositionException(animal.getPosition());
+        else {
+            animals.get(animal.getPosition()).add(animal);
+        }
+
     }
+
 
     @Override
     public void move(Animal animal,MapDirection direction,GrassField map){
-        if(animal.equals(animals.get(animal.getPosition()))) {
             Vector2d oldPosition = animal.getPosition();
-            animals.remove(animal.getPosition());
+            animals.get(oldPosition).remove(animal);
+            if(animals.get(oldPosition).isEmpty()){
+                animals.remove(oldPosition);
+            }
             animal.move(this,direction,map);
-            animals.put(animal.getPosition(),animal);
-            animal.setAge(animal.getAge()+1);
-            int grassEnergy = eatingGrass(animal.getPosition());
-            if (grassEnergy > 0) {
-                animal.setEnergy(animal.getEnergy() + grassEnergy);
-            }
-            if(animal.getEnergy()==0){
-                animals.remove(animal.getPosition());
-                mapChange("zwierzak zmarł");
-            }
-            animal.setEnergy(animal.getEnergy() - 1);
-//            if (isOccupied(animal.getPosition())) {
-//                animals.put(animal.getPosition(), new Animal(animal.getPosition(),3));
-//            }
+            place(animal);
 //            mapChange("zwierze zmienilo pozycje z: " + oldPosition + " na: " + animal.getPosition() + "a jego energia wynosi: "+ animal.getEnergy()+" zwierzak ma: "+ animal.getAge()+"lat");
-            mapChange("geny zwierzaka to: " + animal.getGenomes().toString());
+//            mapChange("geny zwierzaka to: " + animal.getGenomes().toString());
+
         }
-    }
+
+    @Override
     public void clean() {
         for (List<Animal> onOneSpot : animals.values()) {
+            List<Animal> toRemove = new ArrayList<>();
             Vector2d position = onOneSpot.getFirst().getPosition();
             for (Animal animal : onOneSpot) {
                 if (animal.getEnergy() == 0) {
-                    onOneSpot.remove(animal);
+                    toRemove.add(animal);
                     deadAnimalCount -= 1;
                 }
+            }
+            for (Animal animalToClean : toRemove ){
+                onOneSpot.remove(animalToClean);
             }
             if (onOneSpot.isEmpty()) {
                 animals.remove(position);
             }
         }
     }
+    public void allReproduce(){
+        int counter = 0;
+        for(List<Animal> onOneSpot: animals.values()){
+            Vector2d position = onOneSpot.getFirst().getPosition();
+            if(onOneSpot.size()<2){
+                continue;
+            }
+            int onOneSpotSize = onOneSpot.size();
+            onOneSpot.sort((a,b) -> Integer.compare(a.getEnergy(), b.getEnergy()));
+            Animal child = onOneSpot.get(onOneSpotSize-1).reproduce(onOneSpot.get(onOneSpotSize-2));
+            place(child);
+            counter+=1;
+        }
+        mapChange("Urodzono dzieci:" + counter);
+    }
+
+//    public void meal(GrassField map){
+//        for (List<Animal> onOneSpot: animals.values()){
+//            if(map.getElements())
+//        }
+//    }
 
 
 
@@ -110,7 +126,10 @@ public abstract class AbstractWorldMap implements WorldMap {
 
     @Override
     public WorldElement objectAt(Vector2d position){
-        return animals.get(position);
+        if(animals.get(position) == null){
+            return null;
+        }
+        return animals.get(position).getFirst();
 
     }
 
@@ -120,7 +139,12 @@ public abstract class AbstractWorldMap implements WorldMap {
 
     @Override
     public List<WorldElement> getElements(){
-        return new ArrayList<>(animals.values());
+        List<WorldElement> all = new ArrayList<>();
+        for(List<Animal> animals: animals.values())
+        {
+            all.addAll(animals);
+        }
+        return all;
     }
 
     @Override

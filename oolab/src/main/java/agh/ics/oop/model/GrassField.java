@@ -6,7 +6,7 @@ import java.util.*;
 
 public class GrassField extends AbstractWorldMap{
     private Random rand = new Random();
-    private final Map<Vector2d, Grass> grasses = new HashMap<>();
+    private Map<Vector2d, Grass> grasses = new HashMap<>();
     private final int energyFromGrass;
 
 
@@ -49,6 +49,10 @@ public class GrassField extends AbstractWorldMap{
         List<WorldElement> elements = super.getElements();
         elements.addAll(grasses.values());
         return elements;
+    }
+
+    public boolean isGrass(Vector2d position){
+        return grasses.get(position)!=null;
     }
 
     @Override

@@ -68,6 +68,7 @@ public class Genomes {
     public int getGenesLength(){
         return this.genesLength;
     }
+
     @Override
     public String toString() {
         return genes.toString();
