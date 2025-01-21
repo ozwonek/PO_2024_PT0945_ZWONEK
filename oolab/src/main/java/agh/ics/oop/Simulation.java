@@ -7,7 +7,7 @@ import java.util.List;
 
 public class Simulation implements Runnable {
     private List<Animal> animals;
-    private final AbstractWorldMap map;
+    private AbstractWorldMap map;
 
     public Simulation(List<Vector2d> animalOnPosition, AbstractWorldMap map,int energy, int genesLength,int minimumToBefull,int giveToChild) {
         this.animals = new ArrayList<>();
@@ -27,10 +27,8 @@ public class Simulation implements Runnable {
     public void run() {
         for (int i = 0; i<1000; i++) {
                 map.clean();
-
-                for(Animal animal : animals){
+                for(Animal animal : map.getAnimals()){
                     int gen = animal.getGenomes().get(animal.getActive());
-                    System.out.println(gen);
                     MapDirection direction = parse(animal.getOrientation(),gen);
                     map.move(animal,direction,(GrassField) map);
                     animal.nextGene();

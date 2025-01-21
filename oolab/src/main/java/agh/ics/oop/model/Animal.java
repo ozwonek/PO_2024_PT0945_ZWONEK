@@ -35,10 +35,11 @@ public class Animal implements WorldElement {
     }
 
     public Animal reproduce(Animal secondParent){
-        energy = energy - giveToChild;
-        secondParent.setEnergy(secondParent.getEnergy() - giveToChild);
+
         Animal child =  new Animal(this.position,this.giveToChild * 2, genesLength,minimumToBeFull,giveToChild,new Genomes(this,secondParent));
         childrens.add(child);
+        energy = energy - giveToChild;
+        secondParent.setEnergy(secondParent.getEnergy() - giveToChild);
         secondParent.getChildrens().add(child);
         return child;
     }
@@ -64,6 +65,7 @@ public class Animal implements WorldElement {
         this.age = newAge;
     }
     public int getActive(){return this.active;}
+    public int getMinimumToBeFull(){return this.minimumToBeFull;}
     public void nextGene(){
         this.active = (active+1)%genesLength;
     }

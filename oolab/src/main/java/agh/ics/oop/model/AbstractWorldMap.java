@@ -65,12 +65,16 @@ public abstract class AbstractWorldMap implements WorldMap {
     @Override
     public void move(Animal animal,MapDirection direction,GrassField map){
             Vector2d oldPosition = animal.getPosition();
-            animals.get(oldPosition).remove(animal);
-            if(animals.get(oldPosition).isEmpty()){
-                animals.remove(oldPosition);
+            if(animals.get(oldPosition)!=null){
+                animals.get(oldPosition).remove(animal);
+                if(animals.get(oldPosition).isEmpty()){
+                    animals.remove(oldPosition);
+                }
             }
             animal.move(this,direction,map);
+            System.out.println(animal.getEnergy());
             place(animal);
+            animal.setEnergy(animal.getEnergy() - 1);
 //            mapChange("zwierze zmienilo pozycje z: " + oldPosition + " na: " + animal.getPosition() + "a jego energia wynosi: "+ animal.getEnergy()+" zwierzak ma: "+ animal.getAge()+"lat");
 //            mapChange("geny zwierzaka to: " + animal.getGenomes().toString());
 
@@ -78,21 +82,29 @@ public abstract class AbstractWorldMap implements WorldMap {
 
     @Override
     public void clean() {
+        List<Vector2d> toDelatePositions = new ArrayList<>();
         for (List<Animal> onOneSpot : animals.values()) {
             List<Animal> toRemove = new ArrayList<>();
             Vector2d position = onOneSpot.getFirst().getPosition();
             for (Animal animal : onOneSpot) {
-                if (animal.getEnergy() == 0) {
+                if (animal.getEnergy() <= 0) {
+
                     toRemove.add(animal);
-                    deadAnimalCount -= 1;
+                    deadAnimalCount += 1;
                 }
             }
             for (Animal animalToClean : toRemove ){
+                System.out.println("essa");
                 onOneSpot.remove(animalToClean);
+
+
             }
             if (onOneSpot.isEmpty()) {
-                animals.remove(position);
+                toDelatePositions.add(position);
             }
+        }
+        for(Vector2d position: toDelatePositions){
+            animals.remove(position);
         }
     }
     public void allReproduce(){
@@ -102,8 +114,11 @@ public abstract class AbstractWorldMap implements WorldMap {
             if(onOneSpot.size()<2){
                 continue;
             }
-            int onOneSpotSize = onOneSpot.size();
             onOneSpot.sort((a,b) -> Integer.compare(a.getEnergy(), b.getEnergy()));
+            int onOneSpotSize = onOneSpot.size();
+            if(onOneSpot.get(onOneSpotSize-2).getEnergy()<onOneSpot.get(onOneSpotSize-2).getMinimumToBeFull()){
+                continue;
+            }
             Animal child = onOneSpot.get(onOneSpotSize-1).reproduce(onOneSpot.get(onOneSpotSize-2));
             place(child);
             counter+=1;
@@ -147,6 +162,15 @@ public abstract class AbstractWorldMap implements WorldMap {
         return all;
     }
 
+    public List<Animal> getAnimals() {
+        List<Animal> all = new ArrayList<>();
+        for(List<Animal> animals: animals.values())
+        {
+            all.addAll(animals);
+        }
+        return all;
+    }
+
     @Override
     public Boundary getCurrentBounds(){
         return new Boundary(lowerLeft,upperRight);
@@ -161,5 +185,4 @@ public abstract class AbstractWorldMap implements WorldMap {
     public UUID getID(){
         return id;
     }
-
 }

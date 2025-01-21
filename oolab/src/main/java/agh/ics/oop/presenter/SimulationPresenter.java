@@ -101,10 +101,10 @@ public class SimulationPresenter implements MapChangeListener {
         try {
 //            List<MoveDirection> directions = parse(moveList.split(" "));
             List<Vector2d> positions = List.of(new Vector2d(2,2), new Vector2d(3,2), new Vector2d(1,3),new Vector2d(2,3),new Vector2d(4,5),new Vector2d(3,2));
-            int energy = 100;
+            int energy = 10;
             int genesLength = 6;
-            int minimumToBeFull = 2;
-            int giveToChild = 2;
+            int minimumToBeFull = 4;
+            int giveToChild = 10;
             AbstractWorldMap map = new GrassField(10, 3,6,6);
             map.addObserver(this);
             Simulation simulation = new Simulation(positions,map,energy,genesLength,minimumToBeFull,giveToChild);
