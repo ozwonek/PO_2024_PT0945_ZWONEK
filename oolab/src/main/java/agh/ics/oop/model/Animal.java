@@ -2,6 +2,7 @@ package agh.ics.oop.model;
 
 import agh.ics.oop.World;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.Map;
@@ -14,18 +15,34 @@ public class Animal implements WorldElement {
     private int age;
     private final Genomes genomes;
     private UUID id = UUID.randomUUID();
-
-
-    public Animal(Vector2d position, int energy,int genesLength) {
+    private int minimumToBefull;
+    private int giveToChild;
+    private List<Animal> childrens = new ArrayList<>();
+    private int minimumMutation;
+    private int maximumMutation;
+    private int genesLength;
+    public Animal(Vector2d position, int energy,int genesLength,int minimumToBefull,int giveToChild,List<Animal> children,Genomes genomes) {
         this.position = position;
         this.orientation = MapDirection.getRandomDirection();
-        this.genomes = new Genomes(genesLength);
+        this.genomes = genomes;
         this.energy = energy;
+        this.minimumToBefull = minimumToBefull;
+        this.giveToChild = giveToChild;
+        this.childrens = children;
     }
+
     public Genomes getGenomes(){
         return this.genomes;
     }
 
+    public Animal reproduce(Animal secondParent){
+        energy = energy - giveToChild;
+        secondParent.setEnergy(secondParent.getEnergy() - giveToChild);
+        Animal child =  new Animal(this.position,this.giveToChild * 2, genesLength,minimumToBefull,giveToChild,new ArrayList<>(),new Genomes(this,secondParent));
+        childrens.add(child);
+        secondParent.getChildrens().add(child);
+        return child;
+    }
 
     @Override
     public String toString(){
@@ -47,6 +64,7 @@ public class Animal implements WorldElement {
     public void setAge(int newAge){
         this.age = newAge;
     }
+    public List<Animal> getChildrens(){return this.childrens;}
 
     public MapDirection getOrientation(){
         return this.orientation;
@@ -78,5 +96,8 @@ public class Animal implements WorldElement {
         else {
             this.position=currentPosition;
         }
+    }
+    public boolean isFuller (Animal other){
+        return this.energy>= other.getEnergy();
     }
 }
