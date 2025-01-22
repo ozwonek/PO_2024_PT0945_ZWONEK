@@ -67,7 +67,7 @@ public class SimulationPresenter implements MapChangeListener {
                 if (map.isOccupied(pos)) {
                     if(map.objectAt(pos) instanceof Grass){
                         Label grassLabel = new Label("");
-                        grassLabel.setStyle("-fx-background-color: green; -fx-text-fill: white;"); // Zielone tło, biały tekst
+                        grassLabel.setStyle("-fx-background-color: #7676dc; -fx-text-fill: white;"); // Zielone tło, biały tekst
                         grassLabel.setPrefSize(width, height); // Ustaw rozmiar komórki (opcjonalne)
 
                         // Dodajemy etykietę do mapGrid w odpowiedniej pozycji
@@ -100,12 +100,16 @@ public class SimulationPresenter implements MapChangeListener {
         String moveList = movesTextField.getText();
         try {
 //            List<MoveDirection> directions = parse(moveList.split(" "));
-            List<Vector2d> positions = List.of(new Vector2d(2,2), new Vector2d(3,2), new Vector2d(1,3),new Vector2d(2,3),new Vector2d(4,5),new Vector2d(3,2));
+//            List<Vector2d> positions = List.of(new Vector2d(2,2), new Vector2d(3,2), new Vector2d(1,3),new Vector2d(2,3),new Vector2d(4,5),new Vector2d(3,2));
+            List<Vector2d> positions = List.of(new Vector2d(2,2),new Vector2d(2,2));
+
             int energy = 10;
             int genesLength = 6;
             int minimumToBeFull = 4;
             int giveToChild = 10;
-            AbstractWorldMap map = new GrassField(10, 3,6,6);
+
+
+            GrassField map = new GrassField(10,1, 0.9,3,8,8);
             map.addObserver(this);
             Simulation simulation = new Simulation(positions,map,energy,genesLength,minimumToBeFull,giveToChild);
             SimulationEngine engine = new SimulationEngine(List.of(simulation));

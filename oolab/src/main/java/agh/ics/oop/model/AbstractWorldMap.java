@@ -17,6 +17,7 @@ public abstract class AbstractWorldMap implements WorldMap {
     protected Vector2d lowerLeft = new Vector2d(0,0);
     protected Vector2d upperRight;
     protected int deadAnimalCount = 0;
+    private final Random random = new Random();
     public AbstractWorldMap(int width, int height)
     {
         this.width = width;
@@ -76,7 +77,7 @@ public abstract class AbstractWorldMap implements WorldMap {
             place(animal);
             animal.setEnergy(animal.getEnergy() - 1);
 //            mapChange("zwierze zmienilo pozycje z: " + oldPosition + " na: " + animal.getPosition() + "a jego energia wynosi: "+ animal.getEnergy()+" zwierzak ma: "+ animal.getAge()+"lat");
-//            mapChange("geny zwierzaka to: " + animal.getGenomes().toString());
+            mapChange("energia : " + animal.getEnergy());
 
         }
 
@@ -123,14 +124,35 @@ public abstract class AbstractWorldMap implements WorldMap {
             place(child);
             counter+=1;
         }
-        mapChange("Urodzono dzieci:" + counter);
     }
 
-//    public void meal(GrassField map){
-//        for (List<Animal> onOneSpot: animals.values()){
-//            if(map.getElements())
-//        }
-//    }
+    public void allEat(GrassField map) {
+        for (List<Animal> onOneSpot : animals.values()) {
+            Vector2d position = onOneSpot.getFirst().getPosition();
+            if (map.isGrass(position)) {
+                List<Animal> competitors = getStronger(onOneSpot);
+
+                if(competitors.size()>1){
+                    int bestAnimal = 0;
+                    int topEnergy = competitors.getFirst().getEnergy();
+                    int topAge = competitors.getFirst().getAge();
+                    int topChildrenSize = competitors.getFirst().getChildrenSize();
+
+                    if(competitors.getFirst().getEnergy()==competitors.get(1).getEnergy() && competitors.getFirst().getAge()==competitors.get(1).getAge() && competitors.getFirst().getChildrenSize()==competitors.get(1).getChildrenSize()){
+                        int index = random.nextInt(competitors.size());
+                        map.eatGrass(competitors.get(index));
+                    }
+                    else{
+                        map.eatGrass(competitors.getFirst());
+                    }
+                }
+                else{
+                    map.eatGrass(onOneSpot.getFirst());
+                }
+            }
+        }
+    }
+
 
 
 
@@ -147,10 +169,6 @@ public abstract class AbstractWorldMap implements WorldMap {
         return animals.get(position).getFirst();
 
     }
-
-
-    public abstract int eatingGrass(Vector2d position);
-
 
     @Override
     public List<WorldElement> getElements(){
@@ -171,6 +189,8 @@ public abstract class AbstractWorldMap implements WorldMap {
         return all;
     }
 
+
+
     @Override
     public Boundary getCurrentBounds(){
         return new Boundary(lowerLeft,upperRight);
@@ -184,5 +204,52 @@ public abstract class AbstractWorldMap implements WorldMap {
     @Override
     public UUID getID(){
         return id;
+    }
+
+
+    public List<Animal> getStronger(List<Animal> onOneSpot) {
+
+        if(onOneSpot.size()>1){
+            onOneSpot.sort(
+                    Comparator.comparingInt(Animal::getEnergy).reversed()
+                            .thenComparing(Comparator.comparingInt(Animal::getAge).reversed())
+                            .thenComparingInt(Animal::getChildrenSize).reversed());
+
+            int topEnergy = onOneSpot.getFirst().getEnergy();
+            int topAge = onOneSpot.getFirst().getAge();
+            int topChildrenSize = onOneSpot.getFirst().getChildrenSize();
+
+            List<Animal> competitors = new ArrayList<>();
+            for (Animal animal : onOneSpot) {
+                if (animal.getEnergy() == topEnergy && animal.getAge() == topAge && animal.getChildrenSize() == topChildrenSize) {
+                    competitors.add(animal);
+                }
+                if(competitors.size()>=2){
+                    return competitors;
+                }
+                else{
+                    List<Animal> secondCompetitors = new ArrayList<>();
+                    int secondTopEnergy = onOneSpot.get(1).getEnergy();
+                    int secondTopAge = onOneSpot.get(1).getAge();
+                    int secondTopChildrenSize = onOneSpot.get(1).getChildrenSize();
+
+                    for(Animal secondsAnimal: onOneSpot) {
+                        if (secondsAnimal.getEnergy() == secondTopEnergy && secondsAnimal.getAge() == secondTopAge && secondsAnimal.getChildrenSize() == secondTopChildrenSize) {
+                            secondCompetitors.add(secondsAnimal);
+                        }
+                    }
+                    if(secondCompetitors.size()<2){
+                        competitors.add( secondCompetitors.getFirst());
+                        return secondCompetitors;
+                    }
+                    else{
+                        int index = random.nextInt(secondCompetitors.size());
+                        competitors.add(secondCompetitors.get(index));
+                    }
+                }
+            }
+            return competitors;
+        }
+        return onOneSpot;
     }
 }

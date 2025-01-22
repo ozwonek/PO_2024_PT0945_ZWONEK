@@ -18,7 +18,9 @@ public class Animal implements WorldElement {
     private List<Animal> childrens = new ArrayList<>();
     private final int genesLength;
     private static final Random random = new Random();
-    public Animal(Vector2d position, int energy,int genesLength,int minimumToBeFull,int giveToChild,Genomes genomes) {
+
+
+    public Animal(Vector2d position, int energy, int genesLength, int minimumToBeFull, int giveToChild, Genomes genomes) {
         this.position = position;
         this.orientation = MapDirection.getRandomDirection();
         this.genomes = genomes;
@@ -30,13 +32,13 @@ public class Animal implements WorldElement {
         this.active = random.nextInt(genesLength);
     }
 
-    public Genomes getGenomes(){
+    public Genomes getGenomes() {
         return this.genomes;
     }
 
-    public Animal reproduce(Animal secondParent){
+    public Animal reproduce(Animal secondParent) {
 
-        Animal child =  new Animal(this.position,this.giveToChild * 2, genesLength,minimumToBeFull,giveToChild,new Genomes(this,secondParent));
+        Animal child = new Animal(this.position, this.giveToChild * 2, genesLength, minimumToBeFull, giveToChild, new Genomes(this, secondParent));
         childrens.add(child);
         energy = energy - giveToChild;
         secondParent.setEnergy(secondParent.getEnergy() - giveToChild);
@@ -45,64 +47,77 @@ public class Animal implements WorldElement {
     }
 
     @Override
-    public String toString(){
-        return  orientation.toString();
+    public String toString() {
+        return orientation.toString();
     }
 
-    public UUID getId(){
+    public UUID getId() {
         return this.id;
     }
-    public int getEnergy(){
+
+    public int getEnergy() {
         return this.energy;
     }
-    public void setEnergy(int newEnergy){
+
+    public void setEnergy(int newEnergy) {
         this.energy = newEnergy;
     }
-    public int getAge(){
+
+    public int getAge() {
         return this.age;
     }
-    public void setAge(int newAge){
+
+    public void setAge(int newAge) {
         this.age = newAge;
     }
-    public int getActive(){return this.active;}
-    public int getMinimumToBeFull(){return this.minimumToBeFull;}
-    public void nextGene(){
-        this.active = (active+1)%genesLength;
-    }
-    public List<Animal> getChildrens(){return this.childrens;}
 
-    public MapDirection getOrientation(){
+    public int getActive() {
+        return this.active;
+    }
+
+    public int getMinimumToBeFull() {
+        return this.minimumToBeFull;
+    }
+
+    public void nextGene() {
+        this.active = (active + 1) % genesLength;
+    }
+
+    public List<Animal> getChildrens() {
+        return this.childrens;
+    }
+
+    public int getChildrenSize() {
+        return this.childrens.size();
+    }
+
+    public MapDirection getOrientation() {
         return this.orientation;
     }
+
     @Override
-    public Vector2d getPosition(){
+    public Vector2d getPosition() {
         return this.position;
     }
-    public boolean isAt(Vector2d position){
+
+    public boolean isAt(Vector2d position) {
         return this.position.equals(position);
     }
 
-    public void move( MoveValidator validator,MapDirection direction,GrassField map){
-//        Vector2d currentPosition = this.position;
-//        switch(direction){
-//            case RIGHT -> this.orientation = orientation.next();
-//            case LEFT -> this.orientation = orientation.previous();
-//            case FORWARD -> currentPosition= orientation.toUnitVector().add(position);
-//            case BACKWARD -> currentPosition = position.substract(orientation.toUnitVector());
-//        }
-        this.orientation=direction;
-        Vector2d currentPosition= orientation.toUnitVector().add(position);
-        if (!validator.canMoveUpOrDown(currentPosition)){
-            this.orientation= this.orientation.opposite();
-        }
-        else if(!validator.canMoveRightOrLeft(currentPosition)){
-            this.position = this.position.switchWidth(map.width-1);
-        }
-        else {
-            this.position=currentPosition;
+    public void move(MoveValidator validator, MapDirection direction, GrassField map) {
+        this.orientation = direction;
+        Vector2d currentPosition = orientation.toUnitVector().add(position);
+        if (!validator.canMoveUpOrDown(currentPosition)) {
+            this.orientation = this.orientation.opposite();
+        } else if (!validator.canMoveRightOrLeft(currentPosition)) {
+            this.position = this.position.switchWidth(map.width - 1);
+        } else {
+            this.position = currentPosition;
         }
     }
-    public boolean isFuller (Animal other){
-        return this.energy>= other.getEnergy();
+
+    public boolean isFuller(Animal other) {
+        return this.energy >= other.getEnergy();
     }
+
 }

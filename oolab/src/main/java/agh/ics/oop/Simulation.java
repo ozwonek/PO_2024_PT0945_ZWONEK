@@ -3,13 +3,14 @@ package agh.ics.oop;
 import agh.ics.oop.model.*;
 import static agh.ics.oop.OptionsParser.parse;
 import java.util.ArrayList;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 public class Simulation implements Runnable {
     private List<Animal> animals;
-    private AbstractWorldMap map;
+    private GrassField map;
 
-    public Simulation(List<Vector2d> animalOnPosition, AbstractWorldMap map,int energy, int genesLength,int minimumToBefull,int giveToChild) {
+    public Simulation(List<Vector2d> animalOnPosition, GrassField map, int energy, int genesLength, int minimumToBefull, int giveToChild) {
         this.animals = new ArrayList<>();
         for (Vector2d position : animalOnPosition) {
             Animal animal = new Animal(position,energy,genesLength,minimumToBefull,giveToChild,new Genomes(genesLength));
@@ -33,9 +34,11 @@ public class Simulation implements Runnable {
                     map.move(animal,direction,(GrassField) map);
                     animal.nextGene();
                 }
+                map.allEat(map);
                 map.allReproduce();
+                map.growGrass(map.getGrassPerDay(), map.getProbabilityToMakeJungle());
                 try{
-                    Thread.sleep(2000);
+                    Thread.sleep(3000);
                 }
                 catch (InterruptedException e) {
                     System.out.println("Wątek został przerwany: " + e.getMessage());
