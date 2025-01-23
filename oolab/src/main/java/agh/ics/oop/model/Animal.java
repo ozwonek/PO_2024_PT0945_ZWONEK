@@ -4,6 +4,8 @@ import agh.ics.oop.World;
 
 import java.util.*;
 
+import static java.lang.Math.min;
+
 public class Animal implements WorldElement {
     private MapDirection orientation;
     private Vector2d position;
@@ -66,6 +68,15 @@ public class Animal implements WorldElement {
     public int getAge() {
         return this.age;
     }
+
+    public void getOlder(){
+        this.age = this.age + 1;
+    }
+    public boolean toOldToMove(){
+        int randomNumber = random.nextInt(99);// losujemy liczbe od 0 do 99
+        return randomNumber > min(this.age, 79);
+        }
+
 
     public void setAge(int newAge) {
         this.age = newAge;

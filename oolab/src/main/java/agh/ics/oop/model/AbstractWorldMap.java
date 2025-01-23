@@ -7,6 +7,8 @@ import agh.ics.oop.model.util.Boundary;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
+import static java.lang.Math.min;
+
 public abstract class AbstractWorldMap implements WorldMap {
     protected final Map<Vector2d, List<Animal>> animals = new HashMap<>();
     protected final MapVisualizer visualizer = new MapVisualizer(this);
@@ -65,17 +67,20 @@ public abstract class AbstractWorldMap implements WorldMap {
 
     @Override
     public void move(Animal animal,MapDirection direction,GrassField map){
-            Vector2d oldPosition = animal.getPosition();
-            if(animals.get(oldPosition)!=null){
-                animals.get(oldPosition).remove(animal);
-                if(animals.get(oldPosition).isEmpty()){
-                    animals.remove(oldPosition);
+
+            if (animal.toOldToMove()){
+                Vector2d oldPosition = animal.getPosition();
+                if(animals.get(oldPosition)!=null){
+                    animals.get(oldPosition).remove(animal);
+                    if(animals.get(oldPosition).isEmpty()){
+                        animals.remove(oldPosition);
+                    }
                 }
+                animal.move(this, direction, map);
+                place(animal);
             }
-            animal.move(this,direction,map);
-            System.out.println(animal.getEnergy());
-            place(animal);
             animal.setEnergy(animal.getEnergy() - 1);
+            animal.getOlder();
 //            mapChange("zwierze zmienilo pozycje z: " + oldPosition + " na: " + animal.getPosition() + "a jego energia wynosi: "+ animal.getEnergy()+" zwierzak ma: "+ animal.getAge()+"lat");
             mapChange("energia : " + animal.getEnergy());
 
@@ -95,7 +100,6 @@ public abstract class AbstractWorldMap implements WorldMap {
                 }
             }
             for (Animal animalToClean : toRemove ){
-                System.out.println("essa");
                 onOneSpot.remove(animalToClean);
 
 
@@ -109,7 +113,6 @@ public abstract class AbstractWorldMap implements WorldMap {
         }
     }
     public void allReproduce(){
-        int counter = 0;
         for(List<Animal> onOneSpot: animals.values()){
             Vector2d position = onOneSpot.getFirst().getPosition();
             if(onOneSpot.size()<2){
@@ -122,7 +125,6 @@ public abstract class AbstractWorldMap implements WorldMap {
             }
             Animal child = onOneSpot.get(onOneSpotSize-1).reproduce(onOneSpot.get(onOneSpotSize-2));
             place(child);
-            counter+=1;
         }
     }
 
