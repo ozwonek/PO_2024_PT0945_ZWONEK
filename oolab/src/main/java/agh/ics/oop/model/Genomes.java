@@ -6,13 +6,12 @@ import java.util.List;
 import java.util.Random;
 
 public class Genomes {
-    private final List<Integer> genes;
+    private final List<Integer> genes = new ArrayList<>();
     private static final Random random = new Random();
     private final int genesLength;
 
 
     public Genomes(int genesLength) {
-        this.genes = new ArrayList<>();
         this.genesLength = genesLength;
         for(int i =0; i<genesLength; i++){
             int randomGen = random.nextInt(8);
@@ -20,48 +19,43 @@ public class Genomes {
         }
     }
 
-
-
     public Genomes(Animal parent1, Animal parent2){
-        this.genes = new ArrayList<>();
         this.genesLength = parent1.getGenomes().getGenesLength();
-        double dominantPercentege = (double) parent1.getEnergy() / (parent1.getEnergy() + parent2.getEnergy());
+        Animal dominantParent = parent1.getEnergy() > parent2.getEnergy() ? parent1 : parent2;
+        Animal otherParent = parent1.getEnergy() > parent2.getEnergy() ? parent2 : parent1;
+        this.inheritGenes(dominantParent, otherParent);
+        this.mutateGenes(random.nextInt(genesLength));
+    }
+
+    private void inheritGenes(Animal dominantParent, Animal subDaddy) {
+        double dominantPercentege = (double) dominantParent.getEnergy() / (subDaddy.getEnergy() + dominantParent.getEnergy());
 //        System.out.println(dominantPercentege + " " +  parent1.getEnergy()+" " + " " + parent2.getEnergy()+ " "+ " "+ (int) Math.round(dominantPercentege* genesLength) +" "+genesLength );
         boolean side = random.nextBoolean(); //strona z której bierzemy dominujący
-        if(side){
-            int intersection = (int) Math.round(dominantPercentege* genesLength);
-            for(int i = 0;i<intersection;i++){
-                this.genes.add(parent1.getGenomes().get(i));
-            }
-            for(int i = intersection;i<genesLength;i++){
-                this.genes.add(parent2.getGenomes().get(i));
-            }
+        Animal leftParent = side ? dominantParent : subDaddy;
+        Animal rightParent = side ? subDaddy : dominantParent;
 
-        }
-        else{
-            int intersection = genesLength - (int) Math.round(dominantPercentege* this.genesLength) ;
-            for(int i = 0;i<intersection;i++){
-                genes.add(parent2.getGenomes().get(i));
-            }
-            for(int i = intersection;i<this.genesLength;i++){
-                genes.add(parent1.getGenomes().get(i));
-            }
+        int intersection = (int) Math.round(dominantPercentege * genesLength);
+        if (!side) intersection = genesLength - (int) Math.round(dominantPercentege * this.genesLength);
 
+        for (int i = 0;i < genesLength;i++) {
+            Animal parent = i > intersection ? rightParent : leftParent;
+            this.genes.add(parent.getGenomes().get(i));
         }
-        int toChange = random.nextInt(genesLength);
-        List<Integer> indeksy = new ArrayList<>();
+    }
+
+    private void mutateGenes(int mutationCount){
+        List<Integer> indices = new ArrayList<>();
         for (int i = 0; i < genesLength; i++) {
-            indeksy.add(i);
+            indices.add(i);
         }
-        Collections.shuffle(indeksy);
-        List<Integer> toMutate  = indeksy.subList(0,toChange);
+        Collections.shuffle(indices);
+        List<Integer> toMutate  = indices.subList(0,mutationCount);
         for(int index: toMutate){
             int randomGen = random.nextInt(8);
             this.genes.set(index,randomGen);
         }
-
-
     }
+
     public Integer get(int index){
         return this.genes.get(index);
     }

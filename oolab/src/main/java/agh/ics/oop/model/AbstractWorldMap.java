@@ -1,11 +1,9 @@
 package agh.ics.oop.model;
 
-import agh.ics.oop.World;
 import agh.ics.oop.model.util.MapVisualizer;
 import agh.ics.oop.model.util.Boundary;
 
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 
 import static java.lang.Math.min;
 
@@ -19,7 +17,7 @@ public abstract class AbstractWorldMap implements WorldMap {
     protected Vector2d lowerLeft = new Vector2d(0,0);
     protected Vector2d upperRight;
     protected int deadAnimalCount = 0;
-    private final Random random = new Random();
+    private static final Random random = new Random();
     public AbstractWorldMap(int width, int height)
     {
         this.width = width;
@@ -120,7 +118,7 @@ public abstract class AbstractWorldMap implements WorldMap {
             }
             onOneSpot.sort((a,b) -> Integer.compare(a.getEnergy(), b.getEnergy()));
             int onOneSpotSize = onOneSpot.size();
-            if(onOneSpot.get(onOneSpotSize-2).getEnergy()<onOneSpot.get(onOneSpotSize-2).getMinimumToBeFull()){
+            if(onOneSpot.get(onOneSpotSize-2).getEnergy()<onOneSpot.get(onOneSpotSize-2).getMinimumEnergyToReproduce()){
                 continue;
             }
             Animal child = onOneSpot.get(onOneSpotSize-1).reproduce(onOneSpot.get(onOneSpotSize-2));

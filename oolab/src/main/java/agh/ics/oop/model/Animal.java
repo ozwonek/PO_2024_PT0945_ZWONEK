@@ -1,7 +1,5 @@
 package agh.ics.oop.model;
 
-import agh.ics.oop.World;
-
 import java.util.*;
 
 import static java.lang.Math.min;
@@ -15,21 +13,21 @@ public class Animal implements WorldElement {
     private final Genomes genomes;
     private int active;
     private UUID id = UUID.randomUUID();
-    private final int minimumToBeFull;
-    private final int giveToChild;
+    private final int minimumEnergyToReproduce;
+    private final int energyGivenToChild;
     private List<Animal> childrens = new ArrayList<>();
     private final int genesLength;
     private static final Random random = new Random();
 
 
-    public Animal(Vector2d position, int energy, int genesLength, int minimumToBeFull, int giveToChild, Genomes genomes) {
+    public Animal(Vector2d position, int energy, int genesLength, int minimumEnergyToReproduce, int energyGivenToChild, Genomes genomes) {
         this.position = position;
         this.orientation = MapDirection.getRandomDirection();
         this.genomes = genomes;
         this.energy = energy;
         this.genesLength = genesLength;
-        this.minimumToBeFull = minimumToBeFull;
-        this.giveToChild = giveToChild;
+        this.minimumEnergyToReproduce = minimumEnergyToReproduce;
+        this.energyGivenToChild = energyGivenToChild;
         this.childrens = new ArrayList<>();
         this.active = random.nextInt(genesLength);
     }
@@ -38,13 +36,16 @@ public class Animal implements WorldElement {
         return this.genomes;
     }
 
+    public void onChildCreated(Animal child) {
+        this.childrens.add(child);
+        this.energy = this.energy - this.energyGivenToChild;
+    }
+
     public Animal reproduce(Animal secondParent) {
 
-        Animal child = new Animal(this.position, this.giveToChild * 2, genesLength, minimumToBeFull, giveToChild, new Genomes(this, secondParent));
-        childrens.add(child);
-        energy = energy - giveToChild;
-        secondParent.setEnergy(secondParent.getEnergy() - giveToChild);
-        secondParent.getChildrens().add(child);
+        Animal child = new Animal(this.position, this.energyGivenToChild * 2, genesLength, minimumEnergyToReproduce, energyGivenToChild, new Genomes(this, secondParent));
+        this.onChildCreated(child);
+        secondParent.onChildCreated(child);
         return child;
     }
 
@@ -77,17 +78,12 @@ public class Animal implements WorldElement {
         return randomNumber > min(this.age, 79);
         }
 
-
-    public void setAge(int newAge) {
-        this.age = newAge;
-    }
-
     public int getActive() {
         return this.active;
     }
 
-    public int getMinimumToBeFull() {
-        return this.minimumToBeFull;
+    public int getMinimumEnergyToReproduce() {
+        return this.minimumEnergyToReproduce;
     }
 
     public void nextGene() {
@@ -127,8 +123,5 @@ public class Animal implements WorldElement {
         }
     }
 
-    public boolean isFuller(Animal other) {
-        return this.energy >= other.getEnergy();
-    }
 
 }

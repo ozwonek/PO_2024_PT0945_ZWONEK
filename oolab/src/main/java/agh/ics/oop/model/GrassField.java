@@ -8,7 +8,7 @@ import static agh.ics.oop.model.Vector2d.*;
 
 public class GrassField extends AbstractWorldMap {
     private final int grassPerDay;
-    private Random rand = new Random();
+    private static final Random rand = new Random();
     private Map<Vector2d, Grass> grasses = new HashMap<>();
     private final int energyFromGrass;
     private double probabilityToMakeJungle;
@@ -37,11 +37,6 @@ public class GrassField extends AbstractWorldMap {
         }
         return objectAtPosition;
     }
-
-    public int getEnergyFromGrass() {
-        return this.energyFromGrass;
-    }
-
     public double getProbabilityToMakeJungle() {
         return probabilityToMakeJungle;
     }
@@ -54,7 +49,6 @@ public class GrassField extends AbstractWorldMap {
         animal.setEnergy(animal.getEnergy() + energyFromGrass);
         grasses.remove(animal.getPosition());
     }
-
     @Override
     public List<WorldElement> getElements() {
         List<WorldElement> elements = super.getElements();
