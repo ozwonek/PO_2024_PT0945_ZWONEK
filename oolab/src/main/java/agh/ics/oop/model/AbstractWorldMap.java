@@ -17,7 +17,9 @@ public abstract class AbstractWorldMap implements WorldMap {
     protected Vector2d lowerLeft = new Vector2d(0,0);
     protected Vector2d upperRight;
     protected int deadAnimalCount = 0;
-    private static final Random random = new Random();
+    protected static final Random random = new Random();
+    protected final Set<Vector2d> notPrefferedSpots = new HashSet<>();
+    protected final Set<Vector2d> prefferedSpot = new HashSet<>();
     public AbstractWorldMap(int width, int height)
     {
         this.width = width;

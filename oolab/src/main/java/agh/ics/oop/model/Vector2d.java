@@ -1,6 +1,8 @@
 package agh.ics.oop.model;
 
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class Vector2d {
@@ -10,6 +12,7 @@ public class Vector2d {
     public final static Vector2d DOWN = new Vector2d(0,-1);
     public final static Vector2d LEFT = new Vector2d(-1,0);
     public final static Vector2d RIGHT = new Vector2d(1,0);
+    public final static List<Vector2d> MOVEMENT_VECTORS = List.of(UP,DOWN,LEFT,RIGHT);
     public Vector2d(int x, int y) {
         this.x = x;
         this.y = y;

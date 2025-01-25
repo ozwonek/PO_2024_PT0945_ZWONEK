@@ -9,7 +9,6 @@ import java.util.List;
 public class Simulation implements Runnable {
     private List<Animal> animals;
     private GrassField map;
-
     public Simulation(List<Vector2d> animalOnPosition, GrassField map, int energy, int genesLength, int minimumToBefull, int giveToChild) {
         this.animals = new ArrayList<>();
         for (Vector2d position : animalOnPosition) {
@@ -36,7 +35,7 @@ public class Simulation implements Runnable {
                 }
                 map.allEat(map);
                 map.allReproduce();
-                map.growGrass(map.getGrassPerDay(), map.getProbabilityToMakeJungle());
+                map.growGrass(map.getGrassPerDay());
                 try{
                     Thread.sleep(3000);
                 }
