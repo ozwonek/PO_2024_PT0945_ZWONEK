@@ -1,11 +1,9 @@
 package agh.ics.oop.presenter;
 
 import agh.ics.oop.Simulation;
-import agh.ics.oop.SimulationApp;
 import agh.ics.oop.SimulationEngine;
 import agh.ics.oop.model.*;
 import agh.ics.oop.model.util.Boundary;
-import com.sun.javafx.scene.control.IntegerField;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.HPos;
@@ -16,10 +14,8 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 import agh.ics.oop.model.AbstractWorldMap;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -27,8 +23,14 @@ import java.util.List;
 //import static agh.ics.oop.OptionsParser.parse;
 
 public class SimulationPresenter implements MapChangeListener {
-    private WorldMap map;
+    private AbstractWorldMap map;
 
+    @FXML
+    private VBox mapDisplay;
+    @FXML
+    private VBox settingConfigurations;
+    @FXML
+    private VBox dailyStats;
     @FXML
     private VBox configurationForm;
     @FXML
@@ -59,6 +61,10 @@ public class SimulationPresenter implements MapChangeListener {
     private Label grassesPerDayLabel;
     @FXML
     private TextField genesLengthTextField;
+    @FXML
+    private GridPane mapGrid;
+    @FXML
+    private GridPane statisticsGrid;
 
     private final HashMap<String,ArrayList<Integer>> savedConfigurations = new HashMap<>();
 
@@ -69,18 +75,39 @@ public class SimulationPresenter implements MapChangeListener {
     private final static int MAP_HEIGHT = 450;
     private final static int MAP_WIGHT = 450;
 
+    private final static int STATS_WIDTH = 200;
+    private final static int STATS_HEIGHT = 600;
 
-    public void setWorldMap(WorldMap map){
+
+    public void setWorldMap(AbstractWorldMap map){
         this.map = map;
     }
 //    private Boundary boundary = map.getCurrentBounds();
 
 
-    @FXML
-    private GridPane mapGrid;
+
+    private void actualiseStatistics(){
+        clearGrid(statisticsGrid);
+
+
+        Label label = new Label("liczba zwierzaków: " + map.getAnimalsSize());
+        statisticsGrid.add(label,0,0);
+        label = new Label("liczba roślin: ");
+        statisticsGrid.add(label,1,0);
+        label = new Label("liczba wolnych pól: ");
+        statisticsGrid.add(label, 0,1);
+        label = new Label("najpopularniejszy genotyp: ");
+        statisticsGrid.add(label, 1, 1);
+        label = new Label("średniej długości życia zwierzaków: " + map.getAverageAnimalAge());
+        statisticsGrid.add(label,0,2);
+        label = new Label("średniej liczby dzieci dla żyjących zwierzaków: " +map.getAnimalsChildrenCount());
+        statisticsGrid.add(label,1,2);
+        }
+
+
     private void drawMap(){
 
-        clearGrid(); // czyszczenie
+        clearGrid(mapGrid); // czyszczenie
         Boundary boundary = map.getCurrentBounds();
         int mapWidth = boundary.topRightCorner().getX() - boundary.bottomLeftCorner().getX() + 1; //szerokość
         int mapHeight = boundary.topRightCorner().getY() - boundary.bottomLeftCorner().getY() + 1; // wysokość
@@ -91,7 +118,7 @@ public class SimulationPresenter implements MapChangeListener {
         mapGrid.getRowConstraints().add(new RowConstraints(height));
         Label label = new Label("y/x");
         mapGrid.add(label, 0, 0);
-//        GridPane.setHalignment(label, HPos.CENTER);
+        GridPane.setHalignment(label, HPos.CENTER);
         for(int i=0; i<mapWidth; i++){
             label = new Label(Integer.toString(i+boundary.bottomLeftCorner().getX()));
             GridPane.setHalignment(label, HPos.CENTER);
@@ -130,6 +157,11 @@ public class SimulationPresenter implements MapChangeListener {
         }
 
 
+
+    }
+
+    @FXML
+    private void onAnimalClicked(){
 
     }
 
@@ -180,19 +212,26 @@ public class SimulationPresenter implements MapChangeListener {
 
 
     @Override
-    public void mapChanged(WorldMap worldMap, String message){
+    public void mapChanged(AbstractWorldMap worldMap, String message){
         setWorldMap(worldMap);
         Platform.runLater(() -> {
             drawMap();
-//            movesDescriptionLabel.setText(message);
+            actualiseStatistics();
         });
 
     }
 
+
     public void onSimulationStartClicked(){
+
+        dailyStats.setVisible(true);
+        settingConfigurations.setVisible(false);
+
+
+
         int width = getConfiguration().get(0);
         int height = getConfiguration().get(1);
-        int startEnegry = getConfiguration().get(2);
+        int startEnergy = getConfiguration().get(2);
         int energyFromGrass = getConfiguration().get(3);
         int grassPerDay = getConfiguration().get(4);
         int genesLength = getConfiguration().get(5);
@@ -208,7 +247,7 @@ public class SimulationPresenter implements MapChangeListener {
 
             GrassField map = new GrassField(startGrassNumber,grassPerDay, 0.9,energyFromGrass,width,height);
             map.addObserver(this);
-            Simulation simulation = new Simulation(positions,map,startEnegry,genesLength,minimumToBeFull,giveToChild);
+            Simulation simulation = new Simulation(positions,map,startEnergy,genesLength,minimumToBeFull,giveToChild);
             SimulationEngine engine = new SimulationEngine(List.of(simulation));
             new Thread(engine :: runAsync).start();
         }
@@ -218,10 +257,10 @@ public class SimulationPresenter implements MapChangeListener {
 
 
     }
-    private void clearGrid() {
-        mapGrid.getChildren().retainAll(mapGrid.getChildren().get(0)); // hack to retain visible grid lines
-        mapGrid.getColumnConstraints().clear();
-        mapGrid.getRowConstraints().clear();
+    private void clearGrid(GridPane grid) {
+        grid.getChildren().retainAll(grid.getChildren().get(0)); // hack to retain visible grid lines
+        grid.getColumnConstraints().clear();
+        grid.getRowConstraints().clear();
     }
 
 }

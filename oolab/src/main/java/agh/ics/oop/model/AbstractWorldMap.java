@@ -20,6 +20,9 @@ public abstract class AbstractWorldMap implements WorldMap {
     protected static final Random random = new Random();
     protected final Set<Vector2d> notPrefferedSpots = new HashSet<>();
     protected final Set<Vector2d> prefferedSpot = new HashSet<>();
+    protected int deadAnimalsAge = 0;
+    protected int animalsChildrenCount = 0;
+
     public AbstractWorldMap(int width, int height)
     {
         this.width = width;
@@ -51,6 +54,14 @@ public abstract class AbstractWorldMap implements WorldMap {
         }
     }
 
+    public double getAverageAnimalAge(){
+        return (double) deadAnimalsAge /deadAnimalCount;
+    }
+
+    public int getAnimalsChildrenCount(){
+        return animalsChildrenCount;
+    }
+
     @Override
     public void place(Animal animal){
         if(animals.get(animal.getPosition()) == null){
@@ -62,6 +73,10 @@ public abstract class AbstractWorldMap implements WorldMap {
             animals.get(animal.getPosition()).add(animal);
         }
 
+    }
+
+    public int getAnimalsSize(){
+        return animals.size();
     }
 
 
@@ -81,7 +96,6 @@ public abstract class AbstractWorldMap implements WorldMap {
             }
             animal.setEnergy(animal.getEnergy() - 1);
             animal.getOlder();
-//            mapChange("zwierze zmienilo pozycje z: " + oldPosition + " na: " + animal.getPosition() + "a jego energia wynosi: "+ animal.getEnergy()+" zwierzak ma: "+ animal.getAge()+"lat");
             mapChange("energia : " + animal.getEnergy());
 
         }
@@ -94,9 +108,10 @@ public abstract class AbstractWorldMap implements WorldMap {
             Vector2d position = onOneSpot.getFirst().getPosition();
             for (Animal animal : onOneSpot) {
                 if (animal.getEnergy() <= 0) {
-
                     toRemove.add(animal);
                     deadAnimalCount += 1;
+                    deadAnimalsAge+=animal.getAge();
+                    animalsChildrenCount-=animal.getChildrenSize();
                 }
             }
             for (Animal animalToClean : toRemove ){
@@ -125,6 +140,7 @@ public abstract class AbstractWorldMap implements WorldMap {
             }
             Animal child = onOneSpot.get(onOneSpotSize-1).reproduce(onOneSpot.get(onOneSpotSize-2));
             place(child);
+            animalsChildrenCount+=2;
         }
     }
 
@@ -206,6 +222,9 @@ public abstract class AbstractWorldMap implements WorldMap {
     @Override
     public UUID getID(){
         return id;
+    }
+    public int getFreeElements(){
+        return 0;
     }
 
 

@@ -11,6 +11,7 @@
 <?import javafx.geometry.Insets?>
 <?import com.sun.javafx.scene.control.IntegerField?>
 <?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.layout.StackPane?>
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             minHeight="550.0" minWidth="850.0"
@@ -19,44 +20,56 @@
         <URL value="@javafx.css"/>
     </stylesheets>
     <left>
-
         <VBox alignment="CENTER" spacing="10">
-            <Label text="Wybierz konfigurację:"/>
-            <ComboBox fx:id="configurations" onAction="#getConfiguration"/>
-            <Button onAction="#showNewConfigurationForm">Dodaj nową konfigurację</Button>
-            <Button text="Start" onAction="#onSimulationStartClicked"/>
-            <GridPane fx:id="mapGrid" gridLinesVisible="true" alignment="CENTER">
-                <VBox.margin>
-                    <Insets top="10" right="20" bottom="10" left="20"/>
-                </VBox.margin>
-            </GridPane>
+            <VBox fx:id="settingConfigurations" visible="true">
+                <Label text="Wybierz konfigurację:"/>
+                <ComboBox fx:id="configurations" onAction="#getConfiguration"/>
+                <Button onAction="#showNewConfigurationForm">Dodaj nową konfigurację</Button>
+            </VBox>
+
+                    <Button text="Start" onAction="#onSimulationStartClicked"/>
+                    <GridPane fx:id="mapGrid" gridLinesVisible="true" alignment="CENTER">
+                        <VBox.margin>
+                            <Insets top="10" right="20" bottom="10" left="20"/>
+                        </VBox.margin>
+                    </GridPane>
+
         </VBox>
     </left>
     <right>
-        <VBox fx:id="configurationForm" alignment="CENTER" styleClass="map" visible="false">
-            <TextField fx:id="widthTextField" promptText="Podaj szerokość mapy"/>
-            <Label fx:id="widthLabel" text="szerokość"/>
+        <StackPane>
+            <VBox fx:id="dailyStats" alignment="CENTER" visible="false">
+                <Label text="Dzienne statystyki:"/>
+                <GridPane fx:id="statisticsGrid" gridLinesVisible="true" alignment="CENTER">
 
-            <TextField fx:id="heightTextField" promptText="Podaj wysokość mapy"/>
-            <Label fx:id="heightLabel" text="wysokość"/>
+                </GridPane>
+            </VBox>
+            <VBox fx:id="configurationForm" alignment="CENTER" styleClass="map" visible="false">
+                <TextField fx:id="widthTextField" promptText="Podaj szerokość mapy"/>
+                <Label fx:id="widthLabel" text="szerokość"/>
 
-            <TextField fx:id="startEnergyTextField" promptText="Podaj początkową energię zwierzaków"/>
-            <Label fx:id="startEnergyLabel" text="Początkowa energia zwierzaków"/>
+                <TextField fx:id="heightTextField" promptText="Podaj wysokość mapy"/>
+                <Label fx:id="heightLabel" text="wysokość"/>
 
-            <TextField fx:id="startGrassNumberTextField" promptText="Podaj początkową ilość trawy"/>
-            <Label fx:id="startGrassNumberLabel" text="Początkowa ilość trawy"/>
+                <TextField fx:id="startEnergyTextField" promptText="Podaj początkową energię zwierzaków"/>
+                <Label fx:id="startEnergyLabel" text="Początkowa energia zwierzaków"/>
 
-            <TextField fx:id="energyFromGrassTextField" promptText="Podaj energię, którą dostają zwierzaki po zjedzeniu trawy"/>
-            <Label fx:id="energyFromGrassLabel" text="Energia pobierana z trawy"/>
+                <TextField fx:id="startGrassNumberTextField" promptText="Podaj początkową ilość trawy"/>
+                <Label fx:id="startGrassNumberLabel" text="Początkowa ilość trawy"/>
 
-            <TextField fx:id="grassesPerDayTextField" promptText="Podaj ile kępków trawy ma wyratać każdego dnia"/>
-            <Label fx:id="grassesPerDayLabel" text="Ilość nowych kępek trawy na dzień"/>
+                <TextField fx:id="energyFromGrassTextField" promptText="Podaj energię, którą dostają zwierzaki po zjedzeniu trawy"/>
+                <Label fx:id="energyFromGrassLabel" text="Energia pobierana z trawy"/>
 
-            <TextField fx:id="genesLengthTextField" promptText="Podaj długość genotpu"/>
-            <Label text="Długość genotypu"/>
+                <TextField fx:id="grassesPerDayTextField" promptText="Podaj ile kępków trawy ma wyratać każdego dnia"/>
+                <Label fx:id="grassesPerDayLabel" text="Ilość nowych kępek trawy na dzień"/>
 
-            <Button onAction="#addNewConfiguration">Dodaj</Button>
-        </VBox>
+                <TextField fx:id="genesLengthTextField" promptText="Podaj długość genotpu"/>
+                <Label text="Długość genotypu"/>
+
+                <Button onAction="#addNewConfiguration">Dodaj</Button>
+            </VBox>
+        </StackPane>
+
     </right>
 
 
