@@ -71,6 +71,44 @@ public class Animal implements WorldElement {
         return orientation.toString();
     }
 
+    public String toImage(int width,int height) {
+        if (this.getEnergy()>20){
+        return "-fx-background-color: #b7b4a1;" +
+                "-fx-pref-width: " + width + ";" +
+                "-fx-pref-height: " + height + ";" +
+                "-fx-background-image: url('images/1.png'); "
+                + "-fx-background-size: contain; ";
+        }
+        else if (this.getEnergy()>15 && this.getEnergy()<=20){
+            return "-fx-background-color: #b7b4a1;" +
+                    "-fx-pref-width: " + width + ";" +
+                    "-fx-pref-height: " + height + ";" +
+                    "-fx-background-image: url('images/2.png'); "
+                    + "-fx-background-size: contain; ";
+        }
+        else if (this.getEnergy()>10 && this.getEnergy()<=15){
+            return "-fx-background-color: #b7b4a1;" +
+                    "-fx-pref-width: " + width + ";" +
+                    "-fx-pref-height: " + height + ";" +
+                    "-fx-background-image: url('images/3.png'); "
+                    + "-fx-background-size: contain; ";
+        }
+        else if (this.getEnergy()>5 && this.getEnergy()<=10){
+            return "-fx-background-color: #b7b4a1;" +
+                    "-fx-pref-width: " + width + ";" +
+                    "-fx-pref-height: " + height + ";" +
+                    "-fx-background-image: url('images/4.png'); "
+                    + "-fx-background-size: contain; ";
+        }
+        else{
+            return "-fx-background-color: #b7b4a1;" +
+                    "-fx-pref-width: " + width + ";" +
+                    "-fx-pref-height: " + height + ";" +
+                    "-fx-background-image: url('images/5.png'); "
+                    + "-fx-background-size: contain; ";
+        }
+    }
+
     public UUID getId() {
         return this.id;
     }

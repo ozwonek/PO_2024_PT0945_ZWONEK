@@ -355,6 +355,13 @@ public class Globe implements MoveValidator {
 //        return visualizer.draw(lowerLeft,upperRight);
 //    }
 
+    public String toImage(int width,int height){
+        return "-fx-background-color: #b7b4a1;" +
+                "-fx-pref-width: " + width + ";" +
+                "-fx-pref-height: " + height + ";" +
+                "-fx-background-image: url('images/6.png'); "
+                + "-fx-background-size: contain; ";
+    }
     public UUID getID(){
         return id;
     }
