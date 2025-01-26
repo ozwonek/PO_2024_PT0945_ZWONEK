@@ -5,6 +5,7 @@ import agh.ics.oop.SimulationEngine;
 import agh.ics.oop.Statistics;
 import agh.ics.oop.model.*;
 //import agh.ics.oop.model.util.Boundary;
+import agh.ics.oop.model.util.Config;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.HPos;
@@ -64,6 +65,8 @@ public class SimulationPresenter implements MapChangeListener {
     @FXML
     private TextField genesLengthTextField;
     @FXML
+    private TextField grassStart;
+    @FXML
     private GridPane mapGrid;
     @FXML
     private GridPane statisticsGrid;
@@ -73,8 +76,18 @@ public class SimulationPresenter implements MapChangeListener {
     private Label simulationDayLabel;
     @FXML
     private GridPane animalGrid;
+    @FXML
+    private TextField grassStartTextField;
+    @FXML
+    private TextField animalStartTextField;
+    @FXML
+    private TextField energyToReproduceTextField;
+    @FXML
+    private TextField energyToChildTextField;
+    @FXML
+    private TextField energyToReproduce;
 
-    private final HashMap<String,ArrayList<Integer>> savedConfigurations = new HashMap<>();
+    private final HashMap<String,Config> savedConfigurations = new HashMap<>();
 
     private final ArrayList<Integer> currentConfiguration = new ArrayList<>();
 
@@ -208,40 +221,35 @@ public class SimulationPresenter implements MapChangeListener {
 
     @FXML
     private void addNewConfiguration(){
-
-        int width = Integer.parseInt(widthTextField.getText());
-        int height = Integer.parseInt(heightTextField.getText());
-        int startEnergy = Integer.parseInt(startEnergyTextField.getText());
-        int energyFromGrass = Integer.parseInt(energyFromGrassTextField.getText());
-        int grassPerDay = Integer.parseInt(grassesPerDayTextField.getText());
-        int genesLength = Integer.parseInt(genesLengthTextField.getText());
-
+        int mapHeight = Integer.parseInt(heightTextField.getText());
+        int mapWidth = Integer.parseInt(heightTextField.getText());
+        int grassStart= Integer.parseInt(grassStartTextField.getText());
+        int grassDaily = Integer.parseInt(grassesPerDayTextField.getText());
+        int grassEnergy = Integer.parseInt(energyFromGrassTextField.getText());
+        int animalStart = Integer.parseInt(animalStartTextField.getText());
+        int animalStartEnergy =  Integer.parseInt(startEnergyTextField.getText());
+        int animalEnergyToReproduce = Integer.parseInt(energyToReproduceTextField.getText());
+        int animalEnergyToChild = Integer.parseInt(energyToChildTextField.getText());
+        int animalGenotypeLength = Integer.parseInt(genesLengthTextField.getText());
         String newConfigurationText =
-                "szerokość: " + width+
-                "wysokość: " + height +
-                "początkowa energia: " + startEnergy +
-                "początkowa ilość trawy: " + startEnergy +
-                "energia z trawy: " + energyFromGrass +
-                "ilość trawy wyrastającej każdego dnia: " + grassPerDay +
-                "długość genotypu: " + genesLength;
+                "szerokość: " + mapWidth+
+                "wysokość: " + mapHeight +
+                "początkowa energia: " + animalStartEnergy +
+                "początkowa ilość trawy: " + grassStart +
+                "energia z trawy: " + grassEnergy +
+                "ilość trawy wyrastającej każdego dnia: " + grassDaily +
+                "długość genotypu: " + animalGenotypeLength;
 
-        ArrayList<Integer> newConfigurationData = new ArrayList<>();
-
-        newConfigurationData.add(width);
-        newConfigurationData.add(height);
-        newConfigurationData.add(startEnergy);
-        newConfigurationData.add(energyFromGrass);
-        newConfigurationData.add(grassPerDay);
-        newConfigurationData.add(genesLength);
-
-
-        savedConfigurations.put(newConfigurationText,newConfigurationData);
+        Config worldConfig =  new Config(mapHeight,mapWidth,grassStart,grassDaily,grassEnergy,animalStart,animalStartEnergy,animalEnergyToReproduce,animalEnergyToChild,animalGenotypeLength);
+        savedConfigurations.put(newConfigurationText,worldConfig);
         configurations.getItems().add(newConfigurationText);
         configurationForm.setVisible(false);
     }
+    
+
 
     @FXML
-    private ArrayList<Integer> getConfiguration(){
+    private Config getConfiguration(){
         String selectedConfiguration = configurations.getSelectionModel().getSelectedItem();
         return savedConfigurations.get(selectedConfiguration);
     }
@@ -269,31 +277,11 @@ public class SimulationPresenter implements MapChangeListener {
 
 
 
-        int width = getConfiguration().get(0);
-        System.out.println(width);
-        int height = getConfiguration().get(1);
-        System.out.println(height);
-        int startEnergy = getConfiguration().get(2);
-        System.out.println(startEnergy);
-        int energyFromGrass = getConfiguration().get(3);
-        System.out.println(energyFromGrass);
-        int grassPerDay = getConfiguration().get(4);
-        System.out.println(grassPerDay);
-        int genesLength = getConfiguration().get(5);
-        System.out.println(genesLength);
-
-        int startGrassNumber = Integer.parseInt(startGrassNumberTextField.getText());
-
         try {
-            List<Vector2d> positions = List.of(new Vector2d(2,2), new Vector2d(3,2), new Vector2d(1,3),new Vector2d(2,3),new Vector2d(4,5),new Vector2d(3,2));
-
-            int minimumToBeFull = 4;
-            int giveToChild = 10;
-
-
-            Globe map = new Globe(startGrassNumber,grassPerDay, 0.9,energyFromGrass,width,height);
+            Config worldConfig = getConfiguration();
+            Globe map = new Globe(worldConfig);
             map.addObserver(this);
-            Simulation simulation = new Simulation(positions,map,startEnergy,genesLength,minimumToBeFull,giveToChild);
+            Simulation simulation = new Simulation(worldConfig,map);
             SimulationEngine engine = new SimulationEngine(List.of(simulation));
             new Thread(engine :: runAsync).start();
         }

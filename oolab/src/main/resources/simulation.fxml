@@ -54,7 +54,7 @@
                 <TextField fx:id="startEnergyTextField" promptText="Podaj początkową energię zwierzaków"/>
                 <Label fx:id="startEnergyLabel" text="Początkowa energia zwierzaków"/>
 
-                <TextField fx:id="startGrassNumberTextField" promptText="Podaj początkową ilość trawy"/>
+                <TextField fx:id="grassStartTextField" promptText="Podaj początkową ilość trawy"/>
                 <Label fx:id="startGrassNumberLabel" text="Początkowa ilość trawy"/>
 
                 <TextField fx:id="energyFromGrassTextField" promptText="Podaj energię, którą dostają zwierzaki po zjedzeniu trawy"/>
@@ -64,7 +64,17 @@
                 <Label fx:id="grassesPerDayLabel" text="Ilość nowych kępek trawy na dzień"/>
 
                 <TextField fx:id="genesLengthTextField" promptText="Podaj długość genotpu"/>
-                <Label text="Długość genotypu"/>
+                <Label text="genesLengthLabel"/>
+
+                <TextField fx:id="animalStartTextField" promptText="Podaj początkową liczbę zwierząt"/>
+                <Label text="animalStartLabel"/>
+
+                <TextField fx:id="energyToChildTextField" promptText="Podaj ile dla dzieci energii"/>
+                <Label text="energyToChildLabel"/>
+
+                <TextField fx:id="energyToReproduceTextField" promptText="Energia potrzebna do rozmnazania"/>
+                <Label text="energyToReproduceLabel"/>
+
 
                 <Button onAction="#addNewConfiguration">Dodaj</Button>
             </VBox>

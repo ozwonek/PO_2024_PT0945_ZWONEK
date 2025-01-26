@@ -4,6 +4,7 @@ package agh.ics.oop.model;
 //import agh.ics.oop.model.util.MapVisualizer;
 
 import agh.ics.oop.Statistics;
+import agh.ics.oop.model.util.Config;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -12,15 +13,11 @@ import static agh.ics.oop.model.Vector2d.*;
 //import static jdk.internal.org.jline.utils.Colors.s;
 
 public class Globe implements MoveValidator {
-    private final int grassPerDay;
-    private final int energyFromGrass;
     private final Map<Vector2d, Grass> grasses = new HashMap<>();
     private final Map<Vector2d, List<Animal>> animals = new HashMap<>();
     private final Set<Vector2d> occupiedSpots = new HashSet<>();
     private final List<MapChangeListener> observers = new ArrayList<>();
     private final UUID id = UUID.randomUUID();
-    private int width;
-    private int height;
     private Vector2d lowerLeft = new Vector2d(0,0);
     private Vector2d upperRight;
     private int deadAnimalCount = 0;
@@ -34,6 +31,7 @@ public class Globe implements MoveValidator {
     private int animalsAge = 0;
     private Statistics stats = new Statistics();
     private int dayCount = 0;
+    private Config worldConfig;
     public Map<Genomes, Integer> getGenCount() {
         return genCount;
     }
@@ -48,16 +46,13 @@ public class Globe implements MoveValidator {
         }
     }
 
-    public Globe(int numberOfGrasses, int grassPerDay, double probabilityToMakeJungle, int energyFromGrass, int width, int height) {
-        this.width = width;
-        this.height = height;
-        this.energyFromGrass = energyFromGrass;
-        this.grassPerDay = grassPerDay;
-        this.upperRight = new Vector2d(width-1, height-1);
-        int lowerEquator = (int) (0.4 * height);
-        int upperEquator = (int) (0.6 * height);
-        for (int i = 0; i < height; i++) {
-            for (int j = 0; j < width; j++) {
+    public Globe(Config worldConfig) {
+        this.worldConfig = worldConfig;
+        this.upperRight = new Vector2d(worldConfig.mapWidth()-1, worldConfig.mapHeight()-1);
+        int lowerEquator = (int) (0.4 * worldConfig.mapHeight());
+        int upperEquator = (int) (0.6 * worldConfig.mapHeight());
+        for (int i = 0; i < worldConfig.mapHeight(); i++) {
+            for (int j = 0; j < worldConfig.mapWidth(); j++) {
                 if (lowerEquator<=j && j <= upperEquator){
                     prefferedSpot.add(new Vector2d(i,j));
                 }
@@ -66,15 +61,15 @@ public class Globe implements MoveValidator {
                 }
             }
         }
-        growGrass(numberOfGrasses);
+        growGrass(worldConfig.grassStart());
 
     }
 
     public int getWidth(){
-        return this.width;
+        return this.worldConfig.mapWidth();
     }
     public int getHeight(){
-        return this.height;
+        return this.worldConfig.mapHeight();
     }
     public boolean canMoveUpOrDown(Vector2d position) {
         return position.correctHeight(lowerLeft,upperRight);
@@ -294,7 +289,7 @@ public class Globe implements MoveValidator {
     public void removeGrass(Vector2d spot){
         grasses.remove(spot);
 
-        if(spot.getY() <= (int) (0.6 * height) && spot.getY() >= (int) (0.4 * height)){
+        if(spot.getY() <= (int) (0.6 * worldConfig.mapHeight()) && spot.getY() >= (int) (0.4 * worldConfig.mapHeight())){
             prefferedSpot.add(spot);
         }
         else {
@@ -330,11 +325,11 @@ public class Globe implements MoveValidator {
 
 
     public int getGrassPerDay() {
-        return this.grassPerDay;
+        return this.worldConfig.grassDaily();
     }
 
     public void eatGrass(Animal animal) {
-        animal.setEnergy(animal.getEnergy() + energyFromGrass);
+        animal.setEnergy(animal.getEnergy() + worldConfig.grassEnergy());
         removeGrass(animal.getPosition());
 
     }
@@ -410,7 +405,7 @@ public class Globe implements MoveValidator {
         return grasses.size();
     }
     public int freeSpotsLeft(){
-        return height*width - occupiedSpots.size();
+        return worldConfig.mapHeight()*worldConfig.mapWidth() - occupiedSpots.size();
     }
     public double meanEnergy(){
         int sumOfEnergy = 0;

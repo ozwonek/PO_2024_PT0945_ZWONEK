@@ -1,32 +1,30 @@
 package agh.ics.oop;
 
 import agh.ics.oop.model.*;
+import agh.ics.oop.model.util.Config;
+
 import static agh.ics.oop.OptionsParser.parse;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Random;
 
 public class Simulation implements Runnable {
-    private List<Animal> animals;
+    private final Config worldConfig;
     private Globe map;
     private int days=0;
-
-    public Simulation(List<Vector2d> animalOnPosition, Globe map, int energy, int genesLength, int minimumToBefull, int giveToChild) {
-        this.animals = new ArrayList<>();
-        for (Vector2d position : animalOnPosition) {
-            Animal animal = new Animal(position,energy,genesLength,minimumToBefull,giveToChild,new Genomes(genesLength));
+    private Random rand = new Random();
+    public Simulation(Config worldConfig, Globe map) {
+        this.worldConfig = worldConfig;
+        for (int i = 0;i<worldConfig.animalStart();i++){
+            Vector2d randomPosition = new Vector2d(rand.nextInt(worldConfig.mapWidth()-1), rand.nextInt(worldConfig.mapHeight()-1));
+            Animal animal = new Animal(randomPosition,worldConfig.animalStartEnergy(), worldConfig.animalGenotypeLength(), worldConfig.animalEnergyToReproduce(),worldConfig.animalEnergyToChild(),new Genomes(worldConfig.animalGenotypeLength()));
             map.place(animal);
-            animals.add(animal);
             map.addGenCount(animal.getGenomes());
         }
-
-
         this.map = map;
     }
 
-    public List<Animal> getAnimals() {
-        return new ArrayList<>(this.animals);
-    }
 
     @Override
     public void run() {
