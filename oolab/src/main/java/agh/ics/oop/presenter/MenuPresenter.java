@@ -107,6 +107,8 @@ public class MenuPresenter {
 
     private final ArrayList<Integer> currentConfiguration = new ArrayList<>();
 
+    private final SimulationEngine simulationEngine =  new SimulationEngine();
+
     @FXML
     private void showNewConfigurationForm(){
         configurationForm.setVisible(true);
@@ -198,6 +200,7 @@ public class MenuPresenter {
         Parent viewRoot = loader.load();
         Config worldConfig = getConfiguration();
         SimulationPresenter presenter = loader.getController();
+        presenter.simulationEngine = this.simulationEngine;
         Globe map = new Globe(worldConfig);
         presenter.setWorldMap(map);
         presenter.setConfig(worldConfig);

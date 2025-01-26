@@ -13,6 +13,11 @@ public class Simulation implements Runnable {
     private final Config worldConfig;
     private Globe map;
     private int days=0;
+
+    public boolean isRunning() {
+        return running;
+    }
+
     private boolean running = true;
     Object lock = new Object();
     private Random rand = new Random();
@@ -28,9 +33,12 @@ public class Simulation implements Runnable {
     }
 
     public void resume(){
+        System.out.println("Setting running to true");
         running = true;
-        synchronized (lock){
+        synchronized (lock) {
+            System.out.println("Notifinyg");
             lock.notify();
+            lock.notifyAll();
         }
     }
 
@@ -59,8 +67,11 @@ public class Simulation implements Runnable {
     public void run() {
         while (true) {
             try {
-                while (!running) {
-                    this.lock.wait();
+                synchronized (lock) {
+                    while (!running) {
+                        this.lock.wait();
+                        System.out.println("After wait" + running);
+                    }
                 }
             } catch (InterruptedException e) {
                 System.out.println("Wątek został przerwany na czekaniu na wznowienie: " + e.getMessage());

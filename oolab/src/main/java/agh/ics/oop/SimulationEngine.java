@@ -10,28 +10,36 @@ public class SimulationEngine {
     private final List<Simulation> simulations;
     private final List<Thread> threads = new ArrayList<>();
     private final ExecutorService executorThreadPool = Executors.newFixedThreadPool(4);
-    private boolean isAsync = true;
 
     public SimulationEngine(List<Simulation> simulations) {
         this.simulations = simulations;
     }
 
-    public void runSync() {
-        this.isAsync = false;
-        for (Simulation simulation : simulations) {
-            simulation.run();
-        }
+    public SimulationEngine() {
+        this.simulations = new ArrayList<>();
     }
-    
+
+//    public void runSync() {
+//        this.isAsync = false;
+//        for (Simulation simulation : simulations) {
+//            simulation.run();
+//        }
+//    }
+//
+
+    public void runNewSimulation(Simulation newSimulation) {
+        this.simulations.add(newSimulation);
+        Thread thread = new Thread(newSimulation);
+        threads.add(thread);
+        thread.start();
+    }
 
     public void runAsync() {
-        this.isAsync = true;
         for (Simulation simulation : simulations) {
             Thread thread = new Thread(simulation);
             threads.add(thread);
             thread.start();
         }
-
     }
 
     public void awaitSimulationsEnd() {

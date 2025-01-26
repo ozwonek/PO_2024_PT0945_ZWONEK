@@ -115,6 +115,8 @@ public class SimulationPresenter implements MapChangeListener {
     private int simulationDay = 0;
 
     private Config config;
+    public SimulationEngine simulationEngine;
+    private Simulation simulation;
 
     public void setWorldMap(Globe map){
         this.map = map;
@@ -263,15 +265,19 @@ public class SimulationPresenter implements MapChangeListener {
     }
     @FXML
     public void startOrStopButton() {
-        try {
-            Simulation simulation = new Simulation(config, map);
+        if (simulation == null) {
+            simulation = new Simulation(config, map);
+            simulationEngine.runNewSimulation(simulation);
             map.addObserver(this);
-            SimulationEngine engine = new SimulationEngine(List.of(simulation));
-
-            new Thread(engine::runAsync).start();
-        } catch (IllegalArgumentException e) {
-            throw new RuntimeException(e);
+        } else {
+            if (simulation.isRunning()) {
+                simulation.pause();
+            } else {
+                System.out.println("Trying to resume simulation");
+                simulation.resume();;
+            }
         }
+
 
     }
 
