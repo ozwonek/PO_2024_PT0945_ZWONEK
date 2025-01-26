@@ -222,16 +222,16 @@ public class Globe implements MoveValidator {
 
 
 
-    public void setAllOffsprings(){
-        ArrayList<Animal> animalsArray = animals.values().stream()
-                .flatMap(List::stream).sorted(Comparator.comparingInt(Animal::getOffspringCount)).collect(Collectors.toCollection(ArrayList::new));
-        for (Animal animal : animalsArray ){
-            int temporaryOffspringCount = 0;
-            for(Animal child: animal.getChildrens())
-                animal.setOffspringCount(temporaryOffspringCount+child.getChildrenSize());
-            animal.setOffspringCount(animal.getOffspringCount()+animal.getChildrenSize());
-        }
-    }
+//    public void setAllOffsprings(){
+//        ArrayList<Animal> animalsArray = animals.values().stream()
+//                .flatMap(List::stream).sorted(Comparator.comparingInt(Animal::getAge)).collect(Collectors.toCollection(ArrayList::new));
+//        for (Animal animal : animalsArray ){
+//            int temporaryOffspringCount = 0;
+//            for(Animal child: animal.getChildrens())
+//                animal.setOffspringCount(temporaryOffspringCount+child.getChildrenSize());
+//            animal.setOffspringCount(animal.getOffspringCount()+animal.getChildrenSize());
+//        }
+//    }
 
     public void growGrass(int numberOfGrasses){
         int placedGrasses = 0;

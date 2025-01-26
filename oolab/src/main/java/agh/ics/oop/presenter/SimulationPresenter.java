@@ -37,6 +37,9 @@ import com.google.gson.reflect.TypeToken;
 //import static agh.ics.oop.OptionsParser.parse;
 
 public class SimulationPresenter implements MapChangeListener {
+    public VBox mainContainer;
+    public Label animalOnObservation;
+    public VBox animalStatistics;
     private Globe map;
     private Animal animal;
     private static final String CONFIG_FILE = "configurations.json";
@@ -123,6 +126,14 @@ public class SimulationPresenter implements MapChangeListener {
 
     private void setAnimal(Animal animal){
         this.animal = animal;
+        onAnimalClicked(animal);
+        animalStatistics.setVisible(true);
+    }
+    
+    @FXML
+    private void deleteAnimalFromObservation(){
+        this.animal=null;
+        animalStatistics.setVisible(false);
     }
 
 
@@ -209,22 +220,32 @@ public class SimulationPresenter implements MapChangeListener {
     private void onAnimalClicked(Animal animal){
         clearGrid(animalGrid);
 
+        animalOnObservation.setText("Obserwujesz zwierzaka na pozycji: " + animal.getPosition());
+
         Label label = new Label("genotyp zwierzka: " + animal.getGenomes());
-        animalGrid.add(label,0,0);
+        animalGrid.add(label,0,1);
+        label.getStyleClass().add("animal-label");
         label = new Label("aktywny gen: " + animal.getGenomes().get(animal.getActive()));
-        animalGrid.add(label,1,0);
+        animalGrid.add(label,1,1);
+        label.getStyleClass().add("animal-label");
         label = new Label("ilość energii: " + animal.getEnergy());
-        animalGrid.add(label, 0,1);
+        animalGrid.add(label, 0,2);
+        label.getStyleClass().add("animal-label");
         label = new Label("ilość zjedzonych roślin: " + animal.getEatenGrass());
-        animalGrid.add(label, 1, 1);
+        animalGrid.add(label, 1, 2);
+        label.getStyleClass().add("animal-label");
         label = new Label("ilość dzieci: " + animal.getChildrenSize());
-        animalGrid.add(label,0,2);
-        label = new Label("ile dni żyje: " + animal.getAge() );
-        animalGrid.add(label,1,2);
-        label = new Label("ilość potomków: " + animal.getOffspringCount());
         animalGrid.add(label,0,3);
-        label = new Label("dzień śmierci: "+simulationDay);
+        label.getStyleClass().add("animal-label");
+        label = new Label("ile dni żyje: " + animal.getAge() );
         animalGrid.add(label,1,3);
+        label.getStyleClass().add("animal-label");
+        label = new Label("ilość potomków: " + animal.getOffspringCount());
+        animalGrid.add(label,0,4);
+        label.getStyleClass().add("animal-label");
+        label = new Label("dzień śmierci: "+simulationDay);
+        animalGrid.add(label,1,4);
+        label.getStyleClass().add("animal-label");
     }
 
 

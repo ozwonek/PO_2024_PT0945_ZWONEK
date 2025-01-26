@@ -50,13 +50,13 @@ public class Animal implements WorldElement {
     public void setEatenGrass(){
         this.eatenGrass+=1;
     }
-    public void setOffspringCount(int newOffsprings){
-        this.offspringCount = newOffsprings;
-    }
+//    public void setOffspringCount(int newOffsprings){
+//        this.offspringCount = newOffsprings;
+//    }
 
-    public int getOffspringCount(){
-        return this.offspringCount;
-    }
+//    public int getOffspringCount(){
+//        return this.offspringCount;
+//    }
 
     public Animal reproduce(Animal secondParent) {
 
@@ -138,6 +138,17 @@ public class Animal implements WorldElement {
         } else {
             this.position = currentPosition;
         }
+    }
+
+    public int getOffspringCount(){
+
+        int offspringCount = this.getChildrenSize();
+        if(offspringCount!=0){
+            for(Animal animal: this.getChildrens()){
+                offspringCount+=animal.getChildrenSize();
+            }
+        }
+        return offspringCount;
     }
 
 }

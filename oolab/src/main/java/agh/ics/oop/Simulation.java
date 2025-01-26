@@ -41,7 +41,6 @@ public class Simulation implements Runnable {
                 }
                 map.allEat();
                 map.allReproduce();
-                map.setAllOffsprings();
                 map.growGrass(map.getGrassPerDay());
 
 

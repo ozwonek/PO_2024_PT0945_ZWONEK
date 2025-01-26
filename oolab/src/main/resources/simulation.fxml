@@ -39,8 +39,13 @@
     </left>
     <right>
         <StackPane>
+        <VBox alignment="CENTER" spacing="10" xmlns:fx="http://javafx.com/fxml">
+            <VBox fx:id="animalStatistics" alignment="CENTER" visible="false">
+                <Label fx:id="animalOnObservation" text=" "/>
+                <GridPane fx:id="animalGrid" gridLinesVisible="true" />
+                <Button onAction="#deleteAnimalFromObservation" text="stop observation"/>
+            </VBox>
             <VBox fx:id="dailyStats" alignment="CENTER" visible="false">
-                <GridPane fx:id="animalGrid" gridLinesVisible="true" ></GridPane>
                 <Label text="Dzienne statystyki:"/>
                 <GridPane fx:id="statisticsGrid" gridLinesVisible="true" alignment="CENTER">
                 </GridPane>
@@ -82,6 +87,8 @@
 
                 <Button onAction="#addNewConfiguration">Dodaj</Button>
             </VBox>
+        </VBox>
+
         </StackPane>
 
     </right>
