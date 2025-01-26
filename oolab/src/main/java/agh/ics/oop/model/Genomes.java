@@ -1,9 +1,6 @@
 package agh.ics.oop.model;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class Genomes {
     private final List<Integer> genes = new ArrayList<>();
@@ -61,6 +58,19 @@ public class Genomes {
     }
     public int getGenesLength(){
         return this.genesLength;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Genomes genomes = (Genomes) o;
+        return Objects.equals(genes, genomes.genes);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(genes);
     }
 
     @Override

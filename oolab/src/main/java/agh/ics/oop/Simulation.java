@@ -16,7 +16,9 @@ public class Simulation implements Runnable {
             Animal animal = new Animal(position,energy,genesLength,minimumToBefull,giveToChild,new Genomes(genesLength));
             map.place(animal);
             animals.add(animal);
+            map.addGenCount(animal.getGenomes());
         }
+
 
         this.map = map;
     }
@@ -29,6 +31,8 @@ public class Simulation implements Runnable {
     public void run() {
         while (true) {
                 map.clean();
+                map.setStatistics();
+                map.nextDay();
                 for (Animal animal : map.getAnimals()) {
                     int gen = animal.getGenomes().get(animal.getActive());
                     MapDirection direction = parse(animal.getOrientation(), gen);
@@ -38,6 +42,7 @@ public class Simulation implements Runnable {
                 map.allEat();
                 map.allReproduce();
                 map.growGrass(map.getGrassPerDay());
+
 
                 try {
                     Thread.sleep(3000);

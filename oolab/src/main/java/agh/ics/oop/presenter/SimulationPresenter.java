@@ -2,6 +2,7 @@ package agh.ics.oop.presenter;
 
 import agh.ics.oop.Simulation;
 import agh.ics.oop.SimulationEngine;
+import agh.ics.oop.Statistics;
 import agh.ics.oop.model.*;
 //import agh.ics.oop.model.util.Boundary;
 import javafx.application.Platform;
@@ -65,6 +66,8 @@ public class SimulationPresenter implements MapChangeListener {
     private GridPane mapGrid;
     @FXML
     private GridPane statisticsGrid;
+    @FXML
+    private Label dayCount;
 
     private final HashMap<String,ArrayList<Integer>> savedConfigurations = new HashMap<>();
 
@@ -88,20 +91,23 @@ public class SimulationPresenter implements MapChangeListener {
 
     private void actualiseStatistics(){
         clearGrid(statisticsGrid);
-
-
-        Label label = new Label("liczba zwierzaków: " + map.getAnimalsSize());
+        Statistics statistics= map.getStats();
+        Label label = new Label("liczba zwierzaków: " + statistics.getAnimalCount());
         statisticsGrid.add(label,0,0);
-        label = new Label("liczba roślin: ");
+        label = new Label("liczba roślin: " + statistics.getGrassCount());
         statisticsGrid.add(label,1,0);
-        label = new Label("liczba wolnych pól: ");
+        label = new Label("liczba wolnych pól: " + statistics.getFreeSpots());
         statisticsGrid.add(label, 0,1);
-        label = new Label("najpopularniejszy genotyp: ");
+        label = new Label("najpopularniejszy genotyp: " + statistics.getMostPopularGenom());
         statisticsGrid.add(label, 1, 1);
-        label = new Label("średniej długości życia zwierzaków: " + map.getAverageAnimalAge());
+        label = new Label("średniej długości życia zwierzaków: " + statistics.getMeanLifeForLiving());
         statisticsGrid.add(label,0,2);
-        label = new Label("średniej liczby dzieci dla żyjących zwierzaków: " +map.getAnimalsChildrenCount());
+        label = new Label("średniej liczby dzieci dla żyjących zwierzaków: " +statistics.getMeanChildrenCount());
         statisticsGrid.add(label,1,2);
+        label = new Label("średniej liczba długość życia nieżyjącego: " +statistics.getMeanLifeForDead());
+        statisticsGrid.add(label,0,3);
+        label = new Label("Średnia energia: " +statistics.getMeanEnergy());
+        statisticsGrid.add(label,1,3);
         }
 
 

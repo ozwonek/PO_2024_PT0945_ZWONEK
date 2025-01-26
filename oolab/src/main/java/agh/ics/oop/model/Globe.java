@@ -3,16 +3,19 @@ package agh.ics.oop.model;
 //import agh.ics.oop.model.util.Boundary;
 //import agh.ics.oop.model.util.MapVisualizer;
 
+import agh.ics.oop.Statistics;
+
 import java.util.*;
 
 import static agh.ics.oop.model.Vector2d.*;
+//import static jdk.internal.org.jline.utils.Colors.s;
 
 public class Globe implements MoveValidator {
     private final int grassPerDay;
     private final int energyFromGrass;
     private final Map<Vector2d, Grass> grasses = new HashMap<>();
     private final Map<Vector2d, List<Animal>> animals = new HashMap<>();
-//    private final MapVisualizer visualizer = new MapVisualizer(this);
+    private final Set<Vector2d> occupiedSpots = new HashSet<>();
     private final List<MapChangeListener> observers = new ArrayList<>();
     private final UUID id = UUID.randomUUID();
     private int width;
@@ -25,7 +28,24 @@ public class Globe implements MoveValidator {
     private final Set<Vector2d> prefferedSpot = new HashSet<>();
     private int deadAnimalsAge = 0;
     private int animalsChildrenCount = 0;
-//  private double probabilityToMakeJungle;
+    private Map<Genomes,Integer> genCount = new HashMap<>();
+    private Genomes mostCommonGenom;
+    private int animalsAge = 0;
+    private Statistics stats = new Statistics();
+    private int dayCount = 0;
+    public Map<Genomes, Integer> getGenCount() {
+        return genCount;
+    }
+    public void nextDay(){
+        dayCount+=1;
+    }
+
+    public void addGenCount(Genomes genome) {
+        genCount.put(genome,genCount.getOrDefault(genome,0) + 1);
+        if(mostCommonGenom == null || genCount.get(genome)>genCount.get(mostCommonGenom)){
+            mostCommonGenom = genome;
+        }
+    }
 
     public Globe(int numberOfGrasses, int grassPerDay, double probabilityToMakeJungle, int energyFromGrass, int width, int height) {
         this.width = width;
@@ -46,6 +66,7 @@ public class Globe implements MoveValidator {
             }
         }
         growGrass(numberOfGrasses);
+
     }
 
     public int getWidth(){
@@ -82,6 +103,7 @@ public class Globe implements MoveValidator {
     }
 
     public void place(Animal animal){
+        occupiedSpots.add(animal.getPosition());
         if(animals.get(animal.getPosition()) == null){
             List<Animal> onThisSpot = new ArrayList<>();
             onThisSpot.add(animal);
@@ -94,7 +116,13 @@ public class Globe implements MoveValidator {
     }
 
     public int getAnimalsSize(){
-        return animals.size();
+        int countAnimals = 0;
+        for(List<Animal> animals: animals.values()){
+            for(Animal animal : animals){
+                countAnimals +=1;
+            }
+        }
+        return countAnimals;
     }
 
 
@@ -127,6 +155,7 @@ public class Globe implements MoveValidator {
                     toRemove.add(animal);
                     deadAnimalCount += 1;
                     deadAnimalsAge+=animal.getAge();
+                    animalsAge -= animal.getAge();
                     animalsChildrenCount-=animal.getChildrenSize();
                 }
             }
@@ -136,6 +165,9 @@ public class Globe implements MoveValidator {
 
             }
             if (onOneSpot.isEmpty()) {
+                if(!grasses.containsKey(position)){
+                    occupiedSpots.remove(position);
+                }
                 toDelatePositions.add(position);
             }
         }
@@ -156,9 +188,11 @@ public class Globe implements MoveValidator {
             }
             Animal child = onOneSpot.get(onOneSpotSize-1).reproduce(onOneSpot.get(onOneSpotSize-2));
             place(child);
+            addGenCount(child.getGenomes());
             animalsChildrenCount+=2;
         }
     }
+
 
     public void allEat() {
         for (List<Animal> onOneSpot : animals.values()) {
@@ -218,7 +252,7 @@ public class Globe implements MoveValidator {
         List<Vector2d> choosen = new ArrayList<>(placedSet);
         Collections.shuffle(choosen);
         if(numberToGrow!=0){
-            System.out.println(choosen.size()+" "+numberToGrow);
+
             List<Vector2d> indicesChoosen  = choosen.subList(0,Math.min(numberToGrow,choosen.size()));
             for(Vector2d spot: indicesChoosen){
                 addNewGrass(spot);
@@ -236,6 +270,7 @@ public class Globe implements MoveValidator {
 
 
         }
+        occupiedSpots.add(spot);
         prefferedSpot.remove(spot);
         notPrefferedSpots.remove(spot);
     }
@@ -284,6 +319,7 @@ public class Globe implements MoveValidator {
     public void eatGrass(Animal animal) {
         animal.setEnergy(animal.getEnergy() + energyFromGrass);
         removeGrass(animal.getPosition());
+
     }
 
 //    public List<WorldElement> getElements() {
@@ -306,10 +342,6 @@ public class Globe implements MoveValidator {
 
     public UUID getID(){
         return id;
-    }
-
-    public int getFreeElements(){
-        return 0;
     }
 
     public List<Animal> getStronger(List<Animal> onOneSpot) {
@@ -357,6 +389,48 @@ public class Globe implements MoveValidator {
         }
         return onOneSpot;
     }
+    public int getGrassSize(){
+        return grasses.size();
+    }
+    public int freeSpotsLeft(){
+        return height*width - occupiedSpots.size();
+    }
+    public double meanEnergy(){
+        int sumOfEnergy = 0;
+        for(List<Animal> animals: animals.values()){
+            for(Animal animal: animals){
+                sumOfEnergy += animal.getEnergy();
+        }
+        }
+        System.out.println(sumOfEnergy + " " + getAnimalsSize() + " " + sumOfEnergy / getAnimalsSize());
+        return (double) sumOfEnergy /getAnimalsSize();
+    }
+    public void updateSumOfYears(){
+        this.animalsAge = animalsAge + getAnimalsSize();
+    }
+    public double meanChildrenCount(){
+        return ((double) animalsChildrenCount /(2*getAnimalsSize()));
+    }
+    public double meanLifeForLiving(){
+        updateSumOfYears();
+        return (double) this.animalsAge / getAnimalsSize();
+    }
+    public void setStatistics(){
+
+        stats.setStatistics(dayCount,
+                getAnimalsSize(),
+                getGrassSize(),
+                freeSpotsLeft(),
+                mostCommonGenom,
+                meanLifeForLiving(),
+                meanChildrenCount(),
+                meanEnergy(),
+                (double) deadAnimalsAge/deadAnimalCount);
+    }
+    public Statistics getStats(){
+        return stats;
+    }
+
 
 //    @Override
 //    public Boundary getCurrentBounds() {
