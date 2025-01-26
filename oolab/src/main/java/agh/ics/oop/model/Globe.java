@@ -320,6 +320,9 @@ public class Globe implements MoveValidator {
         return all;
     }
     public Animal objectAt(Vector2d position) {
+        if(animals.get(position) == null){
+            return null;
+        }
         return animals.get(position).getFirst();
     }
 
@@ -414,7 +417,7 @@ public class Globe implements MoveValidator {
                 sumOfEnergy += animal.getEnergy();
         }
         }
-        System.out.println(sumOfEnergy + " " + getAnimalsSize() + " " + sumOfEnergy / getAnimalsSize());
+        // System.out.println(sumOfEnergy + " " + getAnimalsSize() + " " + sumOfEnergy / getAnimalsSize());
         return (double) sumOfEnergy /getAnimalsSize();
     }
     public void updateSumOfYears(){

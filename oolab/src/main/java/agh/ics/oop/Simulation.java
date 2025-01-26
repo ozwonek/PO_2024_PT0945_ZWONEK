@@ -13,6 +13,8 @@ public class Simulation implements Runnable {
     private final Config worldConfig;
     private Globe map;
     private int days=0;
+    private boolean running = true;
+    Object lock = new Object();
     private Random rand = new Random();
     public Simulation(Config worldConfig, Globe map) {
         this.worldConfig = worldConfig;
@@ -25,33 +27,55 @@ public class Simulation implements Runnable {
         this.map = map;
     }
 
+    public void resume(){
+        running = true;
+        synchronized (lock){
+            lock.notify();
+        }
+    }
+
+    public void pause(){
+        running = false;
+    }
+
+
+    private void runDay() {
+        this.days += 1;
+        map.clean();
+        map.setStatistics();
+        map.nextDay();
+        for (Animal animal : map.getAnimals()) {
+            int gen = animal.getGenomes().get(animal.getActive());
+            MapDirection direction = parse(animal.getOrientation(), gen);
+            map.move(animal, direction, map);
+            animal.nextGene();
+        }
+        map.allEat();
+        map.allReproduce();
+        map.growGrass(map.getGrassPerDay());
+    }
 
     @Override
     public void run() {
         while (true) {
-                this.days+=1;
-                map.clean();
-                map.setStatistics();
-                map.nextDay();
-                for (Animal animal : map.getAnimals()) {
-                    int gen = animal.getGenomes().get(animal.getActive());
-                    MapDirection direction = parse(animal.getOrientation(), gen);
-                    map.move(animal, direction,  map);
-                    animal.nextGene();
+            try {
+                while (!running) {
+                    this.lock.wait();
                 }
-                map.allEat();
-                map.allReproduce();
-                map.growGrass(map.getGrassPerDay());
-
-
-                try {
-                    Thread.sleep(3000);
-                } catch (InterruptedException e) {
-                    System.out.println("Wątek został przerwany: " + e.getMessage());
-                    Thread.currentThread().interrupt();
-                }
+            } catch (InterruptedException e) {
+                System.out.println("Wątek został przerwany na czekaniu na wznowienie: " + e.getMessage());
+                Thread.currentThread().interrupt();
             }
+            this.runDay();
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException e) {
+                System.out.println("Wątek został przerwany: " + e.getMessage());
+                Thread.currentThread().interrupt();
+            }
+        }
+    }
     }
 
-}
+
 
