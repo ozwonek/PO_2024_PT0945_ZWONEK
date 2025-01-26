@@ -1,0 +1,50 @@
+{
+  "Slay": {
+    "animalStart": 3,
+    "animalStartEnergy": 3,
+    "animalEnergyToChild": 3,
+    "animalEnergyToReproduce": 3,
+    "grassStart": 3,
+    "grassEnergy": 3,
+    "mapWidth": 3,
+    "animalGenotypeLength": 3,
+    "grassDaily": 3,
+    "mapHeight": 3
+  },
+  "Pulpa mango": {
+    "animalStart": 3,
+    "animalStartEnergy": 3,
+    "animalEnergyToChild": 3,
+    "animalEnergyToReproduce": 3,
+    "grassStart": 3,
+    "grassEnergy": 3,
+    "mapWidth": 3,
+    "animalGenotypeLength": 3,
+    "grassDaily": 3,
+    "mapHeight": 3
+  },
+  "Dużo Zwierząt": {
+    "animalStart": 20,
+    "animalStartEnergy": 3,
+    "animalEnergyToChild": 3,
+    "animalEnergyToReproduce": 3,
+    "grassStart": 3,
+    "grassEnergy": 3,
+    "mapWidth": 20,
+    "animalGenotypeLength": 3,
+    "grassDaily": 3,
+    "mapHeight": 20
+  },
+  "Testowa": {
+    "animalStart": 3,
+    "animalStartEnergy": 3,
+    "animalEnergyToChild": 3,
+    "animalEnergyToReproduce": 3,
+    "grassStart": 3,
+    "grassEnergy": 3,
+    "mapWidth": 3,
+    "animalGenotypeLength": 3,
+    "grassDaily": 3,
+    "mapHeight": 3
+  }
+}

@@ -26,6 +26,7 @@
                 <ComboBox fx:id="configurations" onAction="#getConfiguration"/>
                 <Button onAction="#showNewConfigurationForm">Dodaj nową konfigurację</Button>
             </VBox>
+                    <Button text = "Załaduj Stare konfiguraje" onAction = "#loadConfiguration"/>
                     <Button text="Start" onAction="#onSimulationStartClicked"/>
                     <Label fx:id="simulationDayLabel"/>
                     <GridPane fx:id="mapGrid" gridLinesVisible="true" alignment="CENTER">
@@ -45,34 +46,37 @@
                 </GridPane>
             </VBox>
             <VBox fx:id="configurationForm" alignment="CENTER" styleClass="map" visible="false">
-                <TextField fx:id="widthTextField" promptText="Podaj szerokość mapy"/>
+                <TextField fx:id="configNameTextField" promptText="Podaj Nazwe Konfiguracji" text="Testowa"/>
+                <Label fx:id="configNameLabel" text="Nazwa Konfiguracji"/>
+
+                <TextField fx:id="widthTextField" promptText="Podaj szerokość mapy" text="3"/>
                 <Label fx:id="widthLabel" text="szerokość"/>
 
-                <TextField fx:id="heightTextField" promptText="Podaj wysokość mapy"/>
+                <TextField fx:id="heightTextField" promptText="Podaj wysokość mapy" text="3"/>
                 <Label fx:id="heightLabel" text="wysokość"/>
 
-                <TextField fx:id="startEnergyTextField" promptText="Podaj początkową energię zwierzaków"/>
+                <TextField fx:id="startEnergyTextField" promptText="Podaj początkową energię zwierzaków" text="3"/>
                 <Label fx:id="startEnergyLabel" text="Początkowa energia zwierzaków"/>
 
-                <TextField fx:id="grassStartTextField" promptText="Podaj początkową ilość trawy"/>
+                <TextField fx:id="grassStartTextField" promptText="Podaj początkową ilość trawy" text="3"/>
                 <Label fx:id="startGrassNumberLabel" text="Początkowa ilość trawy"/>
 
-                <TextField fx:id="energyFromGrassTextField" promptText="Podaj energię, którą dostają zwierzaki po zjedzeniu trawy"/>
+                <TextField fx:id="energyFromGrassTextField" promptText="Podaj energię, którą dostają zwierzaki po zjedzeniu trawy" text="3"/>
                 <Label fx:id="energyFromGrassLabel" text="Energia pobierana z trawy"/>
 
-                <TextField fx:id="grassesPerDayTextField" promptText="Podaj ile kępków trawy ma wyratać każdego dnia"/>
+                <TextField fx:id="grassesPerDayTextField" promptText="Podaj ile kępków trawy ma wyratać każdego dnia" text="3"/>
                 <Label fx:id="grassesPerDayLabel" text="Ilość nowych kępek trawy na dzień"/>
 
-                <TextField fx:id="genesLengthTextField" promptText="Podaj długość genotpu"/>
+                <TextField fx:id="genesLengthTextField" promptText="Podaj długość genotpu" text="3"/>
                 <Label text="genesLengthLabel"/>
 
-                <TextField fx:id="animalStartTextField" promptText="Podaj początkową liczbę zwierząt"/>
+                <TextField fx:id="animalStartTextField" promptText="Podaj początkową liczbę zwierząt" text="3"/>
                 <Label text="animalStartLabel"/>
 
-                <TextField fx:id="energyToChildTextField" promptText="Podaj ile dla dzieci energii"/>
+                <TextField fx:id="energyToChildTextField" promptText="Podaj ile dla dzieci energii" text="3"/>
                 <Label text="energyToChildLabel"/>
 
-                <TextField fx:id="energyToReproduceTextField" promptText="Energia potrzebna do rozmnazania"/>
+                <TextField fx:id="energyToReproduceTextField" promptText="Energia potrzebna do rozmnazania" text="3"/>
                 <Label text="energyToReproduceLabel"/>
 
 

@@ -6,6 +6,7 @@ import agh.ics.oop.Statistics;
 import agh.ics.oop.model.*;
 //import agh.ics.oop.model.util.Boundary;
 import agh.ics.oop.model.util.Config;
+import com.google.gson.GsonBuilder;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.HPos;
@@ -18,16 +19,27 @@ import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
 
 
+import java.io.*;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+
+
+
 
 //import static agh.ics.oop.OptionsParser.parse;
 
 public class SimulationPresenter implements MapChangeListener {
     private Globe map;
     private Animal animal;
-
+    private static final String CONFIG_FILE = "configurations.json";
     @FXML
     private VBox mapDisplay;
     @FXML
@@ -86,6 +98,10 @@ public class SimulationPresenter implements MapChangeListener {
     private TextField energyToChildTextField;
     @FXML
     private TextField energyToReproduce;
+    @FXML
+    private TextField configNameTextField;
+
+
 
     private final HashMap<String,Config> savedConfigurations = new HashMap<>();
 
@@ -108,7 +124,6 @@ public class SimulationPresenter implements MapChangeListener {
     private void setAnimal(Animal animal){
         this.animal = animal;
     }
-//    private Boundary boundary = map.getCurrentBounds();
 
 
 
@@ -135,7 +150,6 @@ public class SimulationPresenter implements MapChangeListener {
 
 
     private void drawMap(){
-
         clearGrid(mapGrid); // czyszczenie
 //        Boundary boundary = map.getCurrentBounds();
         int mapWidth = map.getWidth(); //szerokość
@@ -221,6 +235,7 @@ public class SimulationPresenter implements MapChangeListener {
 
     @FXML
     private void addNewConfiguration(){
+        String configName = configNameTextField.getText();
         int mapHeight = Integer.parseInt(heightTextField.getText());
         int mapWidth = Integer.parseInt(heightTextField.getText());
         int grassStart= Integer.parseInt(grassStartTextField.getText());
@@ -231,21 +246,65 @@ public class SimulationPresenter implements MapChangeListener {
         int animalEnergyToReproduce = Integer.parseInt(energyToReproduceTextField.getText());
         int animalEnergyToChild = Integer.parseInt(energyToChildTextField.getText());
         int animalGenotypeLength = Integer.parseInt(genesLengthTextField.getText());
-        String newConfigurationText =
-                "szerokość: " + mapWidth+
-                "wysokość: " + mapHeight +
-                "początkowa energia: " + animalStartEnergy +
-                "początkowa ilość trawy: " + grassStart +
-                "energia z trawy: " + grassEnergy +
-                "ilość trawy wyrastającej każdego dnia: " + grassDaily +
-                "długość genotypu: " + animalGenotypeLength;
 
         Config worldConfig =  new Config(mapHeight,mapWidth,grassStart,grassDaily,grassEnergy,animalStart,animalStartEnergy,animalEnergyToReproduce,animalEnergyToChild,animalGenotypeLength);
-        savedConfigurations.put(newConfigurationText,worldConfig);
-        configurations.getItems().add(newConfigurationText);
+        savedConfigurations.put(configName,worldConfig);
+        configurations.getItems().add(configName);
         configurationForm.setVisible(false);
+
+        appendConfigToJson(worldConfig.toMap(), configName);
     }
-    
+    public void loadConfiguration(){
+        Gson gson = new Gson();
+        Type type = new TypeToken<Map<String, Map<String, Integer>>>(){}.getType();
+        Map<String,Map<String,Integer>> allconfigs;
+        try (Reader reader = new FileReader("configurations.json")) {
+            allconfigs = gson.fromJson(reader, type);
+            if (allconfigs == null) {
+                return;
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println("Plik nie istnieje. Tworzę nowy.");
+            allconfigs = new HashMap<>();
+        } catch (IOException e) {
+            System.out.println("Błąd odczytu pliku: " + e.getMessage());
+            return;
+        }
+        System.out.println(allconfigs);
+        for(String name: allconfigs.keySet()){
+            Map<String,Integer> configs = allconfigs.get(name);
+            Config config = new Config(configs.get("mapHeight"),configs.get("mapWidth"),configs.get("grassStart"),configs.get("grassDaily"),configs.get("grassEnergy"),configs.get("animalStart"),configs.get("animalStartEnergy"),configs.get("animalEnergyToReproduce"),configs.get("animalEnergyToChild"),configs.get("animalGenotypeLength"));
+            savedConfigurations.put(name,config);
+            configurations.getItems().add(name);
+        }
+    }
+
+    public void appendConfigToJson(Map<String,Integer> configs, String configName) {
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        Map<String,Map<String,Integer>> allconfigs;
+        Type type = new TypeToken<Map<String, Map<String, Integer>>>(){}.getType();
+
+        try (Reader reader = new FileReader("configurations.json")) {
+            allconfigs = gson.fromJson(reader, type);
+            if (allconfigs == null) {
+                allconfigs = new HashMap<>();
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println("Plik nie istnieje. Tworzę nowy.");
+            allconfigs = new HashMap<>();
+        } catch (IOException e) {
+            System.out.println("Błąd odczytu pliku: " + e.getMessage());
+            return;
+        }
+
+
+        try (Writer writer = new FileWriter("configurations.json")) {
+            gson.toJson(allconfigs, writer);
+            System.out.println("Nowa konfiguracja została dopisana do pliku.");
+        } catch (IOException e) {
+            System.out.println("Błąd zapisu pliku: " + e.getMessage());
+        }
+    }
 
 
     @FXML
@@ -274,6 +333,7 @@ public class SimulationPresenter implements MapChangeListener {
 
         dailyStats.setVisible(true);
         settingConfigurations.setVisible(false);
+
 
 
 
