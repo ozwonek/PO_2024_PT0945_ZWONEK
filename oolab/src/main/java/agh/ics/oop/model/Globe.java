@@ -6,6 +6,7 @@ package agh.ics.oop.model;
 import agh.ics.oop.Statistics;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static agh.ics.oop.model.Vector2d.*;
 //import static jdk.internal.org.jline.utils.Colors.s;
@@ -209,15 +210,31 @@ public class Globe implements MoveValidator {
                     if(competitors.getFirst().getEnergy()==competitors.get(1).getEnergy() && competitors.getFirst().getAge()==competitors.get(1).getAge() && competitors.getFirst().getChildrenSize()==competitors.get(1).getChildrenSize()){
                         int index = random.nextInt(competitors.size());
                         this.eatGrass(competitors.get(index));
+                        competitors.get(index).setEatenGrass();
                     }
                     else{
                         this.eatGrass(competitors.getFirst());
+                        competitors.getFirst().setEatenGrass();
                     }
                 }
                 else{
                     this.eatGrass(onOneSpot.getFirst());
+                    onOneSpot.getFirst().setEatenGrass();
                 }
             }
+        }
+    }
+
+
+
+    public void setAllOffsprings(){
+        ArrayList<Animal> animalsArray = animals.values().stream()
+                .flatMap(List::stream).sorted(Comparator.comparingInt(Animal::getOffspringCount)).collect(Collectors.toCollection(ArrayList::new));
+        for (Animal animal : animalsArray ){
+            int temporaryOffspringCount = 0;
+            for(Animal child: animal.getChildrens())
+                animal.setOffspringCount(temporaryOffspringCount+child.getChildrenSize());
+            animal.setOffspringCount(animal.getOffspringCount()+animal.getChildrenSize());
         }
     }
 
@@ -307,7 +324,7 @@ public class Globe implements MoveValidator {
         }
         return all;
     }
-    public WorldElement objectAt(Vector2d position) {
+    public Animal objectAt(Vector2d position) {
         return animals.get(position).getFirst();
     }
 

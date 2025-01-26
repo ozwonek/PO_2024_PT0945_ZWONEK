@@ -9,6 +9,7 @@ import java.util.List;
 public class Simulation implements Runnable {
     private List<Animal> animals;
     private Globe map;
+    private int days=0;
 
     public Simulation(List<Vector2d> animalOnPosition, Globe map, int energy, int genesLength, int minimumToBefull, int giveToChild) {
         this.animals = new ArrayList<>();
@@ -30,6 +31,7 @@ public class Simulation implements Runnable {
     @Override
     public void run() {
         while (true) {
+                this.days+=1;
                 map.clean();
                 map.setStatistics();
                 map.nextDay();
@@ -41,6 +43,7 @@ public class Simulation implements Runnable {
                 }
                 map.allEat();
                 map.allReproduce();
+                map.setAllOffsprings();
                 map.growGrass(map.getGrassPerDay());
 
 

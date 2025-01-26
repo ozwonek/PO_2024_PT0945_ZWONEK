@@ -18,6 +18,8 @@ public class Animal implements WorldElement {
     private List<Animal> childrens = new ArrayList<>();
     private final int genesLength;
     private static final Random random = new Random();
+    private int eatenGrass =0;
+    private int offspringCount = 0;
 
 
     public Animal(Vector2d position, int energy, int genesLength, int minimumEnergyToReproduce, int energyGivenToChild, Genomes genomes) {
@@ -39,6 +41,21 @@ public class Animal implements WorldElement {
     public void onChildCreated(Animal child) {
         this.childrens.add(child);
         this.energy = this.energy - this.energyGivenToChild;
+    }
+
+    public int getEatenGrass(){
+        return this.eatenGrass;
+    }
+
+    public void setEatenGrass(){
+        this.eatenGrass+=1;
+    }
+    public void setOffspringCount(int newOffsprings){
+        this.offspringCount = newOffsprings;
+    }
+
+    public int getOffspringCount(){
+        return this.offspringCount;
     }
 
     public Animal reproduce(Animal secondParent) {
@@ -122,6 +139,5 @@ public class Animal implements WorldElement {
             this.position = currentPosition;
         }
     }
-
 
 }
