@@ -26,8 +26,8 @@
                 <ComboBox fx:id="configurations" onAction="#getConfiguration"/>
                 <Button onAction="#showNewConfigurationForm">Dodaj nową konfigurację</Button>
             </VBox>
-
                     <Button text="Start" onAction="#onSimulationStartClicked"/>
+                    <Label fx:id="simulationDayLabel"/>
                     <GridPane fx:id="mapGrid" gridLinesVisible="true" alignment="CENTER">
                         <VBox.margin>
                             <Insets top="10" right="20" bottom="10" left="20"/>
@@ -39,9 +39,9 @@
     <right>
         <StackPane>
             <VBox fx:id="dailyStats" alignment="CENTER" visible="false">
+                <GridPane fx:id="animalGrid" gridLinesVisible="true" ></GridPane>
                 <Label text="Dzienne statystyki:"/>
                 <GridPane fx:id="statisticsGrid" gridLinesVisible="true" alignment="CENTER">
-
                 </GridPane>
             </VBox>
             <VBox fx:id="configurationForm" alignment="CENTER" styleClass="map" visible="false">

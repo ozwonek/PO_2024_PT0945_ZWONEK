@@ -24,6 +24,7 @@ import java.util.List;
 
 public class SimulationPresenter implements MapChangeListener {
     private Globe map;
+    private Animal animal;
 
     @FXML
     private VBox mapDisplay;
@@ -65,6 +66,10 @@ public class SimulationPresenter implements MapChangeListener {
     private GridPane mapGrid;
     @FXML
     private GridPane statisticsGrid;
+    @FXML
+    private Label simulationDayLabel;
+    @FXML
+    private GridPane animalGrid;
 
     private final HashMap<String,ArrayList<Integer>> savedConfigurations = new HashMap<>();
 
@@ -77,10 +82,15 @@ public class SimulationPresenter implements MapChangeListener {
 
     private final static int STATS_WIDTH = 200;
     private final static int STATS_HEIGHT = 600;
+    private int simulationDay = 0;
 
 
     public void setWorldMap(Globe map){
         this.map = map;
+    }
+
+    private void setAnimal(Animal animal){
+        this.animal = animal;
     }
 //    private Boundary boundary = map.getCurrentBounds();
 
@@ -136,12 +146,18 @@ public class SimulationPresenter implements MapChangeListener {
             for (int j = 0; j < mapHeight; j++) {
                 Vector2d pos = new Vector2d(i, j);
                 if (map.isAnimal(pos)) {
-                    mapGrid.add(new Label(map.objectAt(pos).toString()), i + 1, mapHeight - j);
+                    Label animalLabel=new Label(map.objectAt(pos).toString());
+                    mapGrid.add(animalLabel , i + 1, mapHeight - j);
+                    animalLabel.setOnMouseClicked(event -> {
+                        System.out.println("Kliknięto na komórkę: " + pos);
+                        setAnimal(map.objectAt(pos));
+                    });
                 }
                 else if (map.isGrass(pos)) {
                     Label grassLabel = new Label(" * ");
                     grassLabel.setStyle("-fx-background-color: #499d49; -fx-text-fill: white;"); // Zielone tło, biały tekst
                     grassLabel.setPrefSize(width, height); // Ustaw rozmiar komórki (opcjonalne)
+
                     // Dodajemy etykietę do mapGrid w odpowiedniej pozycji
                     mapGrid.add(grassLabel, i + 1, mapHeight - j);
                 }
@@ -151,15 +167,30 @@ public class SimulationPresenter implements MapChangeListener {
                 GridPane.setHalignment(mapGrid.getChildren().getLast(), HPos.CENTER);
             }
         }
-
-
-
     }
 
     @FXML
-    private void onAnimalClicked(){
+    private void onAnimalClicked(Animal animal){
+        clearGrid(animalGrid);
 
+        Label label = new Label("genotyp zwierzka: " + animal.getGenomes());
+        animalGrid.add(label,0,0);
+        label = new Label("aktywny gen: " + animal.getGenomes().get(animal.getActive()));
+        animalGrid.add(label,1,0);
+        label = new Label("ilość energii: " + animal.getEnergy());
+        animalGrid.add(label, 0,1);
+        label = new Label("ilość zjedzonych roślin: " + animal.getEatenGrass());
+        animalGrid.add(label, 1, 1);
+        label = new Label("ilość dzieci: " + animal.getChildrenSize());
+        animalGrid.add(label,0,2);
+        label = new Label("ile dni żyje: " + animal.getAge() );
+        animalGrid.add(label,1,2);
+        label = new Label("ilość potomków: " + animal.getOffspringCount());
+        animalGrid.add(label,0,3);
+        label = new Label("dzień śmierci: "+simulationDay);
+        animalGrid.add(label,1,3);
     }
+
 
     @FXML
     private void showNewConfigurationForm(){
@@ -210,8 +241,13 @@ public class SimulationPresenter implements MapChangeListener {
     public void mapChanged(Globe worldMap, String message){
         setWorldMap(worldMap);
         Platform.runLater(() -> {
+            this.simulationDay+=1;
             drawMap();
             actualiseStatistics();
+            if(this.animal!=null){
+                onAnimalClicked(animal);
+            }
+
         });
 
     }
