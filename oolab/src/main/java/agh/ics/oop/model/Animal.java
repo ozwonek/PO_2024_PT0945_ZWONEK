@@ -8,7 +8,7 @@ public class Animal implements WorldElement {
     private MapDirection orientation;
     private Vector2d position;
     private int energy;
-    private WorldMap map;
+//    private WorldMap map;
     private int age;
     private final Genomes genomes;
     private int active;
@@ -111,13 +111,13 @@ public class Animal implements WorldElement {
         return this.position.equals(position);
     }
 
-    public void move(MoveValidator validator, MapDirection direction, GrassField map) {
+    public void move(MoveValidator validator, MapDirection direction, Globe map) {
         this.orientation = direction;
         Vector2d currentPosition = orientation.toUnitVector().add(position);
         if (!validator.canMoveUpOrDown(currentPosition)) {
             this.orientation = this.orientation.opposite();
         } else if (!validator.canMoveRightOrLeft(currentPosition)) {
-            this.position = this.position.switchWidth(map.width - 1);
+            this.position = this.position.switchWidth(map.getWidth() - 1);
         } else {
             this.position = currentPosition;
         }

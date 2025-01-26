@@ -3,7 +3,7 @@ package agh.ics.oop.presenter;
 import agh.ics.oop.Simulation;
 import agh.ics.oop.SimulationEngine;
 import agh.ics.oop.model.*;
-import agh.ics.oop.model.util.Boundary;
+//import agh.ics.oop.model.util.Boundary;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.HPos;
@@ -14,7 +14,7 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
-import agh.ics.oop.model.AbstractWorldMap;
+
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,7 +23,7 @@ import java.util.List;
 //import static agh.ics.oop.OptionsParser.parse;
 
 public class SimulationPresenter implements MapChangeListener {
-    private AbstractWorldMap map;
+    private Globe map;
 
     @FXML
     private VBox mapDisplay;
@@ -79,7 +79,7 @@ public class SimulationPresenter implements MapChangeListener {
     private final static int STATS_HEIGHT = 600;
 
 
-    public void setWorldMap(AbstractWorldMap map){
+    public void setWorldMap(Globe map){
         this.map = map;
     }
 //    private Boundary boundary = map.getCurrentBounds();
@@ -108,9 +108,9 @@ public class SimulationPresenter implements MapChangeListener {
     private void drawMap(){
 
         clearGrid(mapGrid); // czyszczenie
-        Boundary boundary = map.getCurrentBounds();
-        int mapWidth = boundary.topRightCorner().getX() - boundary.bottomLeftCorner().getX() + 1; //szerokość
-        int mapHeight = boundary.topRightCorner().getY() - boundary.bottomLeftCorner().getY() + 1; // wysokość
+//        Boundary boundary = map.getCurrentBounds();
+        int mapWidth = map.getWidth(); //szerokość
+        int mapHeight = map.getHeight(); // wysokość
         int width= MAP_WIGHT/mapWidth;
         int height = MAP_HEIGHT/mapHeight;
         int squareSize = Math.min(height, width); //ile na jeden kwadracik
@@ -120,37 +120,33 @@ public class SimulationPresenter implements MapChangeListener {
         mapGrid.add(label, 0, 0);
         GridPane.setHalignment(label, HPos.CENTER);
         for(int i=0; i<mapWidth; i++){
-            label = new Label(Integer.toString(i+boundary.bottomLeftCorner().getX()));
+            label = new Label(Integer.toString(i));
             GridPane.setHalignment(label, HPos.CENTER);
             mapGrid.getColumnConstraints().add(new ColumnConstraints(squareSize));
             mapGrid.add(label, i+1, 0);
         }
         for(int i=0; i<mapHeight; i++){
-            label = new Label(Integer.toString(boundary.topRightCorner().getY()-i));
+            label = new Label(Integer.toString(mapHeight-i-1));
             GridPane.setHalignment(label, HPos.CENTER);
             mapGrid.getRowConstraints().add(new RowConstraints(squareSize));
             mapGrid.add(label, 0, i+1);
         }
-        for(int i = boundary.bottomLeftCorner().getX();i<=boundary.topRightCorner().getX();i++) // dodawanie na każdej pozycji i,j objektu,jeżeli istnieje
+        for(int i =0;i<mapWidth;i++) // dodawanie na każdej pozycji i,j objektu,jeżeli istnieje
         {
-            for(int j = boundary.bottomLeftCorner().getY();j<=boundary.topRightCorner().getY();j++)
-            {
-                Vector2d pos = new Vector2d(i,j);
-                if (map.isOccupied(pos)) {
-                    if(map.objectAt(pos) instanceof Grass){
-                        Label grassLabel = new Label("");
-                        grassLabel.setStyle("-fx-background-color: #499d49; -fx-text-fill: white;"); // Zielone tło, biały tekst
-                        grassLabel.setPrefSize(width, height); // Ustaw rozmiar komórki (opcjonalne)
-
-                        // Dodajemy etykietę do mapGrid w odpowiedniej pozycji
-                        mapGrid.add(grassLabel,
-                                i - boundary.bottomLeftCorner().getX() + 1,
-                                boundary.topRightCorner().getY() - j + 1);
-                    }
-                    mapGrid.add(new Label(map.objectAt(pos).toString()), i - boundary.bottomLeftCorner().getX() + 1, boundary.topRightCorner().getY() - j + 1);
+            for (int j = 0; j < mapHeight; j++) {
+                Vector2d pos = new Vector2d(i, j);
+                if (map.isAnimal(pos)) {
+                    mapGrid.add(new Label(map.objectAt(pos).toString()), i + 1, mapHeight - j);
+                }
+                else if (map.isGrass(pos)) {
+                    Label grassLabel = new Label(" * ");
+                    grassLabel.setStyle("-fx-background-color: #499d49; -fx-text-fill: white;"); // Zielone tło, biały tekst
+                    grassLabel.setPrefSize(width, height); // Ustaw rozmiar komórki (opcjonalne)
+                    // Dodajemy etykietę do mapGrid w odpowiedniej pozycji
+                    mapGrid.add(grassLabel, i + 1, mapHeight - j);
                 }
                 else {
-                    mapGrid.add(new Label(" "), i - boundary.bottomLeftCorner().getX() + 1, boundary.topRightCorner().getY() - j + 1);
+                    mapGrid.add(new Label(" "), i + 1, mapHeight - j);
                 }
                 GridPane.setHalignment(mapGrid.getChildren().getLast(), HPos.CENTER);
             }
@@ -176,8 +172,8 @@ public class SimulationPresenter implements MapChangeListener {
         int width = Integer.parseInt(widthTextField.getText());
         int height = Integer.parseInt(heightTextField.getText());
         int startEnergy = Integer.parseInt(startEnergyTextField.getText());
-        int energyFromGrass = Integer.parseInt(grassesPerDayTextField.getText());
-        int grassPerDay = Integer.parseInt(energyFromGrassTextField.getText());
+        int energyFromGrass = Integer.parseInt(energyFromGrassTextField.getText());
+        int grassPerDay = Integer.parseInt(grassesPerDayTextField.getText());
         int genesLength = Integer.parseInt(genesLengthTextField.getText());
 
         String newConfigurationText =
@@ -210,9 +206,8 @@ public class SimulationPresenter implements MapChangeListener {
         return savedConfigurations.get(selectedConfiguration);
     }
 
-
     @Override
-    public void mapChanged(AbstractWorldMap worldMap, String message){
+    public void mapChanged(Globe worldMap, String message){
         setWorldMap(worldMap);
         Platform.runLater(() -> {
             drawMap();
@@ -230,11 +225,17 @@ public class SimulationPresenter implements MapChangeListener {
 
 
         int width = getConfiguration().get(0);
+        System.out.println(width);
         int height = getConfiguration().get(1);
+        System.out.println(height);
         int startEnergy = getConfiguration().get(2);
+        System.out.println(startEnergy);
         int energyFromGrass = getConfiguration().get(3);
+        System.out.println(energyFromGrass);
         int grassPerDay = getConfiguration().get(4);
+        System.out.println(grassPerDay);
         int genesLength = getConfiguration().get(5);
+        System.out.println(genesLength);
 
         int startGrassNumber = Integer.parseInt(startGrassNumberTextField.getText());
 
@@ -245,7 +246,7 @@ public class SimulationPresenter implements MapChangeListener {
             int giveToChild = 10;
 
 
-            GrassField map = new GrassField(startGrassNumber,grassPerDay, 0.9,energyFromGrass,width,height);
+            Globe map = new Globe(startGrassNumber,grassPerDay, 0.9,energyFromGrass,width,height);
             map.addObserver(this);
             Simulation simulation = new Simulation(positions,map,startEnergy,genesLength,minimumToBeFull,giveToChild);
             SimulationEngine engine = new SimulationEngine(List.of(simulation));

@@ -8,15 +8,16 @@ import java.util.List;
 
 public class Simulation implements Runnable {
     private List<Animal> animals;
-    private GrassField map;
+    private Globe map;
 
-    public Simulation(List<Vector2d> animalOnPosition, GrassField map, int energy, int genesLength, int minimumToBefull, int giveToChild) {
+    public Simulation(List<Vector2d> animalOnPosition, Globe map, int energy, int genesLength, int minimumToBefull, int giveToChild) {
         this.animals = new ArrayList<>();
         for (Vector2d position : animalOnPosition) {
             Animal animal = new Animal(position,energy,genesLength,minimumToBefull,giveToChild,new Genomes(genesLength));
             map.place(animal);
             animals.add(animal);
         }
+
         this.map = map;
     }
 
@@ -31,10 +32,10 @@ public class Simulation implements Runnable {
                 for (Animal animal : map.getAnimals()) {
                     int gen = animal.getGenomes().get(animal.getActive());
                     MapDirection direction = parse(animal.getOrientation(), gen);
-                    map.move(animal, direction, (GrassField) map);
+                    map.move(animal, direction,  map);
                     animal.nextGene();
                 }
-                map.allEat(map);
+                map.allEat();
                 map.allReproduce();
                 map.growGrass(map.getGrassPerDay());
 
@@ -46,5 +47,6 @@ public class Simulation implements Runnable {
                 }
             }
     }
+
 }
 
