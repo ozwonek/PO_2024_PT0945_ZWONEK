@@ -46,5 +46,17 @@
     "animalGenotypeLength": 3,
     "grassDaily": 3,
     "mapHeight": 3
+  },
+  "Duży Test": {
+    "animalStart": 15,
+    "animalStartEnergy": 10,
+    "animalEnergyToChild": 10,
+    "animalEnergyToReproduce": 20,
+    "grassStart": 30,
+    "grassEnergy": 10,
+    "mapWidth": 20,
+    "animalGenotypeLength": 5,
+    "grassDaily": 10,
+    "mapHeight": 20
   }
 }

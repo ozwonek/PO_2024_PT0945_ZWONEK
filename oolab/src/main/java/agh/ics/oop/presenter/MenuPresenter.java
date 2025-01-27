@@ -177,8 +177,7 @@ public class MenuPresenter {
             System.out.println("Błąd odczytu pliku: " + e.getMessage());
             return;
         }
-
-
+        allconfigs.put(configName,configs);
         try (Writer writer = new FileWriter("configurations.json")) {
             gson.toJson(allconfigs, writer);
             System.out.println("Nowa konfiguracja została dopisana do pliku.");

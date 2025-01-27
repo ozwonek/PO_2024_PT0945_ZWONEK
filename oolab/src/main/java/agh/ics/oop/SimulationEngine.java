@@ -19,27 +19,12 @@ public class SimulationEngine {
         this.simulations = new ArrayList<>();
     }
 
-//    public void runSync() {
-//        this.isAsync = false;
-//        for (Simulation simulation : simulations) {
-//            simulation.run();
-//        }
-//    }
-//
 
     public void runNewSimulation(Simulation newSimulation) {
         this.simulations.add(newSimulation);
         Thread thread = new Thread(newSimulation);
         threads.add(thread);
         thread.start();
-    }
-
-    public void runAsync() {
-        for (Simulation simulation : simulations) {
-            Thread thread = new Thread(simulation);
-            threads.add(thread);
-            thread.start();
-        }
     }
 
     public void awaitSimulationsEnd() {
@@ -61,11 +46,4 @@ public class SimulationEngine {
 
     }
 
-    public void runAsyncInThreadPool() {
-        for (Simulation simulation : simulations) {
-            executorThreadPool.submit(simulation);
-        }
-        awaitSimulationsEnd();
-
-    }
 }

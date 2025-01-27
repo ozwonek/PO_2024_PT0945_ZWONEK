@@ -38,7 +38,6 @@ public class Simulation implements Runnable {
         synchronized (lock) {
             System.out.println("Notifinyg");
             lock.notify();
-            lock.notifyAll();
         }
     }
 
@@ -50,7 +49,6 @@ public class Simulation implements Runnable {
     private void runDay() {
         this.days += 1;
         map.clean();
-        map.setStatistics();
         map.nextDay();
         for (Animal animal : map.getAnimals()) {
             int gen = animal.getGenomes().get(animal.getActive());
@@ -61,6 +59,7 @@ public class Simulation implements Runnable {
         map.allEat();
         map.allReproduce();
         map.growGrass(map.getGrassPerDay());
+        map.setStatistics();
     }
 
     @Override
