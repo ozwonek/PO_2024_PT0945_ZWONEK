@@ -22,8 +22,8 @@
     </stylesheets>
 
     <left>
-        <VBox alignment="CENTER" spacing="10">
-            <VBox fx:id="settingConfigurations" visible="true">
+        <VBox alignment="CENTER" spacing="15" >
+            <VBox fx:id="settingConfigurations" alignment="CENTER">
                 <Label text="Wybierz konfigurację:"/>
                 <ComboBox fx:id="configurations" onAction="#getConfiguration"/>
                 <Button onAction="#showNewConfigurationForm">Dodaj nową konfigurację</Button>

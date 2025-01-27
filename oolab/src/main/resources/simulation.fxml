@@ -22,7 +22,7 @@
     <left>
         <VBox alignment="CENTER" spacing="10">
             <Label fx:id="simulationDayLabel"/>
-            <Button onAction="#startOrStopButton" text="start"/>
+            <Button fx:id="buttonStartStop" onAction="#startOrStopButton" text="start"/>
             <GridPane fx:id="mapGrid" gridLinesVisible="true" alignment="CENTER">
                 <VBox.margin>
                     <Insets top="10" right="20" bottom="10" left="20"/>

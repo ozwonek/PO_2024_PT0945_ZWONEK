@@ -4,7 +4,6 @@ import agh.ics.oop.Simulation;
 import agh.ics.oop.SimulationEngine;
 import agh.ics.oop.Statistics;
 import agh.ics.oop.model.*;
-//import agh.ics.oop.model.util.Boundary;
 import agh.ics.oop.model.util.Config;
 import com.google.gson.GsonBuilder;
 import javafx.application.Platform;
@@ -31,9 +30,6 @@ import java.util.Map;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import javafx.stage.Stage;
-
-
-//import static agh.ics.oop.OptionsParser.parse;
 
 public class MenuPresenter {
     public Label animalOnObservation;

@@ -9,6 +9,7 @@ import agh.ics.oop.model.util.Config;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.HPos;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -17,6 +18,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
 
+import java.util.Objects;
+
 
 //import static agh.ics.oop.OptionsParser.parse;
 
@@ -24,6 +27,7 @@ public class SimulationPresenter implements MapChangeListener  {
     public VBox mainContainer;
     public Label animalOnObservation;
     public VBox animalStatistics;
+    public Button buttonStartStop;
     private Globe map;
     private Animal animal;
     private static final String CONFIG_FILE = "configurations.json";
@@ -282,6 +286,14 @@ public class SimulationPresenter implements MapChangeListener  {
 
     @FXML
     public void startOrStopButton() {
+        if(Objects.equals(buttonStartStop.getText(), "start")){
+            buttonStartStop.setText("stop");
+
+        }
+        else{
+            buttonStartStop.setText("start");
+
+        }
         if (simulation == null) {
             simulation = new Simulation(config, map, save);
             simulationEngine.runNewSimulation(simulation);

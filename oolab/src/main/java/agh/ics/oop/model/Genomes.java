@@ -26,7 +26,6 @@ public class Genomes {
 
     private void inheritGenes(Animal dominantParent, Animal subDaddy) {
         double dominantPercentege = (double) dominantParent.getEnergy() / (subDaddy.getEnergy() + dominantParent.getEnergy());
-//        System.out.println(dominantPercentege + " " +  parent1.getEnergy()+" " + " " + parent2.getEnergy()+ " "+ " "+ (int) Math.round(dominantPercentege* genesLength) +" "+genesLength );
         boolean side = random.nextBoolean(); //strona z której bierzemy dominujący
         Animal leftParent = side ? dominantParent : subDaddy;
         Animal rightParent = side ? subDaddy : dominantParent;

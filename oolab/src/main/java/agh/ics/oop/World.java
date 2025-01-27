@@ -1,6 +1,5 @@
 package agh.ics.oop;
 
-//import agh.ics.oop.OptionsParser;
 import agh.ics.oop.model.*;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;

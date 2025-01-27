@@ -45,19 +45,7 @@ public enum MapDirection {
         };
     }
 
-//    public MapDirection nextNext(){
-//        return switch (this) {
-//            case NORTH -> EAST;
-//            case NORTHEAST -> SOUTHEAST;
-//            case EAST -> SOUTH;
-//            case SOUTHEAST -> SOUTHWEST;
-//            case SOUTH -> WEST;
-//            case SOUTHWEST -> NORTHWEST;
-//            case WEST -> NORTHWEST;
-//            case NORTHWEST -> NORTH;
-//        };
-//    }
-//    }
+
 
     public MapDirection opposite(){
         return switch (this) {
@@ -104,11 +92,3 @@ public enum MapDirection {
         return directions[index];
     }
 }
-//0 -> nie zmienia się
-//1 -> next
-//2 -> next.next
-//3 oposite.previous
-//4 oposite
-//5oposite.next
-//6previous.previous
-//7previous
