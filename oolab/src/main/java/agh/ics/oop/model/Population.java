@@ -91,7 +91,7 @@ public class Population implements MoveValidator {
     private void animalDied(Animal animal){
         deadAnimalCount+=1;
         deadAnimalsAge+=animal.getAge();
-        animalsAge +=animal.getAge();
+        animalsAge -=animal.getAge();
         animalsChildrenCount-=animal.getChildrenSize();
         animal.setDeathDay(this.dayCount);
     }
@@ -205,17 +205,23 @@ public class Population implements MoveValidator {
                 sumOfEnergy += animal.getEnergy();
         }
         }
-        return (double) sumOfEnergy /getAnimalsSize();
+        return Math.round((double) sumOfEnergy*100.0 /getAnimalsSize())/100.0;
     }
     public void updateSumOfYears(){
         this.animalsAge = animalsAge + getAnimalsSize();
     }
     public double meanChildrenCount(){
-        return ((double) animalsChildrenCount /(2*getAnimalsSize()));
+        return Math.round(((double) (animalsChildrenCount*100.0) /(2*getAnimalsSize())))/100.0;
     }
     public double meanLifeForLiving(){
         updateSumOfYears();
-        return (double) this.animalsAge / getAnimalsSize();
+        return Math.round(((double) (this.animalsAge * 100.0) / getAnimalsSize()))/100.0;
+    }
+    public double meanForDead(){
+        if (deadAnimalCount == 0){
+            return 0.0;
+        }
+        return Math.round((double) (this.deadAnimalsAge * 100.0) / deadAnimalCount)/ 100.0;
     }
 
 }

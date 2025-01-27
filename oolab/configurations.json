@@ -1,62 +1,15 @@
 {
-  "Slay": {
-    "animalStart": 3,
-    "animalStartEnergy": 3,
-    "animalEnergyToChild": 3,
-    "animalEnergyToReproduce": 3,
-    "grassStart": 3,
-    "grassEnergy": 3,
-    "mapWidth": 3,
-    "animalGenotypeLength": 3,
-    "grassDaily": 3,
-    "mapHeight": 3
-  },
-  "Pulpa mango": {
-    "animalStart": 3,
-    "animalStartEnergy": 3,
-    "animalEnergyToChild": 3,
-    "animalEnergyToReproduce": 3,
-    "grassStart": 3,
-    "grassEnergy": 3,
-    "mapWidth": 3,
-    "animalGenotypeLength": 3,
-    "grassDaily": 3,
-    "mapHeight": 3
-  },
   "Dużo Zwierząt": {
-    "animalStart": 20,
+    "animalStart": 30,
     "animalStartEnergy": 3,
     "animalEnergyToChild": 3,
     "animalEnergyToReproduce": 3,
-    "grassStart": 3,
-    "grassEnergy": 3,
-    "mapWidth": 20,
-    "animalGenotypeLength": 3,
-    "grassDaily": 3,
-    "mapHeight": 20
-  },
-  "Testowa": {
-    "animalStart": 3,
-    "animalStartEnergy": 100,
-    "animalEnergyToChild": 3,
-    "animalEnergyToReproduce": 3,
-    "grassStart": 3,
-    "grassEnergy": 3,
-    "mapWidth": 10,
-    "animalGenotypeLength": 3,
-    "grassDaily": 1,
-    "mapHeight": 10
-  },
-  "Duży Test": {
-    "animalStart": 15,
-    "animalStartEnergy": 10,
-    "animalEnergyToChild": 10,
-    "animalEnergyToReproduce": 20,
     "grassStart": 30,
     "grassEnergy": 10,
     "mapWidth": 20,
-    "animalGenotypeLength": 5,
-    "grassDaily": 10,
+    "animalGenotypeLength": 3,
+    "grassDaily": 3,
     "mapHeight": 20
   }
+
 }

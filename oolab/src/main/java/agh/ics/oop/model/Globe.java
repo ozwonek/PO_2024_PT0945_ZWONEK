@@ -222,7 +222,7 @@ public class Globe extends Population{
                 meanLifeForLiving(),
                 meanChildrenCount(),
                 meanEnergy(),
-                (double) deadAnimalsAge/deadAnimalCount);
+                meanForDead());
     }
     public Statistics getStats(){
         return stats;
