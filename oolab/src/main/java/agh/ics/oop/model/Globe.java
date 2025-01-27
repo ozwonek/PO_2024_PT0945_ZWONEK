@@ -5,33 +5,14 @@ import agh.ics.oop.model.util.Config;
 
 import java.util.*;
 
-import static agh.ics.oop.model.Vector2d.*;
+import static agh.ics.oop.model.Vector2d.MOVEMENT_VECTORS;
 
-
-public class Globe implements MoveValidator {
+public class Globe extends Population{
     private final Map<Vector2d, Grass> grasses = new HashMap<>();
-    private final Map<Vector2d, List<Animal>> animals = new HashMap<>();
-    private final List<MapChangeListener> observers = new ArrayList<>();
-    private Vector2d lowerLeft = new Vector2d(0,0);
-    private Vector2d upperRight;
-    private int deadAnimalCount = 0;
-    private static final Random random = new Random();
     private final Set<Vector2d> notPrefferedSpots = new HashSet<>();
     private final Set<Vector2d> prefferedSpots = new HashSet<>();
-    private int deadAnimalsAge = 0;
-    private int animalsChildrenCount = 0;
-    private Map<Genomes,Integer> genCount = new HashMap<>();
-    private Genomes mostCommonGenom;
-    private int animalsAge = 0;
-    private Statistics stats = new Statistics();
-    private int dayCount = 0;
-    private Config worldConfig;
-
-
-
-    public Globe(Config worldConfig) {
-        this.worldConfig = worldConfig;
-        this.upperRight = new Vector2d(worldConfig.mapWidth()-1, worldConfig.mapHeight()-1);
+    public Globe(Config worldConfig){
+        super(worldConfig);
         int lowerEquator = (int) (0.4 * worldConfig.mapHeight());
         int upperEquator = (int) (0.6 * worldConfig.mapHeight());
         for (int i = 0; i < worldConfig.mapHeight(); i++) {
@@ -47,84 +28,14 @@ public class Globe implements MoveValidator {
         growGrass(worldConfig.grassStart());
 
     }
-    public void addGenCount(Genomes genome) {
-        genCount.put(genome,genCount.getOrDefault(genome,0) + 1);
-        if(mostCommonGenom == null || genCount.get(genome)>genCount.get(mostCommonGenom)){
-            mostCommonGenom = genome;
-        }
-    }
-    public void nextDay(){
-        dayCount+=1;
-    }
-
-    public boolean isPreferred(Vector2d position){
-        System.out.println(prefferedSpots);
-        System.out.println(position);
-        return prefferedSpots.contains(position);
-
-    }
-
-    public int getWidth(){
-        return this.worldConfig.mapWidth();
-    }
-    public int getHeight(){
-        return this.worldConfig.mapHeight();
-    }
-    public List<Animal> getAnimals() {
-        List<Animal> all = new ArrayList<>();
-        for(List<Animal> animals: animals.values())
-        {
-            all.addAll(animals);
-        }
-        return all;
-    }
-
-    public boolean canMoveUpOrDown(Vector2d position) {
-        return position.correctHeight(lowerLeft,upperRight);
-    }
-    public boolean canMoveRightOrLeft(Vector2d position){
-        return position.correctWidth(lowerLeft,upperRight);
-    }
     public void addObserver(MapChangeListener listener){
         observers.add(listener);
     }
-
     protected void mapChange(String message){
         for(MapChangeListener observer: observers){
             observer.mapChanged(this,message);
         }
     }
-
-    public double getAverageAnimalAge(){
-        return (double) deadAnimalsAge /deadAnimalCount;
-    }
-
-    public int getAnimalsChildrenCount(){
-        return animalsChildrenCount;
-    }
-
-    public void place(Animal animal){
-        if(animals.get(animal.getPosition()) == null){
-            List<Animal> onThisSpot = new ArrayList<>();
-            onThisSpot.add(animal);
-            animals.put(animal.getPosition(),onThisSpot);
-        }
-        else {
-            animals.get(animal.getPosition()).add(animal);
-        }
-
-    }
-
-    public int getAnimalsSize(){
-        int countAnimals = 0;
-        for(List<Animal> animals: animals.values()){
-            for(Animal animal : animals){
-                countAnimals +=1;
-            }
-        }
-        return countAnimals;
-    }
-
     public void move(Animal animal,MapDirection direction,Globe map){
 
         if (animal.toOldToMove()){
@@ -140,60 +51,14 @@ public class Globe implements MoveValidator {
         }
         animal.setEnergy(animal.getEnergy() - 1);
         animal.getOlder();
-        mapChange("energia : " + animal.getEnergy());
+        mapChange("Halo");
 
     }
-
-    private void animalDied(Animal animal){
-        deadAnimalCount+=1;
-        deadAnimalsAge+=animal.getAge();
-        animalsAge +=animal.getAge();
-        animalsChildrenCount-=animal.getChildrenSize();
-        animal.setDeathDay(this.dayCount);
+    public boolean isPreferred(Vector2d position){
+        System.out.println(prefferedSpots);
+        System.out.println(position);
+        return prefferedSpots.contains(position);
     }
-
-    public void clean() {
-        List<Vector2d> toDelatePositions = new ArrayList<>();
-        for (List<Animal> onOneSpot : animals.values()) {
-            List<Animal> toRemove = new ArrayList<>();
-            Vector2d position = onOneSpot.getFirst().getPosition();
-            for (Animal animal : onOneSpot) {
-                if (animal.getEnergy() <= 0) {
-                    toRemove.add(animal);
-                    animalDied(animal);
-                }
-            }
-            for (Animal animalToClean : toRemove ){
-                onOneSpot.remove(animalToClean);
-
-            }
-            if (onOneSpot.isEmpty()) {
-                toDelatePositions.add(position);
-            }
-        }
-        for(Vector2d position: toDelatePositions){
-            animals.remove(position);
-        }
-    }
-    public void allReproduce(){
-        for(List<Animal> onOneSpot: animals.values()){
-            Vector2d position = onOneSpot.getFirst().getPosition();
-            if(onOneSpot.size()<2){
-                continue;
-            }
-            onOneSpot.sort((a,b) -> Integer.compare(a.getEnergy(), b.getEnergy()));
-            int onOneSpotSize = onOneSpot.size();
-            if(onOneSpot.get(onOneSpotSize-2).getEnergy()<onOneSpot.get(onOneSpotSize-2).getMinimumEnergyToReproduce()){
-                continue;
-            }
-            Animal child = onOneSpot.get(onOneSpotSize-1).reproduce(onOneSpot.get(onOneSpotSize-2));
-            place(child);
-            addGenCount(child.getGenomes());
-            animalsChildrenCount+=2;
-        }
-    }
-
-
     public void allEat() {
         List<Vector2d> eatenGrassSpots = new ArrayList<>();
         for (List<Animal> onOneSpot : animals.values()) {
@@ -225,10 +90,6 @@ public class Globe implements MoveValidator {
         }
         removeGrass(eatenGrassSpots);
     }
-
-
-
-
     public void growGrass(int numberOfGrasses){
         int placedGrasses = 0;
         int countFromPreffered = 0;
@@ -255,7 +116,6 @@ public class Globe implements MoveValidator {
         growChoosenSpots(notPrefferedSpots,countFromNotPreffered);
 
     }
-
     private void growChoosenSpots(Set<Vector2d> placedSet, int numberToGrow){
         List<Vector2d> choosen = new ArrayList<>(placedSet);
         Collections.shuffle(choosen);
@@ -268,7 +128,6 @@ public class Globe implements MoveValidator {
         }
 
     }
-
     private void addNewGrass(Vector2d spot){
         this.grasses.put(spot,new Grass(spot));
         for (Vector2d direction : MOVEMENT_VECTORS) {
@@ -280,13 +139,16 @@ public class Globe implements MoveValidator {
         prefferedSpots.remove(spot);
         notPrefferedSpots.remove(spot);
     }
-    public boolean isOccupied(Vector2d spot){
-        return animals.containsKey(spot) || grasses.containsKey(spot);
-    }
-
     public void removeGrass(List<Vector2d> spots){
         for(Vector2d spot: spots){
-            if(spot.getY() <= (int) (0.6 * worldConfig.mapHeight()) && spot.getY() >= (int) (0.4 * worldConfig.mapHeight())){
+            boolean neighbour = false;
+            for (Vector2d direction : MOVEMENT_VECTORS) {
+                Vector2d neighbourSpot = direction.add(spot);
+                if(grasses.containsKey(neighbourSpot)){
+                    neighbour = true;
+                }
+            }
+            if((spot.getY() <= (int) (0.6 * worldConfig.mapHeight()) && spot.getY() >= (int) (0.4 * worldConfig.mapHeight())) || neighbour){
                 prefferedSpots.add(spot);
             }
             else {
@@ -309,34 +171,21 @@ public class Globe implements MoveValidator {
 
 
     }
-
-    public Animal objectAt(Vector2d position) {
-        if(animals.get(position) == null){
-            return null;
-        }
-        return animals.get(position).getFirst();
+    public boolean isOccupied(Vector2d spot){
+        return animals.containsKey(spot) || grasses.containsKey(spot);
     }
-
-
-    public int getGrassPerDay() {
-        return this.worldConfig.grassDaily();
-    }
-
     public void eatGrass(Animal animal) {
         animal.setEnergy(animal.getEnergy() + worldConfig.grassEnergy());
         grasses.remove(animal.getPosition());
 
     }
-
+    public int getGrassPerDay() {
+        return this.worldConfig.grassDaily();
+    }
 
     public boolean isGrass(Vector2d position) {
         return grasses.get(position) != null;
     }
-
-    public boolean isAnimal(Vector2d position){
-        return animals.get(position) != null;
-    }
-
 
     public String toImage(int width,int height){
         String color = "#b7b4a1";
@@ -346,52 +195,6 @@ public class Globe implements MoveValidator {
                 "-fx-pref-height: " + height + ";" +
                 "-fx-background-image: url('images/6.png'); "
                 + "-fx-background-size: contain; ";
-    }
-
-    public List<Animal> getStronger(List<Animal> onOneSpot) {
-
-        if(onOneSpot.size()>1){
-            onOneSpot.sort(
-                    Comparator.comparingInt(Animal::getEnergy).reversed()
-                            .thenComparing(Comparator.comparingInt(Animal::getAge).reversed())
-                            .thenComparingInt(Animal::getChildrenSize).reversed());
-
-            int topEnergy = onOneSpot.getFirst().getEnergy();
-            int topAge = onOneSpot.getFirst().getAge();
-            int topChildrenSize = onOneSpot.getFirst().getChildrenSize();
-
-            List<Animal> competitors = new ArrayList<>();
-            for (Animal animal : onOneSpot) {
-                if (animal.getEnergy() == topEnergy && animal.getAge() == topAge && animal.getChildrenSize() == topChildrenSize) {
-                    competitors.add(animal);
-                }
-                if(competitors.size()>=2){
-                    return competitors;
-                }
-                else{
-                    List<Animal> secondCompetitors = new ArrayList<>();
-                    int secondTopEnergy = onOneSpot.get(1).getEnergy();
-                    int secondTopAge = onOneSpot.get(1).getAge();
-                    int secondTopChildrenSize = onOneSpot.get(1).getChildrenSize();
-
-                    for(Animal secondsAnimal: onOneSpot) {
-                        if (secondsAnimal.getEnergy() == secondTopEnergy && secondsAnimal.getAge() == secondTopAge && secondsAnimal.getChildrenSize() == secondTopChildrenSize) {
-                            secondCompetitors.add(secondsAnimal);
-                        }
-                    }
-                    if(secondCompetitors.size()<2){
-                        competitors.add( secondCompetitors.getFirst());
-                        return secondCompetitors;
-                    }
-                    else{
-                        int index = random.nextInt(secondCompetitors.size());
-                        competitors.add(secondCompetitors.get(index));
-                    }
-                }
-            }
-            return competitors;
-        }
-        return onOneSpot;
     }
     public int getGrassSize(){
         return grasses.size();
@@ -409,25 +212,6 @@ public class Globe implements MoveValidator {
             }
         }
         return freeSpots;
-    }
-    public double meanEnergy(){
-        int sumOfEnergy = 0;
-        for(List<Animal> animals: animals.values()){
-            for(Animal animal: animals){
-                sumOfEnergy += animal.getEnergy();
-        }
-        }
-        return (double) sumOfEnergy /getAnimalsSize();
-    }
-    public void updateSumOfYears(){
-        this.animalsAge = animalsAge + getAnimalsSize();
-    }
-    public double meanChildrenCount(){
-        return ((double) animalsChildrenCount /(2*getAnimalsSize()));
-    }
-    public double meanLifeForLiving(){
-        updateSumOfYears();
-        return (double) this.animalsAge / getAnimalsSize();
     }
     public void setStatistics(){
         stats.setStatistics(dayCount,

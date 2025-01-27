@@ -37,15 +37,15 @@
   },
   "Testowa": {
     "animalStart": 3,
-    "animalStartEnergy": 3,
+    "animalStartEnergy": 100,
     "animalEnergyToChild": 3,
     "animalEnergyToReproduce": 3,
     "grassStart": 3,
     "grassEnergy": 3,
-    "mapWidth": 3,
+    "mapWidth": 10,
     "animalGenotypeLength": 3,
-    "grassDaily": 3,
-    "mapHeight": 3
+    "grassDaily": 1,
+    "mapHeight": 10
   },
   "Duży Test": {
     "animalStart": 15,
