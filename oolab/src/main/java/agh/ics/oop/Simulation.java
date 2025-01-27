@@ -82,7 +82,6 @@ public class Simulation implements Runnable {
     private void runDay() {
         this.days += 1;
         map.clean();
-        map.nextDay();
         for (Animal animal : map.getAnimals()) {
             int gen = animal.getGenomes().get(animal.getActive());
             MapDirection direction = parse(animal.getOrientation(), gen);
@@ -96,6 +95,7 @@ public class Simulation implements Runnable {
         if(csvSave){
             saveStats(map.getStats());
         }
+        map.nextDay();
 
     }
 
