@@ -57,6 +57,13 @@ public class Globe implements MoveValidator {
         dayCount+=1;
     }
 
+    public boolean isPreferred(Vector2d position){
+        System.out.println(prefferedSpots);
+        System.out.println(position);
+        return prefferedSpots.contains(position);
+
+    }
+
     public int getWidth(){
         return this.worldConfig.mapWidth();
     }
@@ -137,6 +144,14 @@ public class Globe implements MoveValidator {
 
     }
 
+    private void animalDied(Animal animal){
+        deadAnimalCount+=1;
+        deadAnimalsAge+=animal.getAge();
+        animalsAge +=animal.getAge();
+        animalsChildrenCount-=animal.getChildrenSize();
+        animal.setDeathDay(this.dayCount);
+    }
+
     public void clean() {
         List<Vector2d> toDelatePositions = new ArrayList<>();
         for (List<Animal> onOneSpot : animals.values()) {
@@ -145,10 +160,7 @@ public class Globe implements MoveValidator {
             for (Animal animal : onOneSpot) {
                 if (animal.getEnergy() <= 0) {
                     toRemove.add(animal);
-                    deadAnimalCount += 1;
-                    deadAnimalsAge+=animal.getAge();
-                    animalsAge -= animal.getAge();
-                    animalsChildrenCount-=animal.getChildrenSize();
+                    animalDied(animal);
                 }
             }
             for (Animal animalToClean : toRemove ){
@@ -213,6 +225,7 @@ public class Globe implements MoveValidator {
         }
         removeGrass(eatenGrassSpots);
     }
+
 
 
 
@@ -315,6 +328,7 @@ public class Globe implements MoveValidator {
 
     }
 
+
     public boolean isGrass(Vector2d position) {
         return grasses.get(position) != null;
     }
@@ -323,8 +337,11 @@ public class Globe implements MoveValidator {
         return animals.get(position) != null;
     }
 
+
     public String toImage(int width,int height){
-        return "-fx-background-color: #b7b4a1;" +
+        String color = "#b7b4a1";
+
+        return "-fx-background-color: "+ color +";" +
                 "-fx-pref-width: " + width + ";" +
                 "-fx-pref-height: " + height + ";" +
                 "-fx-background-image: url('images/6.png'); "

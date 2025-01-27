@@ -19,7 +19,7 @@ public class Animal implements WorldElement {
     private final int genesLength;
     private static final Random random = new Random();
     private int eatenGrass =0;
-    private int offspringCount = 0;
+    private int deathDay =-1;
 
 
     public Animal(Vector2d position, int energy, int genesLength, int minimumEnergyToReproduce, int energyGivenToChild, Genomes genomes) {
@@ -50,13 +50,13 @@ public class Animal implements WorldElement {
     public void setEatenGrass(){
         this.eatenGrass+=1;
     }
-//    public void setOffspringCount(int newOffsprings){
-//        this.offspringCount = newOffsprings;
-//    }
 
-//    public int getOffspringCount(){
-//        return this.offspringCount;
-//    }
+    public void setDeathDay(int day){
+        this.deathDay = day;
+    }
+    public int getDeathDay(){
+        return this.deathDay;
+    }
 
     public Animal reproduce(Animal secondParent) {
 
@@ -71,41 +71,32 @@ public class Animal implements WorldElement {
         return orientation.toString();
     }
 
-    public String toImage(int width,int height) {
-        if (this.getEnergy()>20){
-        return "-fx-background-color: #b7b4a1;" +
+    public String toImage(int width,int height,boolean isDominant) {
+
+        String color = "#b7b4a1";
+        if(isDominant){
+            color = "#222222";
+        }
+        String configuration = "-fx-background-color: "+color+";" +
                 "-fx-pref-width: " + width + ";" +
-                "-fx-pref-height: " + height + ";" +
-                "-fx-background-image: url('images/1.png'); "
-                + "-fx-background-size: contain; ";
+                "-fx-pref-height: " + height + ";"+
+                "-fx-background-size: contain; ";
+
+
+        if (this.getEnergy()>20){
+        return configuration + "-fx-background-image: url('images/1.png'); ";
         }
         else if (this.getEnergy()>15 && this.getEnergy()<=20){
-            return "-fx-background-color: #b7b4a1;" +
-                    "-fx-pref-width: " + width + ";" +
-                    "-fx-pref-height: " + height + ";" +
-                    "-fx-background-image: url('images/2.png'); "
-                    + "-fx-background-size: contain; ";
+            return configuration +  "-fx-background-image: url('images/2.png'); ";
         }
         else if (this.getEnergy()>10 && this.getEnergy()<=15){
-            return "-fx-background-color: #b7b4a1;" +
-                    "-fx-pref-width: " + width + ";" +
-                    "-fx-pref-height: " + height + ";" +
-                    "-fx-background-image: url('images/3.png'); "
-                    + "-fx-background-size: contain; ";
+            return configuration +  "-fx-background-image: url('images/3.png'); " ;
         }
         else if (this.getEnergy()>5 && this.getEnergy()<=10){
-            return "-fx-background-color: #b7b4a1;" +
-                    "-fx-pref-width: " + width + ";" +
-                    "-fx-pref-height: " + height + ";" +
-                    "-fx-background-image: url('images/4.png'); "
-                    + "-fx-background-size: contain; ";
+            return configuration+ "-fx-background-image: url('images/4.png'); ";
         }
         else{
-            return "-fx-background-color: #b7b4a1;" +
-                    "-fx-pref-width: " + width + ";" +
-                    "-fx-pref-height: " + height + ";" +
-                    "-fx-background-image: url('images/5.png'); "
-                    + "-fx-background-size: contain; ";
+            return configuration+ "-fx-background-image: url('images/5.png'); ";
         }
     }
 
@@ -178,15 +169,19 @@ public class Animal implements WorldElement {
         }
     }
 
-    public int getOffspringCount(){
-
-        int offspringCount = this.getChildrenSize();
-        if(offspringCount!=0){
-            for(Animal animal: this.getChildrens()){
-                offspringCount+=animal.getChildrenSize();
+    private void setOffspringCount(Animal animal, Set<Animal> offsprings) {
+        for (Animal child : this.getChildrens()) {
+            if (!offsprings.contains(child)) {
+                offsprings.add(child);
+                child.setOffspringCount(child, offsprings);
             }
         }
-        return offspringCount;
+    }
+
+    public int getOffspringCount(){
+        Set<Animal> offsprings = new HashSet<>();
+        setOffspringCount(this,offsprings);
+        return offsprings.size();
     }
 
 }
