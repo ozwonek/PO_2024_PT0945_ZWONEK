@@ -7,15 +7,12 @@ import java.util.*;
 
 
 public class Population implements MoveValidator {
-//    private final Map<Vector2d, Grass> grasses = new HashMap<>();
     protected final Map<Vector2d, List<Animal>> animals = new HashMap<>();
     protected final List<MapChangeListener> observers = new ArrayList<>();
     protected Vector2d lowerLeft = new Vector2d(0,0);
     protected Vector2d upperRight;
     protected int deadAnimalCount = 0;
     protected static final Random random = new Random();
-//    private final Set<Vector2d> notPrefferedSpots = new HashSet<>();
-//    private final Set<Vector2d> prefferedSpots = new HashSet<>();
     protected int deadAnimalsAge = 0;
     protected int animalsChildrenCount = 0;
     protected Map<Genomes,Integer> genCount = new HashMap<>();
@@ -30,19 +27,7 @@ public class Population implements MoveValidator {
     public Population(Config worldConfig) {
         this.worldConfig = worldConfig;
         this.upperRight = new Vector2d(worldConfig.mapWidth()-1, worldConfig.mapHeight()-1);
-//        int lowerEquator = (int) (0.4 * worldConfig.mapHeight());
-//        int upperEquator = (int) (0.6 * worldConfig.mapHeight());
-//        for (int i = 0; i < worldConfig.mapHeight(); i++) {
-//            for (int j = 0; j < worldConfig.mapWidth(); j++) {
-//                if (lowerEquator<=j && j <= upperEquator){
-//                    prefferedSpots.add(new Vector2d(i,j));
-//                }
-//                else {
-//                    notPrefferedSpots.add(new Vector2d(i,j));
-//                }
-//            }
-//        }
-//        growGrass(worldConfig.grassStart());
+
 
     }
     public void addGenCount(Genomes genome) {
@@ -55,11 +40,6 @@ public class Population implements MoveValidator {
         dayCount+=1;
     }
 
-//    public boolean isPreferred(Vector2d position){
-//        System.out.println(prefferedSpots);
-//        System.out.println(position);
-//        return prefferedSpots.contains(position);
-//    }
 
     public int getWidth(){
         return this.worldConfig.mapWidth();
@@ -82,23 +62,7 @@ public class Population implements MoveValidator {
     public boolean canMoveRightOrLeft(Vector2d position){
         return position.correctWidth(lowerLeft,upperRight);
     }
-//    public void addObserver(MapChangeListener listener){
-//        observers.add(listener);
-//    }
 
-//    protected void mapChange(String message){
-//        for(MapChangeListener observer: observers){
-//            observer.mapChanged(this,message);
-//        }
-//    }
-
-    public double getAverageAnimalAge(){
-        return (double) deadAnimalsAge /deadAnimalCount;
-    }
-
-    public int getAnimalsChildrenCount(){
-        return animalsChildrenCount;
-    }
 
     public void place(Animal animal){
         if(animals.get(animal.getPosition()) == null){
@@ -122,24 +86,7 @@ public class Population implements MoveValidator {
         return countAnimals;
     }
 
-//    public void move(Animal animal,MapDirection direction,Globe map){
-//
-//        if (animal.toOldToMove()){
-//            Vector2d oldPosition = animal.getPosition();
-//            if(animals.get(oldPosition)!=null){
-//                animals.get(oldPosition).remove(animal);
-//                if(animals.get(oldPosition).isEmpty()){
-//                    animals.remove(oldPosition);
-//                }
-//            }
-//            animal.move(this, direction, map);
-//            place(animal);
-//        }
-//        animal.setEnergy(animal.getEnergy() - 1);
-//        animal.getOlder();
-//        mapChange("Halo");
-//
-//    }
+
 
     private void animalDied(Animal animal){
         deadAnimalCount+=1;
@@ -191,121 +138,6 @@ public class Population implements MoveValidator {
     }
 
 
-//    public void allEat() {
-//        List<Vector2d> eatenGrassSpots = new ArrayList<>();
-//        for (List<Animal> onOneSpot : animals.values()) {
-//            Vector2d position = onOneSpot.getFirst().getPosition();
-//            if (this.isGrass(position)) {
-//                eatenGrassSpots.add(position);
-//                List<Animal> competitors = getStronger(onOneSpot);
-//                if(competitors.size()>1){
-//                    int bestAnimal = 0;
-//                    int topEnergy = competitors.getFirst().getEnergy();
-//                    int topAge = competitors.getFirst().getAge();
-//                    int topChildrenSize = competitors.getFirst().getChildrenSize();
-//
-//                    if(competitors.getFirst().getEnergy()==competitors.get(1).getEnergy() && competitors.getFirst().getAge()==competitors.get(1).getAge() && competitors.getFirst().getChildrenSize()==competitors.get(1).getChildrenSize()){
-//                        int index = random.nextInt(competitors.size());
-//                        this.eatGrass(competitors.get(index));
-//                        competitors.get(index).setEatenGrass();
-//                    }
-//                    else{
-//                        this.eatGrass(competitors.getFirst());
-//                        competitors.getFirst().setEatenGrass();
-//                    }
-//                }
-//                else{
-//                    this.eatGrass(onOneSpot.getFirst());
-//                    onOneSpot.getFirst().setEatenGrass();
-//                }
-//            }
-//        }
-//        removeGrass(eatenGrassSpots);
-//    }
-
-
-
-
-//    public void growGrass(int numberOfGrasses){
-//        int placedGrasses = 0;
-//        int countFromPreffered = 0;
-//        int countFromNotPreffered = 0;
-//        while(placedGrasses <numberOfGrasses){
-//            if(notPrefferedSpots.size()-countFromNotPreffered==0){
-//                countFromPreffered += Math.min(prefferedSpots.size()-countFromPreffered,numberOfGrasses-placedGrasses);
-//                break;
-//            }
-//            if(prefferedSpots.size()-countFromPreffered==0){
-//                countFromNotPreffered += Math.min(notPrefferedSpots.size()-countFromNotPreffered,numberOfGrasses-placedGrasses);
-//                break;
-//            }
-//            int randomNumber = random.nextInt(100);
-//            if(randomNumber < 80){
-//                countFromPreffered +=1;
-//            }
-//            else{
-//                countFromNotPreffered +=1;
-//            }
-//            placedGrasses +=1;
-//        }
-//        growChoosenSpots(prefferedSpots,countFromPreffered);
-//        growChoosenSpots(notPrefferedSpots,countFromNotPreffered);
-//
-//    }
-
-//    private void growChoosenSpots(Set<Vector2d> placedSet, int numberToGrow){
-//        List<Vector2d> choosen = new ArrayList<>(placedSet);
-//        Collections.shuffle(choosen);
-//        if(numberToGrow!=0){
-//
-//            List<Vector2d> indicesChoosen  = choosen.subList(0,Math.min(numberToGrow,choosen.size()));
-//            for(Vector2d spot: indicesChoosen){
-//                addNewGrass(spot);
-//            }
-//        }
-//
-//    }
-
-//    private void addNewGrass(Vector2d spot){
-//        this.grasses.put(spot,new Grass(spot));
-//        for (Vector2d direction : MOVEMENT_VECTORS) {
-//            if(spot.add(direction).follows(lowerLeft) && spot.add(direction).proceeds(upperRight)&& !grasses.containsKey(spot.add(direction))){
-//                prefferedSpots.add(spot.add(direction));
-//            }
-//        }
-//
-//        prefferedSpots.remove(spot);
-//        notPrefferedSpots.remove(spot);
-//    }
-//    public boolean isOccupied(Vector2d spot){
-//        return animals.containsKey(spot) || grasses.containsKey(spot);
-//    }
-
-//    public void removeGrass(List<Vector2d> spots){
-//        for(Vector2d spot: spots){
-//            if(spot.getY() <= (int) (0.6 * worldConfig.mapHeight()) && spot.getY() >= (int) (0.4 * worldConfig.mapHeight())){
-//                prefferedSpots.add(spot);
-//            }
-//            else {
-//                notPrefferedSpots.add(spot);
-//            }
-//            for (Vector2d direction : MOVEMENT_VECTORS) {
-//                Vector2d neighbourSpot = direction.add(spot);
-//                boolean grassNeigbour = false;
-//                for(Vector2d nextDirection : MOVEMENT_VECTORS){
-//                    if(grasses.containsKey(neighbourSpot.add(nextDirection))){
-//                        grassNeigbour = true;
-//                    };
-//
-//                }
-//                if(!grassNeigbour){
-//                    prefferedSpots.remove(neighbourSpot);
-//                }
-//            }
-//        }
-//
-//
-//    }
 
     public Animal objectAt(Vector2d position) {
         if(animals.get(position) == null){
@@ -316,32 +148,9 @@ public class Population implements MoveValidator {
 
 
 
-
-//    public void eatGrass(Animal animal) {
-//        animal.setEnergy(animal.getEnergy() + worldConfig.grassEnergy());
-//        grasses.remove(animal.getPosition());
-//
-//    }
-//
-//
-//    public boolean isGrass(Vector2d position) {
-//        return grasses.get(position) != null;
-//    }
-
     public boolean isAnimal(Vector2d position){
         return animals.get(position) != null;
     }
-
-
-//    public String toImage(int width,int height){
-//        String color = "#b7b4a1";
-//
-//        return "-fx-background-color: "+ color +";" +
-//                "-fx-pref-width: " + width + ";" +
-//                "-fx-pref-height: " + height + ";" +
-//                "-fx-background-image: url('images/6.png'); "
-//                + "-fx-background-size: contain; ";
-//    }
 
     public List<Animal> getStronger(List<Animal> onOneSpot) {
 
@@ -388,23 +197,7 @@ public class Population implements MoveValidator {
         }
         return onOneSpot;
     }
-//    public int getGrassSize(){
-//        return grasses.size();
-//    }
-//    public int freeSpotsLeft(){
-//        int freeSpots = 0;
-//        for(int i=0;i<worldConfig.mapWidth();i++)
-//        {
-//            for(int j=0;j<worldConfig.mapHeight();j++){
-//
-//                Vector2d spot = new Vector2d(i,j);
-//                if(!isOccupied(spot)){
-//                    freeSpots++;
-//                }
-//            }
-//        }
-//        return freeSpots;
-//    }
+
     public double meanEnergy(){
         int sumOfEnergy = 0;
         for(List<Animal> animals: animals.values()){
@@ -424,19 +217,5 @@ public class Population implements MoveValidator {
         updateSumOfYears();
         return (double) this.animalsAge / getAnimalsSize();
     }
-//    public void setStatistics(){
-//        stats.setStatistics(dayCount,
-//                getAnimalsSize(),
-//                getGrassSize(),
-//                freeSpotsLeft(),
-//                mostCommonGenom,
-//                meanLifeForLiving(),
-//                meanChildrenCount(),
-//                meanEnergy(),
-//                (double) deadAnimalsAge/deadAnimalCount);
-//    }
-//    public Statistics getStats(){
-//        return stats;
-//    }
 
 }

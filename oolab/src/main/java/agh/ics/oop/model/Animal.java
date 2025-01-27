@@ -100,9 +100,6 @@ public class Animal implements WorldElement {
         }
     }
 
-    public UUID getId() {
-        return this.id;
-    }
 
     public int getEnergy() {
         return this.energy;
@@ -151,10 +148,6 @@ public class Animal implements WorldElement {
     @Override
     public Vector2d getPosition() {
         return this.position;
-    }
-
-    public boolean isAt(Vector2d position) {
-        return this.position.equals(position);
     }
 
     public void move(MoveValidator validator, MapDirection direction, Globe map) {

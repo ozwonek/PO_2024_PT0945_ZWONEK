@@ -4,9 +4,6 @@
     -fx-border-width: 1px;
 }
 
-/*.label{*/
-/*    -fx-text-fill: #ffffff;*/
-/*}*/
 
 .animal-label {
     -fx-font-size: 16px;
@@ -21,5 +18,4 @@
     -fx-text-fill: #000;
     -fx-padding: 10px 0;
     -fx-alignment: center;
-    -fx
 }
