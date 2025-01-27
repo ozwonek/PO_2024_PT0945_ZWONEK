@@ -6,7 +6,6 @@ import agh.ics.oop.Statistics;
 import agh.ics.oop.model.*;
 //import agh.ics.oop.model.util.Boundary;
 import agh.ics.oop.model.util.Config;
-import com.google.gson.GsonBuilder;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.HPos;
@@ -17,26 +16,6 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
-
-
-import java.io.*;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.StackPane;
-
 
 
 //import static agh.ics.oop.OptionsParser.parse;
@@ -165,11 +144,14 @@ public class SimulationPresenter implements MapChangeListener  {
         statisticsGrid.add(label,1,3);
         }
 
-
-    private void drawMap(){
+    private void followAnimal(Animal animal){
+        if(!simulation.isRunning()){
+            setAnimal(animal);
+        }
+    }
+    private void drawMap(boolean guard){
 
         clearGrid(mapGrid); // czyszczenie
-//        Boundary boundary = map.getCurrentBounds();
         int mapWidth = map.getWidth(); //szerokość
         int mapHeight = map.getHeight(); // wysokość
         int width= MAP_WIGHT/mapWidth;
@@ -198,23 +180,31 @@ public class SimulationPresenter implements MapChangeListener  {
                 Vector2d pos = new Vector2d(i, j);
                 if (map.isAnimal(pos)) {
                     Label animalLabel=new Label();
-                    animalLabel.setStyle(map.objectAt(pos).toImage(width,height));
+                    boolean isDominant = false;
+                    if(map.objectAt(pos).getGenomes().equals(map.getStats().getMostPopularGenom())){
+                        isDominant = true;
+                    }
+                    animalLabel.setStyle(map.objectAt(pos).toImage(width,height,guard&&isDominant));
                     mapGrid.add(animalLabel , i + 1, mapHeight - j);
                     animalLabel.setOnMouseClicked(event -> {
-                        setAnimal(map.objectAt(pos));
+                        followAnimal(map.objectAt(pos));
                     });
                 }
                 else if (map.isGrass(pos)) {
                     Label grassLabel = new Label();
                     grassLabel.setStyle(map.toImage(width,height));
-                    grassLabel.setPrefSize(width, height); // Ustaw rozmiar komórki (opcjonalne)
-
-                    // Dodajemy etykietę do mapGrid w odpowiedniej pozycji
+                    grassLabel.setPrefSize(width, height);
                     mapGrid.add(grassLabel, i + 1, mapHeight - j);
                 }
                 else {
                     Label dirt = new Label(" ");
-                    dirt.setStyle("-fx-background-color:#b7b4a1 ");
+                    if(guard&&map.isPreferred(pos)){
+                        dirt.setStyle("-fx-background-color:#f3d217 ");
+
+                    }
+                    else{
+                        dirt.setStyle("-fx-background-color:#b7b4a1 ");
+                    }
                     dirt.setPrefSize(width, height);
                     mapGrid.add(dirt, i + 1, mapHeight - j);
 
@@ -227,6 +217,11 @@ public class SimulationPresenter implements MapChangeListener  {
 
 
     }
+
+    private void preferedSpotsAndDominantGenomes(){
+        drawMap(true);
+    }
+
 
     @FXML
     private void onAnimalClicked(Animal animal){
@@ -255,7 +250,13 @@ public class SimulationPresenter implements MapChangeListener  {
         label = new Label("ilość potomków: " + animal.getOffspringCount());
         animalGrid.add(label,0,4);
         label.getStyleClass().add("animal-label");
-        label = new Label("dzień śmierci: "+simulationDay);
+        if(animal.getDeathDay()!=-1){
+            label = new Label("dzień śmierci: "+animal.getDeathDay());
+
+        }
+        else{
+            label = new Label("zwierzę żyje");
+        }
         animalGrid.add(label,1,4);
         label.getStyleClass().add("animal-label");
     }
@@ -265,7 +266,7 @@ public class SimulationPresenter implements MapChangeListener  {
         setWorldMap(worldMap);
         Platform.runLater(() -> {
             this.simulationDay+=1;
-            drawMap();
+            drawMap(false);
             actualiseStatistics();
             if(this.animal!=null){
                 onAnimalClicked(animal);
@@ -284,6 +285,7 @@ public class SimulationPresenter implements MapChangeListener  {
         } else {
             if (simulation.isRunning()) {
                 simulation.pause();
+                preferedSpotsAndDominantGenomes();
             } else {
                 System.out.println("Trying to resume simulation");
                 simulation.resume();;

@@ -2,9 +2,10 @@ package agh.ics.oop.model;
 
 public class AnimalStatistics {
 
-    private Genomes genome;
+    Animal animal;
 
-    public AnimalStatistics(Animal animal,int daysFromSimulationStarted){
-        this.genome = animal.getGenomes();
+    public AnimalStatistics(Animal animal){
+        this.animal = animal;
     }
+
 }
