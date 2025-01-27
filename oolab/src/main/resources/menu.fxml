@@ -12,6 +12,7 @@
 <?import com.sun.javafx.scene.control.IntegerField?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.control.CheckBox?>
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             minHeight="550.0" minWidth="850.0"
@@ -28,6 +29,7 @@
                 <Button onAction="#showNewConfigurationForm">Dodaj nową konfigurację</Button>
             </VBox>
             <Button text = "Załaduj Stare konfiguraje" onAction = "#loadConfiguration"/>
+            <CheckBox fx:id="csvCheckBox" text="Czy Zapisać do CSV" />
             <Button text="Start" onAction="#onSimulationStartClicked"/>
         </VBox>
     </left>
@@ -66,7 +68,10 @@
                     <TextField fx:id="energyToReproduceTextField" promptText="Energia potrzebna do rozmnazania" text="3"/>
                     <Label text="energyToReproduceLabel"/>
                     <Button onAction="#addNewConfiguration">Dodaj</Button>
+
+
                 </VBox>
+
     </right>
 </BorderPane>
 

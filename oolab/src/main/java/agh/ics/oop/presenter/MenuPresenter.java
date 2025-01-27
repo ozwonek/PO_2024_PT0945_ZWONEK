@@ -13,6 +13,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.HPos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -100,6 +101,8 @@ public class MenuPresenter {
     private TextField energyToReproduce;
     @FXML
     private TextField configNameTextField;
+    @FXML
+    private CheckBox csvCheckBox;
 
 
 
@@ -194,6 +197,8 @@ public class MenuPresenter {
     }
 
     public void onSimulationStartClicked() throws IOException {
+        boolean csvSave = csvCheckBox.isSelected();
+        csvCheckBox.setSelected(false);
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getClassLoader().getResource("simulation.fxml"));
         Parent viewRoot = loader.load();
@@ -203,12 +208,14 @@ public class MenuPresenter {
         Globe map = new Globe(worldConfig);
         presenter.setWorldMap(map);
         presenter.setConfig(worldConfig);
+        presenter.setSave(csvSave);
         presenter.startOrStopButton();
         Stage simulationStage = new Stage();
         simulationStage.setScene(new Scene(viewRoot));
         simulationStage.show();
 
     }
+
 
 }
 

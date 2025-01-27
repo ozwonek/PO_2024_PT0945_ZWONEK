@@ -3,7 +3,15 @@ package agh.ics.oop;
 import agh.ics.oop.model.*;
 import agh.ics.oop.model.util.Config;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+
 import static agh.ics.oop.OptionsParser.parse;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -13,15 +21,16 @@ public class Simulation implements Runnable {
     private final Config worldConfig;
     private Globe map;
     private int days=0;
-
+    private Random rand = new Random();
     public boolean isRunning() {
         return running;
     }
-
+    String randomPath = "stats" + rand.nextInt(10) + ".csv";
     private boolean running = true;
     Object lock = new Object();
-    private Random rand = new Random();
-    public Simulation(Config worldConfig, Globe map) {
+    boolean csvSave;
+    public Simulation(Config worldConfig, Globe map, boolean csvSafe) {
+        this.csvSave = csvSafe;
         this.worldConfig = worldConfig;
         for (int i = 0;i<worldConfig.animalStart();i++){
             Vector2d randomPosition = new Vector2d(rand.nextInt(worldConfig.mapWidth()-1), rand.nextInt(worldConfig.mapHeight()-1));
@@ -30,8 +39,32 @@ public class Simulation implements Runnable {
             map.addGenCount(animal.getGenomes());
         }
         this.map = map;
-    }
+        System.out.println(csvSafe);
+        if(csvSafe){
+            try {
+                Path path = Paths.get(randomPath);
+                try (BufferedWriter writer = new BufferedWriter(new FileWriter(randomPath, true))) {
+                        writer.write("Day Count,Animal Count,Grass Count,Free Spots,Most Popular Genom,Mean Children Count,Mean Life For Living,Mean Life For Dead,Mean Energy");
+                    }
+            } catch (IOException e) {
+                System.err.println("Error initializing statistics file: " + e.getMessage());
+            }
 
+        }
+    }
+    public void saveStats(Statistics statistic){
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(randomPath, true))) {
+            String line = String.format("%d,%d,%d,%d,%s,%.2f,%.2f,%.2f,%.2f\n",
+                    statistic.getDayCount(), statistic.getAnimalCount(), statistic.getGrassCount(),
+                    statistic.getFreeSpots(), statistic.getMostPopularGenom() == null ? "N/A" : statistic.getMostPopularGenom(),
+                    statistic.getMeanChildrenCount(), statistic.getMeanLifeForLiving(),
+                    statistic.getMeanLifeForDead(), statistic.getMeanEnergy());
+            writer.write(line);
+            writer.newLine();
+        } catch (IOException e) {
+            System.err.println("Error saving statistics: " + e.getMessage());
+        }
+    }
     public void resume(){
         System.out.println("Setting running to true");
         running = true;
@@ -60,6 +93,10 @@ public class Simulation implements Runnable {
         map.allReproduce();
         map.growGrass(map.getGrassPerDay());
         map.setStatistics();
+        if(csvSave){
+            saveStats(map.getStats());
+        }
+
     }
 
     @Override
@@ -86,6 +123,5 @@ public class Simulation implements Runnable {
         }
     }
     }
-
 
 

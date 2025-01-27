@@ -101,6 +101,10 @@ public class SimulationPresenter implements MapChangeListener  {
     private Config config;
     public SimulationEngine simulationEngine;
     private Simulation simulation;
+    private boolean save = false;
+    public void setSave(boolean checkBox) {
+        this.save = checkBox;
+    }
 
     public void setWorldMap(Globe map){
         this.map = map;
@@ -279,7 +283,7 @@ public class SimulationPresenter implements MapChangeListener  {
     @FXML
     public void startOrStopButton() {
         if (simulation == null) {
-            simulation = new Simulation(config, map);
+            simulation = new Simulation(config, map, save);
             simulationEngine.runNewSimulation(simulation);
             map.addObserver(this);
         } else {
