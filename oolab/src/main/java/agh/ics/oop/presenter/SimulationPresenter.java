@@ -23,8 +23,8 @@ import java.util.Objects;
 
 //import static agh.ics.oop.OptionsParser.parse;
 
-public class SimulationPresenter implements MapChangeListener  {
-    public VBox mainContainer;
+public class SimulationPresenter implements MapChangeListener {
+    public VBox mainContainer; // kolejne publiczne atrybuty
     public Label animalOnObservation;
     public VBox animalStatistics;
     public Button buttonStartStop;
@@ -106,111 +106,110 @@ public class SimulationPresenter implements MapChangeListener  {
     public SimulationEngine simulationEngine;
     private Simulation simulation;
     private boolean save = false;
+
     public void setSave(boolean checkBox) {
         this.save = checkBox;
     }
 
-    public void setWorldMap(Globe map){
+    public void setWorldMap(Globe map) {
         this.map = map;
     }
-    public void setConfig(Config config){
+
+    public void setConfig(Config config) {
         this.config = config;
     }
 
-    private void setAnimal(Animal animal){
+    private void setAnimal(Animal animal) {
         this.animal = animal;
         onAnimalClicked(animal);
         animalStatistics.setVisible(true);
     }
-    
+
     @FXML
-    private void deleteAnimalFromObservation(){
-        this.animal=null;
+    private void deleteAnimalFromObservation() {
+        this.animal = null;
         animalStatistics.setVisible(false);
     }
 
 
-
-    private void actualiseStatistics(){
+    private void actualiseStatistics() {
         clearGrid(statisticsGrid);
-        Statistics statistics= map.getStats();
+        Statistics statistics = map.getStats();
         Label label = new Label("liczba zwierzaków: " + statistics.getAnimalCount());
-        statisticsGrid.add(label,0,0);
+        statisticsGrid.add(label, 0, 0);
         label = new Label("liczba roślin: " + statistics.getGrassCount());
-        statisticsGrid.add(label,1,0);
+        statisticsGrid.add(label, 1, 0);
         label = new Label("liczba wolnych pól: " + statistics.getFreeSpots());
-        statisticsGrid.add(label, 0,1);
+        statisticsGrid.add(label, 0, 1);
         label = new Label("najpopularniejszy genotyp: " + statistics.getMostPopularGenom());
         statisticsGrid.add(label, 1, 1);
         label = new Label("średniej długości życia zwierzaków: " + statistics.getMeanLifeForLiving());
-        statisticsGrid.add(label,0,2);
-        label = new Label("średniej liczby dzieci dla żyjących zwierzaków: " +statistics.getMeanChildrenCount());
-        statisticsGrid.add(label,1,2);
-        label = new Label("średniej liczba długość życia nieżyjącego: " +statistics.getMeanLifeForDead());
-        statisticsGrid.add(label,0,3);
-        label = new Label("Średnia energia: " +statistics.getMeanEnergy());
-        statisticsGrid.add(label,1,3);
-        }
+        statisticsGrid.add(label, 0, 2);
+        label = new Label("średniej liczby dzieci dla żyjących zwierzaków: " + statistics.getMeanChildrenCount());
+        statisticsGrid.add(label, 1, 2);
+        label = new Label("średniej liczba długość życia nieżyjącego: " + statistics.getMeanLifeForDead());
+        statisticsGrid.add(label, 0, 3);
+        label = new Label("Średnia energia: " + statistics.getMeanEnergy());
+        statisticsGrid.add(label, 1, 3);
+    }
 
-    private void followAnimal(Animal animal){
-        if(!simulation.isRunning()){
+    private void followAnimal(Animal animal) {
+        if (!simulation.isRunning()) {
             setAnimal(animal);
         }
     }
-    private void drawMap(boolean guard){
+
+    private void drawMap(boolean guard) { // guard?
 
         clearGrid(mapGrid); // czyszczenie
         int mapWidth = map.getWidth(); //szerokość
         int mapHeight = map.getHeight(); // wysokość
-        int width= MAP_WIGHT/mapWidth;
-        int height = MAP_HEIGHT/mapHeight;
+        int width = MAP_WIGHT / mapWidth;
+        int height = MAP_HEIGHT / mapHeight;
         int squareSize = Math.min(height, width); //ile na jeden kwadracik
         mapGrid.getColumnConstraints().add(new ColumnConstraints(width));
         mapGrid.getRowConstraints().add(new RowConstraints(height));
         Label label = new Label("y/x");
         mapGrid.add(label, 0, 0);
         GridPane.setHalignment(label, HPos.CENTER);
-        for(int i=0; i<mapWidth; i++){
+        for (int i = 0; i < mapWidth; i++) {
             label = new Label(Integer.toString(i));
             GridPane.setHalignment(label, HPos.CENTER);
             mapGrid.getColumnConstraints().add(new ColumnConstraints(squareSize));
-            mapGrid.add(label, i+1, 0);
+            mapGrid.add(label, i + 1, 0);
         }
-        for(int i=0; i<mapHeight; i++){
-            label = new Label(Integer.toString(mapHeight-i-1));
+        for (int i = 0; i < mapHeight; i++) {
+            label = new Label(Integer.toString(mapHeight - i - 1));
             GridPane.setHalignment(label, HPos.CENTER);
             mapGrid.getRowConstraints().add(new RowConstraints(squareSize));
-            mapGrid.add(label, 0, i+1);
+            mapGrid.add(label, 0, i + 1);
         }
-        for(int i =0;i<mapWidth;i++) // dodawanie na każdej pozycji i,j objektu,jeżeli istnieje
+        for (int i = 0; i < mapWidth; i++) // dodawanie na każdej pozycji i,j objektu,jeżeli istnieje
         {
             for (int j = 0; j < mapHeight; j++) {
                 Vector2d pos = new Vector2d(i, j);
                 if (map.isAnimal(pos)) {
-                    Label animalLabel=new Label();
+                    Label animalLabel = new Label();
                     boolean isDominant = false;
-                    if(map.objectAt(pos).getGenomes().equals(map.getStats().getMostPopularGenom())){
+                    if (map.objectAt(pos).getGenomes().equals(map.getStats().getMostPopularGenom())) {
                         isDominant = true;
                     }
-                    animalLabel.setStyle(map.objectAt(pos).toImage(width,height,guard&&isDominant));
-                    mapGrid.add(animalLabel , i + 1, mapHeight - j);
+                    animalLabel.setStyle(map.objectAt(pos).toImage(width, height, guard && isDominant));
+                    mapGrid.add(animalLabel, i + 1, mapHeight - j);
                     animalLabel.setOnMouseClicked(event -> {
                         followAnimal(map.objectAt(pos));
                     });
-                }
-                else if (map.isGrass(pos)) {
+                } else if (map.isGrass(pos)) {
                     Label grassLabel = new Label();
-                    grassLabel.setStyle(map.toImage(width,height));
+                    grassLabel.setStyle(map.toImage(width, height));
                     grassLabel.setPrefSize(width, height);
                     mapGrid.add(grassLabel, i + 1, mapHeight - j);
-                }
-                else {
+                } else {
                     Label dirt = new Label(" ");
-                    if(guard&&map.isPreferred(pos)){
+                    if (guard && map.isPreferred(pos)) {
                         dirt.setStyle("-fx-background-color:#f3d217 ");
 
-                    }
-                    else{
+                    } else {
                         dirt.setStyle("-fx-background-color:#b7b4a1 ");
                     }
                     dirt.setPrefSize(width, height);
@@ -223,60 +222,58 @@ public class SimulationPresenter implements MapChangeListener  {
         }
 
 
-
     }
 
-    private void preferedSpotsAndDominantGenomes(){
+    private void preferedSpotsAndDominantGenomes() {
         drawMap(true);
     }
 
 
     @FXML
-    private void onAnimalClicked(Animal animal){
+    private void onAnimalClicked(Animal animal) {
         clearGrid(animalGrid);
 
         animalOnObservation.setText("Obserwujesz zwierzaka na pozycji: " + animal.getPosition());
 
         Label label = new Label("genotyp zwierzka: " + animal.getGenomes());
-        animalGrid.add(label,0,1);
+        animalGrid.add(label, 0, 1);
         label.getStyleClass().add("animal-label");
         label = new Label("aktywny gen: " + animal.getGenomes().get(animal.getActive()));
-        animalGrid.add(label,1,1);
+        animalGrid.add(label, 1, 1);
         label.getStyleClass().add("animal-label");
         label = new Label("ilość energii: " + animal.getEnergy());
-        animalGrid.add(label, 0,2);
+        animalGrid.add(label, 0, 2);
         label.getStyleClass().add("animal-label");
         label = new Label("ilość zjedzonych roślin: " + animal.getEatenGrass());
         animalGrid.add(label, 1, 2);
         label.getStyleClass().add("animal-label");
         label = new Label("ilość dzieci: " + animal.getChildrenSize());
-        animalGrid.add(label,0,3);
+        animalGrid.add(label, 0, 3);
         label.getStyleClass().add("animal-label");
-        label = new Label("ile dni żyje: " + animal.getAge() );
-        animalGrid.add(label,1,3);
+        label = new Label("ile dni żyje: " + animal.getAge());
+        animalGrid.add(label, 1, 3);
         label.getStyleClass().add("animal-label");
         label = new Label("ilość potomków: " + animal.getOffspringCount());
-        animalGrid.add(label,0,4);
+        animalGrid.add(label, 0, 4);
         label.getStyleClass().add("animal-label");
-        if(animal.getDeathDay()!=-1){
-            label = new Label("dzień śmierci: "+animal.getDeathDay());
+        if (animal.getDeathDay() != -1) {
+            label = new Label("dzień śmierci: " + animal.getDeathDay());
 
-        }
-        else{
+        } else {
             label = new Label("zwierzę żyje");
         }
-        animalGrid.add(label,1,4);
+        animalGrid.add(label, 1, 4);
         label.getStyleClass().add("animal-label");
     }
 
     @Override
-    public void mapChanged(Globe worldMap, String message){
+    public void mapChanged(Globe worldMap, String message) {
         setWorldMap(worldMap);
         Platform.runLater(() -> {
-            this.simulationDay+=1;
+            this.simulationDay += 1;
             drawMap(false);
             actualiseStatistics();
-            if(this.animal!=null){
+            if (this.animal != null) {
                 onAnimalClicked(animal);
             }
 
@@ -286,11 +283,10 @@ public class SimulationPresenter implements MapChangeListener  {
 
     @FXML
     public void startOrStopButton() {
-        if(Objects.equals(buttonStartStop.getText(), "start")){
+        if (Objects.equals(buttonStartStop.getText(), "start")) {
             buttonStartStop.setText("stop");
 
-        }
-        else{
+        } else {
             buttonStartStop.setText("start");
 
         }
@@ -304,17 +300,18 @@ public class SimulationPresenter implements MapChangeListener  {
                 preferedSpotsAndDominantGenomes();
             } else {
                 System.out.println("Trying to resume simulation");
-                simulation.resume();;
+                simulation.resume();
+                ;
             }
         }
     }
 
 
-        private void clearGrid (GridPane grid){
-            grid.getChildren().retainAll(grid.getChildren().get(0)); // hack to retain visible grid lines
-            grid.getColumnConstraints().clear();
-            grid.getRowConstraints().clear();
-        }
-
-
+    private void clearGrid(GridPane grid) {
+        grid.getChildren().retainAll(grid.getChildren().get(0)); // hack to retain visible grid lines
+        grid.getColumnConstraints().clear();
+        grid.getRowConstraints().clear();
     }
+
+
+}

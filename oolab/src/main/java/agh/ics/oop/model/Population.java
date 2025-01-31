@@ -9,13 +9,13 @@ import java.util.*;
 public class Population implements MoveValidator {
     protected final Map<Vector2d, List<Animal>> animals = new HashMap<>();
     protected final List<MapChangeListener> observers = new ArrayList<>();
-    protected Vector2d lowerLeft = new Vector2d(0,0);
+    protected Vector2d lowerLeft = new Vector2d(0, 0);
     protected Vector2d upperRight;
     protected int deadAnimalCount = 0;
     protected static final Random random = new Random();
     protected int deadAnimalsAge = 0;
     protected int animalsChildrenCount = 0;
-    protected Map<Genomes,Integer> genCount = new HashMap<>();
+    protected Map<Genomes, Integer> genCount = new HashMap<>();
     protected Genomes mostCommonGenom;
     protected int animalsAge = 0;
     protected Statistics stats = new Statistics();
@@ -23,76 +23,77 @@ public class Population implements MoveValidator {
     protected Config worldConfig;
 
 
-
     public Population(Config worldConfig) {
         this.worldConfig = worldConfig;
-        this.upperRight = new Vector2d(worldConfig.mapWidth()-1, worldConfig.mapHeight()-1);
+        this.upperRight = new Vector2d(worldConfig.mapWidth() - 1, worldConfig.mapHeight() - 1);
 
 
     }
+
     public void addGenCount(Genomes genome) {
-        genCount.put(genome,genCount.getOrDefault(genome,0) + 1);
-        if(mostCommonGenom == null || genCount.get(genome)>genCount.get(mostCommonGenom)){
+        genCount.put(genome, genCount.getOrDefault(genome, 0) + 1);
+        if (mostCommonGenom == null || genCount.get(genome) > genCount.get(mostCommonGenom)) {
             mostCommonGenom = genome;
         }
     }
-    public void nextDay(){
-        dayCount+=1;
+
+    public void nextDay() {
+        dayCount += 1;
     }
 
 
-    public int getWidth(){
+    public int getWidth() {
         return this.worldConfig.mapWidth();
     }
-    public int getHeight(){
+
+    public int getHeight() {
         return this.worldConfig.mapHeight();
     }
+
     public List<Animal> getAnimals() {
         List<Animal> all = new ArrayList<>();
-        for(List<Animal> animals: animals.values())
-        {
+        for (List<Animal> animals : animals.values()) {
             all.addAll(animals);
         }
         return all;
     }
 
     public boolean canMoveUpOrDown(Vector2d position) {
-        return position.correctHeight(lowerLeft,upperRight);
+        return position.correctHeight(lowerLeft, upperRight);
     }
-    public boolean canMoveRightOrLeft(Vector2d position){
-        return position.correctWidth(lowerLeft,upperRight);
+
+    public boolean canMoveRightOrLeft(Vector2d position) {
+        return position.correctWidth(lowerLeft, upperRight);
     }
 
 
-    public void place(Animal animal){
-        if(animals.get(animal.getPosition()) == null){
+    public void place(Animal animal) {
+        if (animals.get(animal.getPosition()) == null) {
             List<Animal> onThisSpot = new ArrayList<>();
             onThisSpot.add(animal);
-            animals.put(animal.getPosition(),onThisSpot);
-        }
-        else {
+            animals.put(animal.getPosition(), onThisSpot);
+        } else {
             animals.get(animal.getPosition()).add(animal);
         }
 
     }
 
-    public int getAnimalsSize(){
+    public int getAnimalsSize() {
         int countAnimals = 0;
-        for(List<Animal> animals: animals.values()){
-            for(Animal animal : animals){
-                countAnimals +=1;
+        for (List<Animal> animals : animals.values()) {
+            for (Animal animal : animals) {
+                countAnimals += 1;
             }
         }
         return countAnimals;
     }
 
 
-
-    private void animalDied(Animal animal){
-        deadAnimalCount+=1;
-        deadAnimalsAge+=animal.getAge();
-        animalsAge -=animal.getAge();
-        animalsChildrenCount-=animal.getChildrenSize();
+    private void animalDied(Animal animal) {
+        deadAnimalCount += 1;
+        deadAnimalsAge += animal.getAge();
+        animalsAge -= animal.getAge();
+        animalsChildrenCount -= animal.getChildrenSize();
         animal.setDeathDay(this.dayCount);
     }
 
@@ -107,7 +108,7 @@ public class Population implements MoveValidator {
                     animalDied(animal);
                 }
             }
-            for (Animal animalToClean : toRemove ){
+            for (Animal animalToClean : toRemove) {
                 onOneSpot.remove(animalToClean);
 
             }
@@ -115,46 +116,45 @@ public class Population implements MoveValidator {
                 toDelatePositions.add(position);
             }
         }
-        for(Vector2d position: toDelatePositions){
+        for (Vector2d position : toDelatePositions) {
             animals.remove(position);
         }
     }
-    public void allReproduce(){
-        for(List<Animal> onOneSpot: animals.values()){
+
+    public void allReproduce() {
+        for (List<Animal> onOneSpot : animals.values()) {
             Vector2d position = onOneSpot.getFirst().getPosition();
-            if(onOneSpot.size()<2){
+            if (onOneSpot.size() < 2) {
                 continue;
             }
-            onOneSpot.sort((a,b) -> Integer.compare(a.getEnergy(), b.getEnergy()));
+            onOneSpot.sort((a, b) -> Integer.compare(a.getEnergy(), b.getEnergy()));
             int onOneSpotSize = onOneSpot.size();
-            if(onOneSpot.get(onOneSpotSize-2).getEnergy()<onOneSpot.get(onOneSpotSize-2).getMinimumEnergyToReproduce()){
+            if (onOneSpot.get(onOneSpotSize - 2).getEnergy() < onOneSpot.get(onOneSpotSize - 2).getMinimumEnergyToReproduce()) {
                 continue;
             }
-            Animal child = onOneSpot.get(onOneSpotSize-1).reproduce(onOneSpot.get(onOneSpotSize-2));
+            Animal child = onOneSpot.get(onOneSpotSize - 1).reproduce(onOneSpot.get(onOneSpotSize - 2));
             place(child);
             addGenCount(child.getGenomes());
-            animalsChildrenCount+=2;
+            animalsChildrenCount += 2;
         }
     }
 
 
-
     public Animal objectAt(Vector2d position) {
-        if(animals.get(position) == null){
+        if (animals.get(position) == null) {
             return null;
         }
         return animals.get(position).getFirst();
     }
 
 
-
-    public boolean isAnimal(Vector2d position){
+    public boolean isAnimal(Vector2d position) {
         return animals.get(position) != null;
     }
 
     public List<Animal> getStronger(List<Animal> onOneSpot) {
 
-        if(onOneSpot.size()>1){
+        if (onOneSpot.size() > 1) {
             onOneSpot.sort(
                     Comparator.comparingInt(Animal::getEnergy).reversed()
                             .thenComparing(Comparator.comparingInt(Animal::getAge).reversed())
@@ -169,25 +169,23 @@ public class Population implements MoveValidator {
                 if (animal.getEnergy() == topEnergy && animal.getAge() == topAge && animal.getChildrenSize() == topChildrenSize) {
                     competitors.add(animal);
                 }
-                if(competitors.size()>=2){
+                if (competitors.size() >= 2) {
                     return competitors;
-                }
-                else{
+                } else {
                     List<Animal> secondCompetitors = new ArrayList<>();
                     int secondTopEnergy = onOneSpot.get(1).getEnergy();
                     int secondTopAge = onOneSpot.get(1).getAge();
                     int secondTopChildrenSize = onOneSpot.get(1).getChildrenSize();
 
-                    for(Animal secondsAnimal: onOneSpot) {
+                    for (Animal secondsAnimal : onOneSpot) {
                         if (secondsAnimal.getEnergy() == secondTopEnergy && secondsAnimal.getAge() == secondTopAge && secondsAnimal.getChildrenSize() == secondTopChildrenSize) {
                             secondCompetitors.add(secondsAnimal);
                         }
                     }
-                    if(secondCompetitors.size()<2){
-                        competitors.add( secondCompetitors.getFirst());
+                    if (secondCompetitors.size() < 2) {
+                        competitors.add(secondCompetitors.getFirst());
                         return secondCompetitors;
-                    }
-                    else{
+                    } else {
                         int index = random.nextInt(secondCompetitors.size());
                         competitors.add(secondCompetitors.get(index));
                     }
@@ -198,30 +196,34 @@ public class Population implements MoveValidator {
         return onOneSpot;
     }
 
-    public double meanEnergy(){
+    public double meanEnergy() {
         int sumOfEnergy = 0;
-        for(List<Animal> animals: animals.values()){
-            for(Animal animal: animals){
+        for (List<Animal> animals : animals.values()) {
+            for (Animal animal : animals) {
                 sumOfEnergy += animal.getEnergy();
+            }
         }
-        }
-        return Math.round((double) sumOfEnergy*100.0 /getAnimalsSize())/100.0;
+        return Math.round((double) sumOfEnergy * 100.0 / getAnimalsSize()) / 100.0;
     }
-    public void updateSumOfYears(){
+
+    public void updateSumOfYears() {
         this.animalsAge = animalsAge + getAnimalsSize();
     }
-    public double meanChildrenCount(){
-        return Math.round(((double) (animalsChildrenCount*100.0) /(2*getAnimalsSize())))/100.0;
+
+    public double meanChildrenCount() {
+        return Math.round(((double) (animalsChildrenCount * 100.0) / (2 * getAnimalsSize()))) / 100.0;
     }
-    public double meanLifeForLiving(){
+
+    public double meanLifeForLiving() {
         updateSumOfYears();
-        return Math.round(((double) (this.animalsAge * 100.0) / getAnimalsSize()))/100.0;
+        return Math.round(((double) (this.animalsAge * 100.0) / getAnimalsSize())) / 100.0;
     }
-    public double meanForDead(){
-        if (deadAnimalCount == 0){
+
+    public double meanForDead() {
+        if (deadAnimalCount == 0) {
             return 0.0;
         }
-        return Math.round((double) (this.deadAnimalsAge * 100.0) / deadAnimalCount)/ 100.0;
+        return Math.round((double) (this.deadAnimalsAge * 100.0) / deadAnimalCount) / 100.0;
     }
 
 }

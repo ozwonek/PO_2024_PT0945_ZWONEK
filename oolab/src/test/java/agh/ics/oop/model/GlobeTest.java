@@ -49,23 +49,23 @@ class GlobeTest {
     }
 
     @Test
-    void correctNotOccupied(){
-        Config config = new Config(6,6,16,9,10, 0, 10, 5, 5, 2);
+    void correctNotOccupied() {
+        Config config = new Config(6, 6, 16, 9, 10, 0, 10, 5, 5, 2);
         Globe globe = new Globe(config);
-        assertEquals(20,globe.freeSpotsLeft());
+        assertEquals(20, globe.freeSpotsLeft());
     }
 
     @Test
-    void validMoves(){
+    void validMoves() {
 
-        Vector2d position = new Vector2d(5,5);
-        Vector2d lowerLeft = new Vector2d(0,0);
-        Vector2d upperRight1 = new Vector2d(5,4);
-        Vector2d upperRight2 = new Vector2d(4,5);
+        Vector2d position = new Vector2d(5, 5);
+        Vector2d lowerLeft = new Vector2d(0, 0);
+        Vector2d upperRight1 = new Vector2d(5, 4);
+        Vector2d upperRight2 = new Vector2d(4, 5);
 
         assertFalse(position.correctHeight(lowerLeft, upperRight1));
         assertFalse(position.correctWidth(lowerLeft, upperRight2));
         assertTrue(position.correctHeight(lowerLeft, upperRight2));
-        assertTrue(position.correctWidth(lowerLeft,upperRight1));
+        assertTrue(position.correctWidth(lowerLeft, upperRight1));
     }
 }

@@ -8,18 +8,18 @@ public class Animal implements WorldElement {
     private MapDirection orientation;
     private Vector2d position;
     private int energy;
-//    private WorldMap map;
+    //    private WorldMap map;
     private int age;
     private final Genomes genomes;
-    private int active;
+    private int active; // co active? czy to nie powinna być część genomu?
     private UUID id = UUID.randomUUID();
     private final int minimumEnergyToReproduce;
     private final int energyGivenToChild;
-    private List<Animal> childrens = new ArrayList<>();
+    private List<Animal> childrens = new ArrayList<>(); // liczba podwójnie mnoga
     private final int genesLength;
     private static final Random random = new Random();
-    private int eatenGrass =0;
-    private int deathDay =-1;
+    private int eatenGrass = 0;
+    private int deathDay = -1; // wyjątkowo polecam Integer
 
 
     public Animal(Vector2d position, int energy, int genesLength, int minimumEnergyToReproduce, int energyGivenToChild, Genomes genomes) {
@@ -43,18 +43,19 @@ public class Animal implements WorldElement {
         this.energy = this.energy - this.energyGivenToChild;
     }
 
-    public int getEatenGrass(){
+    public int getEatenGrass() {
         return this.eatenGrass;
     }
 
-    public void setEatenGrass(){
-        this.eatenGrass+=1;
+    public void setEatenGrass() {
+        this.eatenGrass += 1;
     }
 
-    public void setDeathDay(int day){
+    public void setDeathDay(int day) {
         this.deathDay = day;
     }
-    public int getDeathDay(){
+
+    public int getDeathDay() {
         return this.deathDay;
     }
 
@@ -71,32 +72,28 @@ public class Animal implements WorldElement {
         return orientation.toString();
     }
 
-    public String toImage(int width,int height,boolean isDominant) {
+    public String toImage(int width, int height, boolean isDominant) {
 
         String color = "#b7b4a1";
-        if(isDominant){
+        if (isDominant) {
             color = "#222222";
         }
-        String configuration = "-fx-background-color: "+color+";" +
+        String configuration = "-fx-background-color: " + color + ";" +
                 "-fx-pref-width: " + width + ";" +
-                "-fx-pref-height: " + height + ";"+
+                "-fx-pref-height: " + height + ";" +
                 "-fx-background-size: contain; ";
 
 
-        if (this.getEnergy()>20){
-        return configuration + "-fx-background-image: url('images/1.png'); ";
-        }
-        else if (this.getEnergy()>15 && this.getEnergy()<=20){
-            return configuration +  "-fx-background-image: url('images/2.png'); ";
-        }
-        else if (this.getEnergy()>10 && this.getEnergy()<=15){
-            return configuration +  "-fx-background-image: url('images/3.png'); " ;
-        }
-        else if (this.getEnergy()>5 && this.getEnergy()<=10){
-            return configuration+ "-fx-background-image: url('images/4.png'); ";
-        }
-        else{
-            return configuration+ "-fx-background-image: url('images/5.png'); ";
+        if (this.getEnergy() > 20) {
+            return configuration + "-fx-background-image: url('images/1.png'); ";
+        } else if (this.getEnergy() > 15 && this.getEnergy() <= 20) {
+            return configuration + "-fx-background-image: url('images/2.png'); ";
+        } else if (this.getEnergy() > 10 && this.getEnergy() <= 15) {
+            return configuration + "-fx-background-image: url('images/3.png'); ";
+        } else if (this.getEnergy() > 5 && this.getEnergy() <= 10) {
+            return configuration + "-fx-background-image: url('images/4.png'); ";
+        } else {
+            return configuration + "-fx-background-image: url('images/5.png'); ";
         }
     }
 
@@ -113,13 +110,14 @@ public class Animal implements WorldElement {
         return this.age;
     }
 
-    public void getOlder(){
+    public void getOlder() {
         this.age = this.age + 1;
     }
-    public boolean toOldToMove(){
+
+    public boolean toOldToMove() { // myląca nazwa
         int randomNumber = random.nextInt(99);// losujemy liczbe od 0 do 99
         return randomNumber > min(this.age, 79);
-        }
+    }
 
     public int getActive() {
         return this.active;
@@ -134,7 +132,7 @@ public class Animal implements WorldElement {
     }
 
     public List<Animal> getChildrens() {
-        return this.childrens;
+        return this.childrens; // dehermetyzacja
     }
 
     public int getChildrenSize() {
@@ -171,9 +169,9 @@ public class Animal implements WorldElement {
         }
     }
 
-    public int getOffspringCount(){
+    public int getOffspringCount() {
         Set<Animal> offsprings = new HashSet<>();
-        setOffspringCount(this,offsprings);
+        setOffspringCount(this, offsprings);
         return offsprings.size();
     }
 

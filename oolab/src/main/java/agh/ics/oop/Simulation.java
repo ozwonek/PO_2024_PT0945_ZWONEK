@@ -20,39 +20,43 @@ import java.util.Random;
 public class Simulation implements Runnable {
     private final Config worldConfig;
     private Globe map;
-    private int days=0;
-    private Random rand = new Random();
+    private int days = 0;
+    private Random rand = new Random(); // static?
+
     public boolean isRunning() {
         return running;
     }
-    String randomPath = "stats" + rand.nextInt(10) + ".csv";
+
+    String randomPath = "stats" + rand.nextInt(10) + ".csv"; // atrybuty między metodami?
     private boolean running = true;
-    Object lock = new Object();
-    boolean csvSave;
+    Object lock = new Object(); // modyfikator dostępu?
+    boolean csvSave; // modyfikator dostępu?
+
     public Simulation(Config worldConfig, Globe map, boolean csvSafe) {
         this.csvSave = csvSafe;
         this.worldConfig = worldConfig;
-        for (int i = 0;i<worldConfig.animalStart();i++){
-            Vector2d randomPosition = new Vector2d(rand.nextInt(worldConfig.mapWidth()-1), rand.nextInt(worldConfig.mapHeight()-1));
-            Animal animal = new Animal(randomPosition,worldConfig.animalStartEnergy(), worldConfig.animalGenotypeLength(), worldConfig.animalEnergyToReproduce(),worldConfig.animalEnergyToChild(),new Genomes(worldConfig.animalGenotypeLength()));
+        for (int i = 0; i < worldConfig.animalStart(); i++) {
+            Vector2d randomPosition = new Vector2d(rand.nextInt(worldConfig.mapWidth() - 1), rand.nextInt(worldConfig.mapHeight() - 1)); // czy to zadanie dla symulacji?
+            Animal animal = new Animal(randomPosition, worldConfig.animalStartEnergy(), worldConfig.animalGenotypeLength(), worldConfig.animalEnergyToReproduce(), worldConfig.animalEnergyToChild(), new Genomes(worldConfig.animalGenotypeLength()));
             map.place(animal);
             map.addGenCount(animal.getGenomes());
         }
         this.map = map;
-        System.out.println(csvSafe);
-        if(csvSafe){
+        System.out.println(csvSafe); // ?
+        if (csvSafe) {
             try {
                 Path path = Paths.get(randomPath);
                 try (BufferedWriter writer = new BufferedWriter(new FileWriter(randomPath, true))) {
-                        writer.write("Day Count,Animal Count,Grass Count,Free Spots,Most Popular Genom,Mean Children Count,Mean Life For Living,Mean Life For Dead,Mean Energy");
-                    }
+                    writer.write("Day Count,Animal Count,Grass Count,Free Spots,Most Popular Genom,Mean Children Count,Mean Life For Living,Mean Life For Dead,Mean Energy");
+                }
             } catch (IOException e) {
                 System.err.println("Error initializing statistics file: " + e.getMessage());
             }
 
         }
     }
-    public void saveStats(Statistics statistic){
+
+    public void saveStats(Statistics statistic) { // czy to zadanie dla symulacji?
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(randomPath, true))) {
             String line = String.format("%d,%d,%d,%d,%s,%.2f,%.2f,%.2f,%.2f\n",
                     statistic.getDayCount(), statistic.getAnimalCount(), statistic.getGrassCount(),
@@ -65,7 +69,8 @@ public class Simulation implements Runnable {
             System.err.println("Error saving statistics: " + e.getMessage());
         }
     }
-    public void resume(){
+
+    public void resume() {
         System.out.println("Setting running to true");
         running = true;
         synchronized (lock) {
@@ -74,7 +79,7 @@ public class Simulation implements Runnable {
         }
     }
 
-    public void pause(){
+    public void pause() {
         running = false;
     }
 
@@ -92,7 +97,7 @@ public class Simulation implements Runnable {
         map.allReproduce();
         map.growGrass(map.getGrassPerDay());
         map.setStatistics();
-        if(csvSave){
+        if (csvSave) {
             saveStats(map.getStats());
         }
         map.nextDay();
@@ -110,8 +115,8 @@ public class Simulation implements Runnable {
                     }
                 }
             } catch (InterruptedException e) {
-                System.out.println("Wątek został przerwany na czekaniu na wznowienie: " + e.getMessage());
-                Thread.currentThread().interrupt();
+                System.out.println("Wątek został przerwany na czekaniu na wznowienie: " + e.getMessage()); // czy to dobry wybór?
+                Thread.currentThread().interrupt(); // jaki jest sens wysyłać interrupt sobie samemu?
             }
             this.runDay();
             try {
@@ -122,6 +127,6 @@ public class Simulation implements Runnable {
             }
         }
     }
-    }
+}
 
 

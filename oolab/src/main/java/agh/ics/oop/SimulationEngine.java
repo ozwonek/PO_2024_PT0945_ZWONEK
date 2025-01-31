@@ -12,7 +12,6 @@ public class SimulationEngine {
     private final ExecutorService executorThreadPool = Executors.newFixedThreadPool(4);
 
 
-
     public SimulationEngine() {
         this.simulations = new ArrayList<>();
     }
@@ -24,7 +23,6 @@ public class SimulationEngine {
         threads.add(thread);
         thread.start();
     }
-
 
 
     public void awaitSimulationsEnd() {
@@ -39,7 +37,7 @@ public class SimulationEngine {
             }
 
         } catch (InterruptedException e) {
-            System.out.println(e.getMessage());
+            System.out.println(e.getMessage()); // czy to dobry wybór?
 
         }
 

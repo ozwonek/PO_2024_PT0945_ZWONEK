@@ -34,7 +34,7 @@
         <VBox alignment="CENTER" spacing="10" xmlns:fx="http://javafx.com/fxml">
             <VBox fx:id="animalStatistics" alignment="CENTER" visible="false">
                 <Label fx:id="animalOnObservation" text=" "/>
-                <GridPane fx:id="animalGrid" gridLinesVisible="true" />
+                <GridPane fx:id="animalGrid" gridLinesVisible="true"/>
                 <Button onAction="#deleteAnimalFromObservation" text="stop observation"/>
             </VBox>
             <VBox fx:id="dailyStats" alignment="CENTER">
@@ -49,101 +49,101 @@
 
 </BorderPane>
 
-<!--        <?xml version="1.0" encoding="UTF-8"?>-->
+        <!--        <?xml version="1.0" encoding="UTF-8"?>-->
 
-<!--        <?import javafx.scene.control.Label?>-->
-<!--        <?import javafx.scene.layout.BorderPane?>-->
-<!--        <?import javafx.scene.layout.GridPane?>-->
-<!--        <?import javafx.scene.control.TextField?>-->
-<!--        <?import javafx.scene.layout.VBox?>-->
-<!--        <?import javafx.scene.control.Button?>-->
-<!--        <?import javafx.scene.layout.HBox?>-->
-<!--        <?import java.net.URL?>-->
-<!--        <?import javafx.geometry.Insets?>-->
-<!--        <?import com.sun.javafx.scene.control.IntegerField?>-->
-<!--        <?import javafx.scene.control.ComboBox?>-->
-<!--        <?import javafx.scene.layout.StackPane?>-->
-<!--<BorderPane xmlns="http://javafx.com/javafx"-->
-<!--            xmlns:fx="http://javafx.com/fxml"-->
-<!--            minHeight="550.0" minWidth="850.0"-->
-<!--            fx:controller="agh.ics.oop.presenter.SimulationPresenter">-->
-<!--<stylesheets>-->
-<!--    <URL value="@javafx.css"/>-->
-<!--</stylesheets>-->
-<!--<left>-->
-<!--    <VBox alignment="CENTER" spacing="10">-->
-<!--        <VBox fx:id="settingConfigurations" visible="true">-->
-<!--            <Label text="Wybierz konfigurację:"/>-->
-<!--            <ComboBox fx:id="configurations" onAction="#getConfiguration"/>-->
-<!--            <Button onAction="#showNewConfigurationForm">Dodaj nową konfigurację</Button>-->
-<!--        </VBox>-->
-<!--        <Button text = "Załaduj Stare konfiguraje" onAction = "#loadConfiguration"/>-->
-<!--        <Button text="Start" onAction="#onSimulationStartClicked"/>-->
-<!--        <Label fx:id="simulationDayLabel"/>-->
-<!--        <GridPane fx:id="mapGrid" gridLinesVisible="true" alignment="CENTER">-->
-<!--            <VBox.margin>-->
-<!--                <Insets top="10" right="20" bottom="10" left="20"/>-->
-<!--            </VBox.margin>-->
-<!--        </GridPane>-->
+        <!--        <?import javafx.scene.control.Label?>-->
+        <!--        <?import javafx.scene.layout.BorderPane?>-->
+        <!--        <?import javafx.scene.layout.GridPane?>-->
+        <!--        <?import javafx.scene.control.TextField?>-->
+        <!--        <?import javafx.scene.layout.VBox?>-->
+        <!--        <?import javafx.scene.control.Button?>-->
+        <!--        <?import javafx.scene.layout.HBox?>-->
+        <!--        <?import java.net.URL?>-->
+        <!--        <?import javafx.geometry.Insets?>-->
+        <!--        <?import com.sun.javafx.scene.control.IntegerField?>-->
+        <!--        <?import javafx.scene.control.ComboBox?>-->
+        <!--        <?import javafx.scene.layout.StackPane?>-->
+        <!--<BorderPane xmlns="http://javafx.com/javafx"-->
+        <!--            xmlns:fx="http://javafx.com/fxml"-->
+        <!--            minHeight="550.0" minWidth="850.0"-->
+        <!--            fx:controller="agh.ics.oop.presenter.SimulationPresenter">-->
+        <!--<stylesheets>-->
+        <!--    <URL value="@javafx.css"/>-->
+        <!--</stylesheets>-->
+        <!--<left>-->
+        <!--    <VBox alignment="CENTER" spacing="10">-->
+        <!--        <VBox fx:id="settingConfigurations" visible="true">-->
+        <!--            <Label text="Wybierz konfigurację:"/>-->
+        <!--            <ComboBox fx:id="configurations" onAction="#getConfiguration"/>-->
+        <!--            <Button onAction="#showNewConfigurationForm">Dodaj nową konfigurację</Button>-->
+        <!--        </VBox>-->
+        <!--        <Button text = "Załaduj Stare konfiguraje" onAction = "#loadConfiguration"/>-->
+        <!--        <Button text="Start" onAction="#onSimulationStartClicked"/>-->
+        <!--        <Label fx:id="simulationDayLabel"/>-->
+        <!--        <GridPane fx:id="mapGrid" gridLinesVisible="true" alignment="CENTER">-->
+        <!--            <VBox.margin>-->
+        <!--                <Insets top="10" right="20" bottom="10" left="20"/>-->
+        <!--            </VBox.margin>-->
+        <!--        </GridPane>-->
 
-<!--    </VBox>-->
-<!--</left>-->
-<!--<right>-->
-<!--    <StackPane>-->
-<!--        <VBox alignment="CENTER" spacing="10" xmlns:fx="http://javafx.com/fxml">-->
-<!--            <VBox fx:id="animalStatistics" alignment="CENTER" visible="false">-->
-<!--                <Label fx:id="animalOnObservation" text=" "/>-->
-<!--                <GridPane fx:id="animalGrid" gridLinesVisible="true" />-->
-<!--                <Button onAction="#deleteAnimalFromObservation" text="stop observation"/>-->
-<!--            </VBox>-->
-<!--            <VBox fx:id="dailyStats" alignment="CENTER" visible="false">-->
-<!--                <Label text="Dzienne statystyki:"/>-->
-<!--                <GridPane fx:id="statisticsGrid" gridLinesVisible="true" alignment="CENTER">-->
-<!--                </GridPane>-->
-<!--            </VBox>-->
-<!--            <VBox fx:id="configurationForm" alignment="CENTER" styleClass="map" visible="false">-->
-<!--                <TextField fx:id="configNameTextField" promptText="Podaj Nazwe Konfiguracji" text="Testowa"/>-->
-<!--                <Label fx:id="configNameLabel" text="Nazwa Konfiguracji"/>-->
+        <!--    </VBox>-->
+        <!--</left>-->
+        <!--<right>-->
+        <!--    <StackPane>-->
+        <!--        <VBox alignment="CENTER" spacing="10" xmlns:fx="http://javafx.com/fxml">-->
+        <!--            <VBox fx:id="animalStatistics" alignment="CENTER" visible="false">-->
+        <!--                <Label fx:id="animalOnObservation" text=" "/>-->
+        <!--                <GridPane fx:id="animalGrid" gridLinesVisible="true" />-->
+        <!--                <Button onAction="#deleteAnimalFromObservation" text="stop observation"/>-->
+        <!--            </VBox>-->
+        <!--            <VBox fx:id="dailyStats" alignment="CENTER" visible="false">-->
+        <!--                <Label text="Dzienne statystyki:"/>-->
+        <!--                <GridPane fx:id="statisticsGrid" gridLinesVisible="true" alignment="CENTER">-->
+        <!--                </GridPane>-->
+        <!--            </VBox>-->
+        <!--            <VBox fx:id="configurationForm" alignment="CENTER" styleClass="map" visible="false">-->
+        <!--                <TextField fx:id="configNameTextField" promptText="Podaj Nazwe Konfiguracji" text="Testowa"/>-->
+        <!--                <Label fx:id="configNameLabel" text="Nazwa Konfiguracji"/>-->
 
-<!--                <TextField fx:id="widthTextField" promptText="Podaj szerokość mapy" text="3"/>-->
-<!--                <Label fx:id="widthLabel" text="szerokość"/>-->
+        <!--                <TextField fx:id="widthTextField" promptText="Podaj szerokość mapy" text="3"/>-->
+        <!--                <Label fx:id="widthLabel" text="szerokość"/>-->
 
-<!--                <TextField fx:id="heightTextField" promptText="Podaj wysokość mapy" text="3"/>-->
-<!--                <Label fx:id="heightLabel" text="wysokość"/>-->
+        <!--                <TextField fx:id="heightTextField" promptText="Podaj wysokość mapy" text="3"/>-->
+        <!--                <Label fx:id="heightLabel" text="wysokość"/>-->
 
-<!--                <TextField fx:id="startEnergyTextField" promptText="Podaj początkową energię zwierzaków" text="3"/>-->
-<!--                <Label fx:id="startEnergyLabel" text="Początkowa energia zwierzaków"/>-->
+        <!--                <TextField fx:id="startEnergyTextField" promptText="Podaj początkową energię zwierzaków" text="3"/>-->
+        <!--                <Label fx:id="startEnergyLabel" text="Początkowa energia zwierzaków"/>-->
 
-<!--                <TextField fx:id="grassStartTextField" promptText="Podaj początkową ilość trawy" text="3"/>-->
-<!--                <Label fx:id="startGrassNumberLabel" text="Początkowa ilość trawy"/>-->
+        <!--                <TextField fx:id="grassStartTextField" promptText="Podaj początkową ilość trawy" text="3"/>-->
+        <!--                <Label fx:id="startGrassNumberLabel" text="Początkowa ilość trawy"/>-->
 
-<!--                <TextField fx:id="energyFromGrassTextField" promptText="Podaj energię, którą dostają zwierzaki po zjedzeniu trawy" text="3"/>-->
-<!--                <Label fx:id="energyFromGrassLabel" text="Energia pobierana z trawy"/>-->
+        <!--                <TextField fx:id="energyFromGrassTextField" promptText="Podaj energię, którą dostają zwierzaki po zjedzeniu trawy" text="3"/>-->
+        <!--                <Label fx:id="energyFromGrassLabel" text="Energia pobierana z trawy"/>-->
 
-<!--                <TextField fx:id="grassesPerDayTextField" promptText="Podaj ile kępków trawy ma wyratać każdego dnia" text="3"/>-->
-<!--                <Label fx:id="grassesPerDayLabel" text="Ilość nowych kępek trawy na dzień"/>-->
+        <!--                <TextField fx:id="grassesPerDayTextField" promptText="Podaj ile kępków trawy ma wyratać każdego dnia" text="3"/>-->
+        <!--                <Label fx:id="grassesPerDayLabel" text="Ilość nowych kępek trawy na dzień"/>-->
 
-<!--                <TextField fx:id="genesLengthTextField" promptText="Podaj długość genotpu" text="3"/>-->
-<!--                <Label text="genesLengthLabel"/>-->
+        <!--                <TextField fx:id="genesLengthTextField" promptText="Podaj długość genotpu" text="3"/>-->
+        <!--                <Label text="genesLengthLabel"/>-->
 
-<!--                <TextField fx:id="animalStartTextField" promptText="Podaj początkową liczbę zwierząt" text="3"/>-->
-<!--                <Label text="animalStartLabel"/>-->
+        <!--                <TextField fx:id="animalStartTextField" promptText="Podaj początkową liczbę zwierząt" text="3"/>-->
+        <!--                <Label text="animalStartLabel"/>-->
 
-<!--                <TextField fx:id="energyToChildTextField" promptText="Podaj ile dla dzieci energii" text="3"/>-->
-<!--                <Label text="energyToChildLabel"/>-->
+        <!--                <TextField fx:id="energyToChildTextField" promptText="Podaj ile dla dzieci energii" text="3"/>-->
+        <!--                <Label text="energyToChildLabel"/>-->
 
-<!--                <TextField fx:id="energyToReproduceTextField" promptText="Energia potrzebna do rozmnazania" text="3"/>-->
-<!--                <Label text="energyToReproduceLabel"/>-->
-
-
-<!--                <Button onAction="#addNewConfiguration">Dodaj</Button>-->
-<!--            </VBox>-->
-<!--        </VBox>-->
-
-<!--    </StackPane>-->
-
-<!--</right>-->
+        <!--                <TextField fx:id="energyToReproduceTextField" promptText="Energia potrzebna do rozmnazania" text="3"/>-->
+        <!--                <Label text="energyToReproduceLabel"/>-->
 
 
-<!--</BorderPane>-->
+        <!--                <Button onAction="#addNewConfiguration">Dodaj</Button>-->
+        <!--            </VBox>-->
+        <!--        </VBox>-->
+
+        <!--    </StackPane>-->
+
+        <!--</right>-->
+
+
+        <!--</BorderPane>-->
 

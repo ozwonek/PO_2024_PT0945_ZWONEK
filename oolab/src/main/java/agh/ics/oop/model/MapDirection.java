@@ -46,8 +46,7 @@ public enum MapDirection {
     }
 
 
-
-    public MapDirection opposite(){
+    public MapDirection opposite() {
         return switch (this) {
             case NORTH -> SOUTH;
             case SOUTH -> NORTH;
@@ -66,7 +65,7 @@ public enum MapDirection {
             case SOUTH -> SOUTHEAST;
             case WEST -> SOUTHWEST;
             case EAST -> NORTHEAST;
-            case SOUTHWEST ->SOUTH;
+            case SOUTHWEST -> SOUTH;
             case NORTHEAST -> NORTH;
             case SOUTHEAST -> EAST;
             case NORTHWEST -> WEST;
@@ -79,7 +78,7 @@ public enum MapDirection {
             case SOUTH -> Vector2d.DOWN;
             case WEST -> Vector2d.LEFT;
             case EAST -> Vector2d.RIGHT;
-            case NORTHWEST -> Vector2d.UP.add(Vector2d.LEFT);
+            case NORTHWEST -> Vector2d.UP.add(Vector2d.LEFT); // nowy obiekt co wywołanie?
             case SOUTHEAST -> Vector2d.DOWN.add(Vector2d.RIGHT);
             case NORTHEAST -> Vector2d.UP.add(Vector2d.RIGHT);
             case SOUTHWEST -> Vector2d.DOWN.add(Vector2d.LEFT);

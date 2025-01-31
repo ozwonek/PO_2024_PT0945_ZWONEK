@@ -1,4 +1,4 @@
-package agh.ics.oop;
+package agh.ics.oop; // czy to jest klasa na główny pakiet?
 
 import agh.ics.oop.model.Genomes;
 
@@ -12,7 +12,6 @@ public class Statistics {
     private double meanEnergy = 0.0;
     private double meanLifeForDead = 0.0;
     private double meanChildrenCount = 0.0;
-
 
 
     public int getDayCount() {
@@ -50,7 +49,8 @@ public class Statistics {
     public double getMeanChildrenCount() {
         return meanChildrenCount;
     }
-    public Statistics(){
+
+    public Statistics() {
         this.dayCount = 0;
         this.animalCount = 0;
         this.grassCount = 0;
@@ -59,10 +59,10 @@ public class Statistics {
         this.meanChildrenCount = 0.0;
         this.meanLifeForLiving = 0.0;
         this.meanLifeForDead = 0.0;
-        this.meanEnergy = 0.0 ;
+        this.meanEnergy = 0.0;
     }
 
-    public void setStatistics(int dayCount,int animalCount, int grassCount, int freeSpots, Genomes mostPopularGenom, double meanLifeForLiving, double meanChildrenCount, double meanEnergy, double meanLifeForDead){
+    public void setStatistics(int dayCount, int animalCount, int grassCount, int freeSpots, Genomes mostPopularGenom, double meanLifeForLiving, double meanChildrenCount, double meanEnergy, double meanLifeForDead) {
         this.dayCount = dayCount;
         this.animalCount = animalCount;
         this.grassCount = grassCount;

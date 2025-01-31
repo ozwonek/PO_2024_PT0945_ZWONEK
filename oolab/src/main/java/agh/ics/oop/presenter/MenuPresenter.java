@@ -32,8 +32,8 @@ import com.google.gson.reflect.TypeToken;
 import javafx.stage.Stage;
 
 public class MenuPresenter {
-    public Label animalOnObservation;
-    public VBox animalStatistics;
+    public Label animalOnObservation; // publiczny modyfikowalny atrybut?
+    public VBox animalStatistics; // drugi?
     private Globe map;
     private Animal animal;
     private static final String CONFIG_FILE = "configurations.json";
@@ -101,43 +101,44 @@ public class MenuPresenter {
     private CheckBox csvCheckBox;
 
 
-
-    private final HashMap<String,Config> savedConfigurations = new HashMap<>();
+    private final HashMap<String, Config> savedConfigurations = new HashMap<>();
 
     private final ArrayList<Integer> currentConfiguration = new ArrayList<>();
 
-    private final SimulationEngine simulationEngine =  new SimulationEngine();
+    private final SimulationEngine simulationEngine = new SimulationEngine();
 
     @FXML
-    private void showNewConfigurationForm(){
+    private void showNewConfigurationForm() {
         configurationForm.setVisible(true);
     }
 
     @FXML
-    private void addNewConfiguration(){
+    private void addNewConfiguration() {
         String configName = configNameTextField.getText();
         int mapHeight = Integer.parseInt(heightTextField.getText());
         int mapWidth = Integer.parseInt(heightTextField.getText());
-        int grassStart= Integer.parseInt(grassStartTextField.getText());
+        int grassStart = Integer.parseInt(grassStartTextField.getText());
         int grassDaily = Integer.parseInt(grassesPerDayTextField.getText());
         int grassEnergy = Integer.parseInt(energyFromGrassTextField.getText());
         int animalStart = Integer.parseInt(animalStartTextField.getText());
-        int animalStartEnergy =  Integer.parseInt(startEnergyTextField.getText());
+        int animalStartEnergy = Integer.parseInt(startEnergyTextField.getText());
         int animalEnergyToReproduce = Integer.parseInt(energyToReproduceTextField.getText());
         int animalEnergyToChild = Integer.parseInt(energyToChildTextField.getText());
         int animalGenotypeLength = Integer.parseInt(genesLengthTextField.getText());
 
-        Config worldConfig =  new Config(mapHeight,mapWidth,grassStart,grassDaily,grassEnergy,animalStart,animalStartEnergy,animalEnergyToReproduce,animalEnergyToChild,animalGenotypeLength);
-        savedConfigurations.put(configName,worldConfig);
+        Config worldConfig = new Config(mapHeight, mapWidth, grassStart, grassDaily, grassEnergy, animalStart, animalStartEnergy, animalEnergyToReproduce, animalEnergyToChild, animalGenotypeLength);
+        savedConfigurations.put(configName, worldConfig);
         configurations.getItems().add(configName);
         configurationForm.setVisible(false);
 
         appendConfigToJson(worldConfig.toMap(), configName);
     }
-    public void loadConfiguration(){
+
+    public void loadConfiguration() {  // czy to zadanie dla prezentera?
         Gson gson = new Gson();
-        Type type = new TypeToken<Map<String, Map<String, Integer>>>(){}.getType();
-        Map<String,Map<String,Integer>> allconfigs;
+        Type type = new TypeToken<Map<String, Map<String, Integer>>>() {
+        }.getType();
+        Map<String, Map<String, Integer>> allconfigs;
         try (Reader reader = new FileReader("configurations.json")) {
             allconfigs = gson.fromJson(reader, type);
             if (allconfigs == null) {
@@ -151,18 +152,19 @@ public class MenuPresenter {
             return;
         }
         System.out.println(allconfigs);
-        for(String name: allconfigs.keySet()){
-            Map<String,Integer> configs = allconfigs.get(name);
-            Config config = new Config(configs.get("mapHeight"),configs.get("mapWidth"),configs.get("grassStart"),configs.get("grassDaily"),configs.get("grassEnergy"),configs.get("animalStart"),configs.get("animalStartEnergy"),configs.get("animalEnergyToReproduce"),configs.get("animalEnergyToChild"),configs.get("animalGenotypeLength"));
-            savedConfigurations.put(name,config);
+        for (String name : allconfigs.keySet()) {
+            Map<String, Integer> configs = allconfigs.get(name);
+            Config config = new Config(configs.get("mapHeight"), configs.get("mapWidth"), configs.get("grassStart"), configs.get("grassDaily"), configs.get("grassEnergy"), configs.get("animalStart"), configs.get("animalStartEnergy"), configs.get("animalEnergyToReproduce"), configs.get("animalEnergyToChild"), configs.get("animalGenotypeLength"));
+            savedConfigurations.put(name, config);
             configurations.getItems().add(name);
         }
     }
 
-    public void appendConfigToJson(Map<String,Integer> configs, String configName) {
+    public void appendConfigToJson(Map<String, Integer> configs, String configName) {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        Map<String,Map<String,Integer>> allconfigs;
-        Type type = new TypeToken<Map<String, Map<String, Integer>>>(){}.getType();
+        Map<String, Map<String, Integer>> allconfigs;
+        Type type = new TypeToken<Map<String, Map<String, Integer>>>() {
+        }.getType();
 
         try (Reader reader = new FileReader("configurations.json")) {
             allconfigs = gson.fromJson(reader, type);
@@ -176,7 +178,7 @@ public class MenuPresenter {
             System.out.println("Błąd odczytu pliku: " + e.getMessage());
             return;
         }
-        allconfigs.put(configName,configs);
+        allconfigs.put(configName, configs);
         try (Writer writer = new FileWriter("configurations.json")) {
             gson.toJson(allconfigs, writer);
             System.out.println("Nowa konfiguracja została dopisana do pliku.");
@@ -187,7 +189,7 @@ public class MenuPresenter {
 
 
     @FXML
-    private Config getConfiguration(){
+    private Config getConfiguration() {
         String selectedConfiguration = configurations.getSelectionModel().getSelectedItem();
         return savedConfigurations.get(selectedConfiguration);
     }
