@@ -24,11 +24,11 @@ public class Genomes {
         this.mutateGenes(random.nextInt(genesLength));
     }
 
-    private void inheritGenes(Animal dominantParent, Animal subDaddy) {
-        double dominantPercentege = (double) dominantParent.getEnergy() / (subDaddy.getEnergy() + dominantParent.getEnergy());
+    private void inheritGenes(Animal dominantParent, Animal nonDominant) {
+        double dominantPercentege = (double) dominantParent.getEnergy() / (nonDominant.getEnergy() + dominantParent.getEnergy());
         boolean side = random.nextBoolean(); //strona z której bierzemy dominujący
-        Animal leftParent = side ? dominantParent : subDaddy;
-        Animal rightParent = side ? subDaddy : dominantParent;
+        Animal leftParent = side ? dominantParent : nonDominant;
+        Animal rightParent = side ? nonDominant : dominantParent;
 
         int intersection = (int) Math.round(dominantPercentege * genesLength);
         if (!side) intersection = genesLength - (int) Math.round(dominantPercentege * this.genesLength);

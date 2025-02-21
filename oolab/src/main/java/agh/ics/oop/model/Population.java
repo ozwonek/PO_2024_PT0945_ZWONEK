@@ -9,8 +9,8 @@ import java.util.*;
 public class Population implements MoveValidator {
     protected final Map<Vector2d, List<Animal>> animals = new HashMap<>();
     protected final List<MapChangeListener> observers = new ArrayList<>();
-    protected Vector2d lowerLeft = new Vector2d(0,0);
-    protected Vector2d upperRight;
+    protected final Vector2d lowerLeft = new Vector2d(0,0);
+    protected final Vector2d upperRight;
     protected int deadAnimalCount = 0;
     protected static final Random random = new Random();
     protected int deadAnimalsAge = 0;
@@ -20,7 +20,7 @@ public class Population implements MoveValidator {
     protected int animalsAge = 0;
     protected Statistics stats = new Statistics();
     protected int dayCount = 0;
-    protected Config worldConfig;
+    protected final Config worldConfig;
 
 
 
@@ -125,6 +125,7 @@ public class Population implements MoveValidator {
             if(onOneSpot.size()<2){
                 continue;
             }
+            List<Animal> choosen = getStronger(onOneSpot);
             onOneSpot.sort((a,b) -> Integer.compare(a.getEnergy(), b.getEnergy()));
             int onOneSpotSize = onOneSpot.size();
             if(onOneSpot.get(onOneSpotSize-2).getEnergy()<onOneSpot.get(onOneSpotSize-2).getMinimumEnergyToReproduce()){
@@ -211,17 +212,17 @@ public class Population implements MoveValidator {
         this.animalsAge = animalsAge + getAnimalsSize();
     }
     public double meanChildrenCount(){
-        return Math.round(((double) (animalsChildrenCount*100.0) /(2*getAnimalsSize())))/100.0;
+        return Math.round(((animalsChildrenCount*100.0) /(2*getAnimalsSize())))/100.0;
     }
     public double meanLifeForLiving(){
         updateSumOfYears();
-        return Math.round(((double) (this.animalsAge * 100.0) / getAnimalsSize()))/100.0;
+        return Math.round(((this.animalsAge * 100.0) / getAnimalsSize()))/100.0;
     }
     public double meanForDead(){
         if (deadAnimalCount == 0){
             return 0.0;
         }
-        return Math.round((double) (this.deadAnimalsAge * 100.0) / deadAnimalCount)/ 100.0;
+        return Math.round((this.deadAnimalsAge * 100.0) / deadAnimalCount)/ 100.0;
     }
 
 }

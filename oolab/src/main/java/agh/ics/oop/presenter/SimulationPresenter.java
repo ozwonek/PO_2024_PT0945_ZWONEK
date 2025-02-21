@@ -188,10 +188,7 @@ public class SimulationPresenter implements MapChangeListener  {
                 Vector2d pos = new Vector2d(i, j);
                 if (map.isAnimal(pos)) {
                     Label animalLabel=new Label();
-                    boolean isDominant = false;
-                    if(map.objectAt(pos).getGenomes().equals(map.getStats().getMostPopularGenom())){
-                        isDominant = true;
-                    }
+                    boolean isDominant = map.objectAt(pos).getGenomes().equals(map.getStats().getMostPopularGenom());
                     animalLabel.setStyle(map.objectAt(pos).toImage(width,height,guard&&isDominant));
                     mapGrid.add(animalLabel , i + 1, mapHeight - j);
                     animalLabel.setOnMouseClicked(event -> {
@@ -304,7 +301,7 @@ public class SimulationPresenter implements MapChangeListener  {
                 preferedSpotsAndDominantGenomes();
             } else {
                 System.out.println("Trying to resume simulation");
-                simulation.resume();;
+                simulation.resume();
             }
         }
     }

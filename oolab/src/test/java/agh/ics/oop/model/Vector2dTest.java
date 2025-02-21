@@ -11,10 +11,10 @@ class Vector2dTest {
         Vector2d v2 = new Vector2d(1,2);
         Vector2d v3 = new Vector2d(1,2);
 
-        assertFalse(v1.equals(1));
-        assertTrue(v1.equals(v1));
-        assertTrue(v2.equals(v3));
-        assertFalse(v1.equals(v2));
+        assertNotEquals(1, v1);
+        assertEquals(v1, v1);
+        assertEquals(v2, v3);
+        assertNotEquals(v1, v2);
     }
     @Test
     void convertToString(){

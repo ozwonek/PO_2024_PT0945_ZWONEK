@@ -19,16 +19,16 @@ import java.util.Random;
 
 public class Simulation implements Runnable {
     private final Config worldConfig;
-    private Globe map;
+    private final Globe map;
     private int days=0;
-    private Random rand = new Random();
+    private static final Random rand = new Random();
     public boolean isRunning() {
         return running;
     }
-    String randomPath = "stats" + rand.nextInt(10) + ".csv";
+    private final String randomPath = "stats" + rand.nextInt(10) + ".csv";
     private boolean running = true;
-    Object lock = new Object();
-    boolean csvSave;
+    private final Object lock = new Object();
+    private final boolean csvSave;
     public Simulation(Config worldConfig, Globe map, boolean csvSafe) {
         this.csvSave = csvSafe;
         this.worldConfig = worldConfig;
@@ -39,7 +39,6 @@ public class Simulation implements Runnable {
             map.addGenCount(animal.getGenomes());
         }
         this.map = map;
-        System.out.println(csvSafe);
         if(csvSafe){
             try {
                 Path path = Paths.get(randomPath);

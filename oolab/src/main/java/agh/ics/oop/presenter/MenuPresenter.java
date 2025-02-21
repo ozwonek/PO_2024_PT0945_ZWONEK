@@ -1,15 +1,11 @@
 package agh.ics.oop.presenter;
 
-import agh.ics.oop.Simulation;
 import agh.ics.oop.SimulationEngine;
-import agh.ics.oop.Statistics;
 import agh.ics.oop.model.*;
 import agh.ics.oop.model.util.Config;
 import com.google.gson.GsonBuilder;
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.HPos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.CheckBox;
@@ -23,7 +19,6 @@ import java.io.*;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 
@@ -32,11 +27,6 @@ import com.google.gson.reflect.TypeToken;
 import javafx.stage.Stage;
 
 public class MenuPresenter {
-    public Label animalOnObservation;
-    public VBox animalStatistics;
-    private Globe map;
-    private Animal animal;
-    private static final String CONFIG_FILE = "configurations.json";
     @FXML
     private VBox mapDisplay;
     @FXML

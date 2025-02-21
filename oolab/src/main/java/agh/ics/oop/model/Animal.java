@@ -8,18 +8,16 @@ public class Animal implements WorldElement {
     private MapDirection orientation;
     private Vector2d position;
     private int energy;
-//    private WorldMap map;
     private int age;
     private final Genomes genomes;
     private int active;
-    private UUID id = UUID.randomUUID();
     private final int minimumEnergyToReproduce;
     private final int energyGivenToChild;
     private List<Animal> childrens = new ArrayList<>();
     private final int genesLength;
     private static final Random random = new Random();
     private int eatenGrass =0;
-    private int deathDay =-1;
+    private Integer deathDay =-1;
 
 
     public Animal(Vector2d position, int energy, int genesLength, int minimumEnergyToReproduce, int energyGivenToChild, Genomes genomes) {

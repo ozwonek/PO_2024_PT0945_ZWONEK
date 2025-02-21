@@ -160,7 +160,7 @@ public class Globe extends Population{
                 for(Vector2d nextDirection : MOVEMENT_VECTORS){
                     if(grasses.containsKey(neighbourSpot.add(nextDirection))){
                         grassNeigbour = true;
-                    };
+                    }
 
                 }
                 if(!grassNeigbour){
