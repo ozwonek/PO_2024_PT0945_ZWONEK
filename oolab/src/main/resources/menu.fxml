@@ -1,17 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.layout.HBox?>
 <?import java.net.URL?>
-<?import javafx.geometry.Insets?>
-<?import com.sun.javafx.scene.control.IntegerField?>
 <?import javafx.scene.control.ComboBox?>
-<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.control.CheckBox?>
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
@@ -21,7 +15,7 @@
         <URL value="@javafx.css"/>
     </stylesheets>
 
-    <left>
+    <center>
         <VBox alignment="CENTER" spacing="15" >
             <VBox fx:id="settingConfigurations" alignment="CENTER">
                 <Label text="Wybierz konfigurację:"/>
@@ -32,7 +26,7 @@
             <CheckBox fx:id="csvCheckBox" text="Czy Zapisać do CSV" />
             <Button text="Start" onAction="#onSimulationStartClicked"/>
         </VBox>
-    </left>
+    </center>
     <right>
                 <VBox fx:id="configurationForm" alignment="CENTER" styleClass="map" visible="false">
                     <TextField fx:id="configNameTextField" promptText="Podaj Nazwe Konfiguracji" text="Testowa"/>
@@ -57,16 +51,16 @@
                     <Label fx:id="grassesPerDayLabel" text="Ilość nowych kępek trawy na dzień"/>
 
                     <TextField fx:id="genesLengthTextField" promptText="Podaj długość genotpu" text="3"/>
-                    <Label text="genesLengthLabel"/>
+                    <Label text="Długość Genomów"/>
 
                     <TextField fx:id="animalStartTextField" promptText="Podaj początkową liczbę zwierząt" text="3"/>
-                    <Label text="animalStartLabel"/>
+                    <Label text="Początkowa energia"/>
 
                     <TextField fx:id="energyToChildTextField" promptText="Podaj ile dla dzieci energii" text="3"/>
-                    <Label text="energyToChildLabel"/>
+                    <Label text="Energia przekazywana dzieciom"/>
 
                     <TextField fx:id="energyToReproduceTextField" promptText="Energia potrzebna do rozmnazania" text="3"/>
-                    <Label text="energyToReproduceLabel"/>
+                    <Label text="Energia potrzebna do rozmnażania"/>
                     <Button onAction="#addNewConfiguration">Dodaj</Button>
 
 
